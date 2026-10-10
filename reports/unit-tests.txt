@@ -1,4 +1,4 @@
-{"status": "offline_validated", "run_directory": "C:\\Users\\mirac\\Documents\\antigravity\\noble-einstein\\dist\\clean-7f095e19\\runs\\test-temp\\tmpgeul7k3v\\20261010T191018Z-5a74c9ea", "error": null, "error_type": null}
+{"status": "offline_validated", "run_directory": "C:\\Users\\mirac\\Documents\\antigravity\\noble-einstein\\dist\\clean-691db212\\runs\\test-temp\\tmph39bjzv5\\20261010T194147Z-0e6fb0f3", "error": null, "error_type": null}
 test_all_seven_tools_and_schema_enums (test_builder.CompilerTests.test_all_seven_tools_and_schema_enums) ... ok
 test_arbitrary_holidays_extracted_from_brief (test_builder.CompilerTests.test_arbitrary_holidays_extracted_from_brief) ... ok
 test_calendar_counts_after_today_and_crosses_holiday_year_boundary (test_builder.CompilerTests.test_calendar_counts_after_today_and_crosses_holiday_year_boundary) ... ok
@@ -53,6 +53,7 @@ test_calendar_code_with_leap_year_and_end_of_year (test_builder.StressTests.test
 test_compile_with_international_characters_and_emojis (test_builder.StressTests.test_compile_with_international_characters_and_emojis) ... ok
 test_compile_with_three_hierarchical_documents (test_builder.StressTests.test_compile_with_three_hierarchical_documents) ... ok
 test_generalized_freya_origin_and_working_day_bands (test_builder.StressTests.test_generalized_freya_origin_and_working_day_bands) ... ok
+test_natural_language_holidays_normalized (test_builder.StressTests.test_natural_language_holidays_normalized) ... ok
 test_offer_code_malformed_input_graceful_fallback (test_builder.StressTests.test_offer_code_malformed_input_graceful_fallback) ... ok
 test_offer_code_with_days_late_exceeding_bands (test_builder.StressTests.test_offer_code_with_days_late_exceeding_bands) ... ok
 test_offer_code_with_single_and_multiple_products (test_builder.StressTests.test_offer_code_with_single_and_multiple_products) ... ok
@@ -163,6 +164,6 @@ test_099_fault_protocol_verify_identity_is_not_service_error (test_scenarios_100
 test_100_final_farewell_and_terminal_guarantee (test_scenarios_100.HundredScenariosTest.test_100_final_farewell_and_terminal_guarantee) ... ok
 
 ----------------------------------------------------------------------
-Ran 162 tests in 0.289s
+Ran 163 tests in 0.342s
 
 OK

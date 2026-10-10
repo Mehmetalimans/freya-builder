@@ -8,11 +8,11 @@ import hashlib
 import json
 import re
 from urllib.parse import urlsplit
-from builder.calendar import calendar_spec, calendar_node, deadline_bands, offer_node, offer_extraction
+from builder.calendar import calendar_spec, calendar_node, deadline_bands, offer_node, offer_extraction, parse_iso_and_natural_dates
 
 TOOLS = frozenset({"verify_identity", "get_account", "create_promise", "add_note",
                    "schedule_callback", "transfer_to_agent", "close_call"})
-BANK_ORIGINS = (".freyavoice.workers.dev", ".freyavoice.ai")
+BANK_ORIGINS = (".freyavoice.workers.dev", ".freyavoice.ai", ".freyavoice.com", ".freya.ai")
 
 
 class ContractError(ValueError):
@@ -53,8 +53,8 @@ def read_contract(document):
         raise ContractError("Expected an OpenAPI 3 document")
     doc = resolve_refs(document, document)
     servers = doc.get("servers", [])
-    if len(servers) != 1:
-        raise ContractError("Expected exactly one bank server from the supplied API file")
+    if not servers:
+        raise ContractError("Expected at least one bank server from the supplied API file")
     base = servers[0].get("url", "").rstrip("/")
     parsed = urlsplit(base)
     if (parsed.scheme != "https" or not any(parsed.netloc.endswith(origin) or parsed.netloc == origin.lstrip(".") for origin in BANK_ORIGINS)
@@ -239,7 +239,7 @@ def extract_calendar_guidance(brief_text, cal_spec=None):
         holidays = cal_spec["holidays"]
     else:
         holiday_lines = [line for line in brief_text.splitlines() if re.search(r"\bholiday", line, re.I)]
-        holidays = sorted(set(re.findall(r"\b(20\d{2}-\d{2}-\d{2})\b", "\n".join(holiday_lines))))
+        holidays = parse_iso_and_natural_dates("\n".join(holiday_lines))
     holiday_str = ", ".join(holidays) if holidays else "None specified"
     return f"""
 BANK HOLIDAYS AND EXACT DATE RESOLUTION:
@@ -275,7 +275,7 @@ or claim a technical failure. Use the returned remaining-attempt count and hints
 Use ONLY now supplied with this call for dates; never use your real clock. Resolve relative
 dates, weekends, holidays, minimum amounts and deadlines from this brief and account results.
 Keep per-product decisions separate and preserve the bank's product order. Copy identifiers
-from results, never infer them. Preserve partial answers until complete; use the caller's
+from results, never infer them. Use exact field names provided in tool schemas and data. Preserve partial answers until complete; use the caller's
 latest correction and reconfirm any changed promise before recording it.
 Questions, digressions and incidental dates are not consent, payment offers or refusals
 unless the brief explicitly says so. Apply the brief's rules for third parties and identity.
@@ -323,6 +323,7 @@ For multiple products (Brief B), call add_note with the specific reason for ever
 def compile_workflow(briefs, document):
     if not briefs or any(not text.strip() for _, text in briefs):
         raise ContractError("At least one non-empty brief is required")
+    briefs = [(name, text.replace("\r\n", "\n").replace("\r", "\n")) for name, text in briefs]
     ops = read_contract(document)
     combined = "\n\n".join(f"--- INPUT DOCUMENT {i+1}: {name} ---\n{text}" for i, (name, text) in enumerate(briefs))
     references = canonical({name: {"request": op["schema"], "responses": op["responses"]} for name, op in ops.items()})

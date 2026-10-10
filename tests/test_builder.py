@@ -586,9 +586,51 @@ class StressTests(unittest.TestCase):
         with self.assertRaises(ContractError):
             read_contract(doc_invalid)
 
-        custom_brief = "# Policy\n| 1 to 14 | early | 10th working day after call date |\n| 15 to 60 | late | the 5th business day after now |"
+        # Multiple servers accepted, picking the first
+        doc_multi = deepcopy(API)
+        doc_multi["servers"] = [
+            {"url": "https://live.freyavoice.ai", "description": "Production"},
+            {"url": "https://sandbox.freyavoice.ai", "description": "Sandbox"}
+        ]
+        contract_multi = read_contract(doc_multi)
+        self.assertEqual(contract_multi["get_account"]["url"], "https://live.freyavoice.ai/get_account")
+
+        # Flexible bands: 'within 7 business days' without 'after today'
+        custom_brief = "# Policy\n| 1 to 14 | early | within 10 working days |\n| 15 to 60 | late | 5 business days |"
         bands = deadline_bands([("brief.md", custom_brief)])
         self.assertEqual(bands, [[1, 14, 10], [15, 60, 5]])
+
+    def test_natural_language_holidays_normalized(self):
+        from builder.calendar import parse_iso_and_natural_dates
+        dates1 = parse_iso_and_natural_dates("Bank holidays: October 26th, 2026, November 11, 2026, and Dec 25, 2026.")
+        self.assertEqual(dates1, ["2026-10-26", "2026-11-11", "2026-12-25"])
+
+        dates2 = parse_iso_and_natural_dates("Holidays: 26th of October 2026, 2026/11/15, 2027.01.01")
+        self.assertEqual(dates2, ["2026-10-26", "2026-11-15", "2027-01-01"])
+
+        # Alternative phrasing: "Bank holidays to skip:"
+        brief = "# Branch Memo\nBank holidays to skip: 26th of October 2026, November 11, 2026."
+        spec = calendar_spec([("policy", brief)])
+        self.assertIsNotNone(spec)
+        self.assertEqual(spec["holidays"], ["2026-10-26", "2026-11-11"])
+
+    def test_offer_code_with_list_of_products_structure(self):
+        from builder.calendar import offer_code
+        spec = {"holidays": ["2026-10-26"]}
+        bands = [[1, 7, 7], [8, 45, 7]]
+        code = offer_code(spec, bands)
+        values = {
+            "now": "2026-10-14T10:00",
+            "payment_offer_date": "2026-10-20",
+            "get_account_response.data.products": [
+                {"product_id": "card_99", "days_late": 4},
+                {"product_id": "loan_88", "days_late": 15}
+            ]
+        }
+        exec(code, {"vars": values})
+        self.assertEqual(values["payment_offer_action"], "none")
+        self.assertIn("PRODUCT card_99", values["payment_date_facts"])
+        self.assertIn("PRODUCT loan_88", values["payment_date_facts"])
 
 
 if __name__ == "__main__": unittest.main()
