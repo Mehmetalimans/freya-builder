@@ -1,4 +1,4 @@
-{"status": "offline_validated", "run_directory": "C:\\Users\\mirac\\Documents\\antigravity\\noble-einstein\\dist\\clean-87871ce8\\runs\\test-temp\\tmpgttftzw0\\20261010T162509Z-874ef90a", "error": null, "error_type": null}
+{"status": "offline_validated", "run_directory": "C:\\Users\\asus\\.codex\\.chatgpt-projects\\g-p-6aca2978a33481919b0eeebee0f0aae4\\freya-builder\\dist\\clean-4d56bbc4\\runs\\test-temp\\tmp28fw3_ke\\20261010T164622Z-9364da9c", "error": null, "error_type": null}
 test_all_seven_tools_and_schema_enums (test_builder.CompilerTests.test_all_seven_tools_and_schema_enums) ... ok
 test_arbitrary_holidays_extracted_from_brief (test_builder.CompilerTests.test_arbitrary_holidays_extracted_from_brief) ... ok
 test_calendar_counts_after_today_and_crosses_holiday_year_boundary (test_builder.CompilerTests.test_calendar_counts_after_today_and_crosses_holiday_year_boundary) ... ok
@@ -19,8 +19,8 @@ test_local_ref_resolution (test_builder.CompilerTests.test_local_ref_resolution)
 test_missing_verification_signal_is_explicit_fallback (test_builder.CompilerTests.test_missing_verification_signal_is_explicit_fallback) ... ok
 test_offer_calculation_uses_input_bands_and_each_account_product (test_builder.CompilerTests.test_offer_calculation_uses_input_bands_and_each_account_product) ... ok
 test_openapi_with_null_and_omitted_documentation_fields (test_builder.CompilerTests.test_openapi_with_null_and_omitted_documentation_fields) ... ok
-test_prompt_covers_critical_judge_criteria (test_builder.CompilerTests.test_prompt_covers_critical_judge_criteria) ... ok
 test_raw_memo_and_overrides_are_preserved_in_order (test_builder.CompilerTests.test_raw_memo_and_overrides_are_preserved_in_order) ... ok
+test_replaced_policy_does_not_keep_previous_sms_requirement (test_builder.CompilerTests.test_replaced_policy_does_not_keep_previous_sms_requirement) ... ok
 test_tools_include_post_process_hooks (test_builder.CompilerTests.test_tools_include_post_process_hooks) ... ok
 test_unknown_close_success_signal_fails (test_builder.CompilerTests.test_unknown_close_success_signal_fails) ... ok
 test_unsupported_shapes_and_hosts_rejected (test_builder.CompilerTests.test_unsupported_shapes_and_hosts_rejected) ... ok
@@ -60,8 +60,37 @@ test_post_process_hooks_resilient_to_primitive_and_empty_inputs (test_builder.St
 test_read_contract_rejects_array_properties (test_builder.StressTests.test_read_contract_rejects_array_properties) ... ok
 test_read_contract_rejects_non_scalar_properties (test_builder.StressTests.test_read_contract_rejects_non_scalar_properties) ... ok
 test_validate_workflow_enforces_isolated_nodes (test_builder.StressTests.test_validate_workflow_enforces_isolated_nodes) ... ok
+test_012_early_arrears_tomorrow_option (test_calendar_scenarios.CalendarAndSchemaTests.test_012_early_arrears_tomorrow_option) ... ok
+test_029_late_band_floor_calculation_in_offer_code (test_calendar_scenarios.CalendarAndSchemaTests.test_029_late_band_floor_calculation_in_offer_code) ... ok
+test_031_calendar_saturday_shifted_to_monday (test_calendar_scenarios.CalendarAndSchemaTests.test_031_calendar_saturday_shifted_to_monday) ... ok
+test_032_calendar_sunday_shifted_to_monday (test_calendar_scenarios.CalendarAndSchemaTests.test_032_calendar_sunday_shifted_to_monday) ... ok
+test_033_calendar_bank_holiday_shifted_to_next_business_day (test_calendar_scenarios.CalendarAndSchemaTests.test_033_calendar_bank_holiday_shifted_to_next_business_day) ... ok
+test_034_calendar_next_friday_calculation (test_calendar_scenarios.CalendarAndSchemaTests.test_034_calendar_next_friday_calculation) ... ok
+test_035_calendar_skips_counting_today (test_calendar_scenarios.CalendarAndSchemaTests.test_035_calendar_skips_counting_today) ... ok
+test_036_calendar_90_day_horizon (test_calendar_scenarios.CalendarAndSchemaTests.test_036_calendar_90_day_horizon) ... ok
+test_037_calendar_leap_year_handling (test_calendar_scenarios.CalendarAndSchemaTests.test_037_calendar_leap_year_handling) ... ok
+test_038_calendar_arbitrary_now_anchor_independence (test_calendar_scenarios.CalendarAndSchemaTests.test_038_calendar_arbitrary_now_anchor_independence) ... ok
+test_044_deadline_outside_window_flag_in_offer (test_calendar_scenarios.CalendarAndSchemaTests.test_044_deadline_outside_window_flag_in_offer) ... ok
+test_045_deadline_within_window_preserves_offer (test_calendar_scenarios.CalendarAndSchemaTests.test_045_deadline_within_window_preserves_offer) ... ok
+test_060_hardship_tools_available_in_collection (test_calendar_scenarios.CalendarAndSchemaTests.test_060_hardship_tools_available_in_collection) ... ok
+test_070_dispute_outcome_enum_compliance (test_calendar_scenarios.CalendarAndSchemaTests.test_070_dispute_outcome_enum_compliance) ... ok
+test_074_transfer_queue_enum_validity (test_calendar_scenarios.CalendarAndSchemaTests.test_074_transfer_queue_enum_validity) ... ok
+test_088_multi_product_offer_code_multi_product_iteration (test_calendar_scenarios.CalendarAndSchemaTests.test_088_multi_product_offer_code_multi_product_iteration) ... ok
+test_bank_write_retries_remain_disabled_and_connect_retries_are_bounded (test_integration_regressions.IntegrationRegressions.test_bank_write_retries_remain_disabled_and_connect_retries_are_bounded) ... ok
+test_changed_close_and_transfer_enums_have_no_stale_hook_instructions (test_integration_regressions.IntegrationRegressions.test_changed_close_and_transfer_enums_have_no_stale_hook_instructions) ... ok
+test_failed_account_lookup_does_not_announce_loaded_account (test_integration_regressions.IntegrationRegressions.test_failed_account_lookup_does_not_announce_loaded_account) ... ok
+test_hook_cannot_invent_next_identity_question_or_attempt_limit (test_integration_regressions.IntegrationRegressions.test_hook_cannot_invent_next_identity_question_or_attempt_limit) ... ok
+test_hooks_do_not_override_close_enum_or_retry_policy (test_integration_regressions.IntegrationRegressions.test_hooks_do_not_override_close_enum_or_retry_policy) ... ok
+test_hooks_preserve_actual_bank_fields (test_integration_regressions.IntegrationRegressions.test_hooks_preserve_actual_bank_fields) ... ok
+test_identity_transport_failure_is_not_customer_rejection (test_integration_regressions.IntegrationRegressions.test_identity_transport_failure_is_not_customer_rejection) ... ok
+test_malformed_response_metadata_does_not_crash_identity_detection (test_integration_regressions.IntegrationRegressions.test_malformed_response_metadata_does_not_crash_identity_detection) ... ok
+test_null_constraint_is_rejected_instead_of_silently_removed (test_integration_regressions.IntegrationRegressions.test_null_constraint_is_rejected_instead_of_silently_removed) ... ok
+test_null_required_is_rejected_with_contract_error (test_integration_regressions.IntegrationRegressions.test_null_required_is_rejected_with_contract_error) ... ok
+test_string_false_is_not_success (test_integration_regressions.IntegrationRegressions.test_string_false_is_not_success) ... ok
+test_unrecognized_calendar_does_not_invent_weekdays_or_holidays (test_integration_regressions.IntegrationRegressions.test_unrecognized_calendar_does_not_invent_weekdays_or_holidays) ... ok
+test_unseen_policy_has_no_stale_bank_dates_or_numeric_rules (test_integration_regressions.IntegrationRegressions.test_unseen_policy_has_no_stale_bank_dates_or_numeric_rules) ... ok
 
 ----------------------------------------------------------------------
-Ran 61 tests in 0.289s
+Ran 90 tests in 0.233s
 
 OK

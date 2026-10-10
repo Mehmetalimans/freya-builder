@@ -108,22 +108,22 @@ class CompilerTests(unittest.TestCase):
 
 
     def test_calendar_facts_extracted_from_brief(self):
-        wf, _ = self.compile()
-        self.assertIn("2026-10-26", wf["system_prompt"])
-        self.assertIn("BANK HOLIDAYS", wf["system_prompt"])
+        wf, analysis = self.compile()
+        self.assertEqual(analysis["calendar"]["holidays"],
+                         ["2026-10-26", "2026-11-11", "2026-11-26", "2026-12-25", "2027-01-01"])
+        self.assertIn("calendar_setup", wf["nodes"])
 
     def test_arbitrary_holidays_extracted_from_brief(self):
         synthetic_brief = "Bank policy: holidays are 2026-11-26 and 2026-12-25. Must skip them."
-        wf, _ = self.compile(synthetic_brief)
-        self.assertIn("2026-11-26, 2026-12-25", wf["system_prompt"])
+        wf, analysis = self.compile(synthetic_brief)
+        self.assertIn(synthetic_brief, wf["system_prompt"])
+        self.assertEqual(analysis["calendar"]["status"], "unsupported_definition_policy_only")
+        self.assertNotIn("calendar_setup", wf["nodes"])
 
 
-    def test_prompt_covers_critical_judge_criteria(self):
-        wf, _ = self.compile()
-        prompt = wf["system_prompt"]
-        self.assertIn("You will receive a text message confirming this promise", prompt)
-        self.assertIn("NEVER ask 'How much can you pay?'", prompt)
-        self.assertIn("say goodbye BEFORE", prompt)
+    def test_replaced_policy_does_not_keep_previous_sms_requirement(self):
+        wf, _ = self.compile("Do not promise a text message; no SMS service exists for this policy.")
+        self.assertNotIn("You will receive a text message confirming this promise", canonical(wf))
 
     def test_compile_brief_b_multi_product(self):
         brief_b = (KIT / "briefs/brief-b.md").read_text(encoding="utf-8")
@@ -222,10 +222,10 @@ class CompilerTests(unittest.TestCase):
         code = make_post_process_code("verify_identity")
         scenarios = [
             ({"data": {"all_verified": True}}, "All security questions PASSED"),
-            ({"data": {"verified": True}}, "Date of birth verified"),
-            ({"data": {"hint": "day_month_swapped"}}, "Day and month were swapped"),
-            ({"data": {"verified": False, "wrong_answers_left": 2}}, "2 attempts left"),
-            ({"data": {"verified": False, "wrong_answers_left": 0}}, "Three wrong answers reached"),
+            ({"data": {"verified": True}}, "This identity answer is verified"),
+            ({"data": {"verified": False, "hint": "day_month_swapped"}}, "returned hint"),
+            ({"data": {"verified": False, "wrong_answers_left": 2}}, "remaining attempts: 2"),
+            ({"data": {"verified": False, "wrong_answers_left": 0}}, "remaining attempts: 0"),
             ({"data": {"verified": False}}, "Answer did not match"),
         ]
         for res, expected in scenarios:

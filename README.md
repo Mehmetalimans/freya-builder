@@ -1,4 +1,11 @@
-# Freya builder 0.1.9 — public testler ve ölçülen düzeltmeler
+# Freya builder 0.1.10 — entegrasyon incelemesi sonrası aday
+
+Miraç'ın `integration/v3-final` dalı incelendi; sabit politika/tarih talimatları,
+hatalı hook başarı yorumları ve null şema sorunları düzeltildi.
+[Bulgular ve kanıt](docs/mirac-integration-review.md). 90 yerel test geçti;
+0.1.10 henüz canlı dağıtılmadı veya benchmark ile ölçülmedi. Aşağıdaki canlı
+sonuçlar önceki sürümlere aittir. Ekip B public vakalarını kullanmış olduğundan
+bu vakalar artık bağımsız holdout değil, regresyon kümesidir.
 
 Resmî Build the Builder **v3** paketi üzerine kurulu, bağımlılıksız Python builder.
 Brief A için resmî istemciyle doğrulama, yayınlama, platform export'u ve geri okuma
@@ -194,7 +201,7 @@ python -m venv --without-pip .venv
 ```
 
 Linux/macOS'ta sanal ortam Python yolu `.venv/bin/python` olur. Windows temiz
-sanal ortam kontrolü raporda belirtilir. Linux'ta birim testleri, Git güvenlik
+sanal ortam kontrolü raporda belirtilir. Önceki kod commit'inde Linux'ta birim testleri, Git güvenlik
 kontrolü ve A/A+B üretimleri [GitHub Actions'ta geçti](https://github.com/Mehmetalimans/freya-builder/actions/runs/38065145260).
 macOS üzerinde doğrulama yapılmadı.
 

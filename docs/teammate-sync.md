@@ -1,5 +1,11 @@
 # Takım Eşgüdüm ve Entegrasyon Raporu — 10 Ekim 2026
 
+> Kaynak ekip bildirimi korunmuştur. Aşağıdaki "düzeltildi" ve canlı %100 başarı
+> ifadeleri son entegrasyon incelemesinde bütünüyle doğrulanmadı. Kalan hatalar,
+> uygulanan düzeltmeler ve B holdout bağımsızlığına etkisi
+> [güncel incelemede](mirac-integration-review.md) açıklanır. Bu bildirimdeki skor
+> yeni 0.1.10 adayının ölçümü değildir; kaynak koşu kayıtları henüz uzlaştırılmadı.
+
 **Gönderen:** Mirac (`feat/agent-core-optimization`)  
 **Alıcı:** Mehmet Ali (`builder/extended-evaluation`)  
 **Konu:** `docs/teammate-code-review.md` İnceleme Yanıtı, Canlı Staging Sonuçları ve PR Birleştirme Planı

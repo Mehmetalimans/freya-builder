@@ -1,6 +1,11 @@
 # İki kişilik görev takibi
 
 Son güncelleme: 10 Ekim 2026. Durumlar yalnız bu repodaki kanıta dayanır.
+Son kod adayı **0.1.10**: Miraç'ın `7dc5e56` entegrasyonu incelendi ve
+[bulunan hatalar düzeltildi](mirac-integration-review.md); 90 yerel test geçti.
+Bu aday henüz yayınlanmadı. Aşağıdaki canlı veriler önceki sürümlere aittir.
+Miraç'ın raporunda B public vakalarının kullanıldığı belirtiliyor; B artık ekip
+genelinde kullanılmamış holdout sayılamaz. CLI split adı eski ayrımı koruyor.
 Güncel geniş test: 19 gerçek çağrı (önceki pilot hariç); 17'si birleşik scorer
 ile puanlandı, son ikisinin ledger okuması servis 500/1101 hatasında engellendi.
 En iyi tamamlanmış geniş tur 0.1.6 ile 6/7; 0.1.9 adayının tam skoru bilinmiyor.
@@ -35,7 +40,7 @@ Son aday 0.1.9 aynı workflow'un API üzerinden doğrulanmış v10 sürümüdür
 | Arkadaş | `builder/evaluate.py` ile resmî public geliştirme vakalarını ölçme | Geniş ölçümler raporda. Son iki çağrı tamamlandı fakat puanlanamadı; `builder/recover.py` salt okuma kurtarması ve bekleyen rezerv var. Tek test operatörü bu oturumdaki asistan. |
 | Arkadaş | Hata/timeout ve sonuç kaydı | Araç hatası, uzakta hâlâ çalışan iş olasılığı ve hesaplanan/gerçek maliyet ayrı. Belirsiz toplam `null`. |
 | Ortak | `builder/build.py`, sözleşme, bütçe, sürüm | Değişiklik için ilgili iki parça testi ve PR incelemesi. |
-| Ortak | Ayrılmış 3 A + 3 B public vaka ile genelleme | Geliştirme sabitlendikten sonra üç tekrar; gizli final skoru iddiası yok. |
+| Ortak | Public regresyon ve genelleme | B'nin üç vakası ekipçe kullanılmış; tekrarları regresyondur. Kalan A vakalarının ekip kullanım geçmişini doğrula; bağımsız genelleme ölçümü hâlâ yok. |
 | Ortak | Temiz ortam, son commit, iki export + iz ve resmî teslim | `scripts/release.py`, `scripts/verify_release.py`; eksik final verileri tamamlanmadan teslim edildi sayılmaz. |
 
 ## Sıradaki çalışma sırası

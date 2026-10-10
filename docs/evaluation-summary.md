@@ -63,12 +63,18 @@ doğru iş kararı verildiğini kanıtlamaz. Teknik ayrıntılar:
 | Tekrar üretim | Kaynak paket temiz Windows ortamında doğrulandı; macOS kontrol edilmedi. | Final kod ve export/izleri sabitlendikten sonra temiz ortam kontrolünü yenile. |
 | Teslim | Gizli brief sonuçları, iki final export/iz ve organizatörün son teslim adımları eksik. | Kesin commit ve resmî teslim koşullarıyla tamamla. |
 
-[Temiz ortam raporu](../reports/verification.json) 39 birim testinin geçtiği
+[Tarihsel temiz ortam raporu](https://github.com/Mehmetalimans/freya-builder/blob/e390cc4/reports/verification.json) 39 birim testinin geçtiği
 doğrulama çalışmasına, A ve A+B için tekrarlanan eşit workflow hash'lerine ve
 sıfır üçüncü taraf bağımlılığına aittir. Bu kontroller canlı görev başarısı değildir.
 Kod commit'inin [Linux CI çalışması](https://github.com/Mehmetalimans/freya-builder/actions/runs/38065145260)
 başarılıdır. Bu belge daha sonra yapılan dokümantasyon değişikliklerinin aynı
 arşiv hash'ine sahip olduğunu iddia etmez.
+
+Sonraki 0.1.10 incelemesi ve 90 yerel test sonucu
+[ayrı belgede](mirac-integration-review.md), güncel temiz ortam sonucu ise
+`reports/verification.json` içindedir. Ekip raporu B vakalarının kullanıldığını
+bildirdiğinden yukarıdaki altı vakalık holdout planının B kısmı artık bağımsız
+genelleme ölçümü değildir; tekrarları regresyon olarak raporlanmalıdır.
 
 ## Kod incelemesi ve ekip devri
 

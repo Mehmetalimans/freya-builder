@@ -3,6 +3,14 @@
 Bu belge **mevcut kodun** ürettiği arayüzü tanımlar; planlanan düzeltme döngüsü
 henüz uygulanmış sayılmaz. Ortak dosya değişiklikleri PR incelemesi gerektirir.
 
+0.1.10 entegrasyon düzeltmesi: post-process hook'ları yalnız gerçek boolean
+başarı/doğrulama alanlarını yorumlar, banka verisini değiştirmeden açıklama ekler.
+Hook soru sırası, deneme sayısı, SMS vaadi, kapanış enum'u veya yeni retry bütçesi
+belirlemez; bu kararlar verilen politikadadır. Desteklenmeyen null şema kısıtları
+sessizce silinmez, açık hata verir. Bağlantı kurulmadan önceki hatalar için belgeli
+`connect_retries=2`, tool-level HTTP tekrarı için `maxRetries=0` kullanılır.
+Yeni sürüm yerelde doğrulandı; canlı yayın/geri okuma ve benchmark henüz yapılmadı.
+
 ## Girdi ve saf üretim
 
 `builder.core.compile_workflow(briefs, document)` alır:
@@ -105,3 +113,8 @@ kapanmaz. Kurtarma süresi yeni bir simülasyon süresi olarak raporlanmaz.
 bildirimini okuyabilir; `holdout` veya gizli vaka değerleri kod/prompt kuralına
 elle eklenemez. Düzeltme arayüzü için yeni alan gerekecekse önce bu sözleşme
 güncellenip iki parçanın testleri aynı PR'de geçirilir.
+
+Ekip raporuna göre B public vakaları kullanılmıştır. `--split holdout` dosya
+seçimi tarihsel ayrımı korur; ekip genelinde veri bağımsızlığını garanti etmez.
+B tekrarları regresyon olarak raporlanmalı; genelleme için kullanılmamış veri
+geçmişi ayrıca doğrulanmalıdır.

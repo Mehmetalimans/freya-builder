@@ -1,5 +1,9 @@
 # Antigravity dalı incelemesi — 10 Ekim 2026
 
+Bu belge ilk `daef83b` incelemesinin tarihsel kaydıdır. Son `integration/v3-final`
+commit'i `7dc5e56` için uygulanan düzeltmeler ve güncel kabul kanıtı
+[entegrasyon incelemesinde](mirac-integration-review.md) bulunur.
+
 İncelenen dal: `feat/agent-core-optimization`, commit
 `daef83b` (öncesindeki beş geliştirme commit'i dahil). Dal fetch edildi ve
 korundu; mevcut yerel değişikliklerin üzerine yazılmadı. Aşağıdaki davranışlar
