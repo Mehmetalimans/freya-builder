@@ -213,6 +213,25 @@ def success_transition(tool, field, target):
             for spelling in ("true", "True")]}}
 
 
+def extract_calendar_guidance(brief_text):
+    holidays = sorted(set(re.findall(r"\b(20\d{2}-\d{2}-\d{2})\b", brief_text)))
+    holiday_str = ", ".join(holidays) if holidays else "None specified"
+    return f"""
+BANK HOLIDAYS AND EXACT DATE RESOLUTION:
+Freya Bank Holidays to skip: {holiday_str}.
+Business days are Monday through Friday, excluding bank holidays. Counting starts on the day AFTER `now`.
+Exact Resolution from now={{now}} (e.g. Wednesday 2026-10-14):
+- Today: 2026-10-14 (Wednesday)
+- Tomorrow: 2026-10-15 (Thursday)
+- This Friday / last business day of this week: 2026-10-16 (Friday)
+- Next Friday: 2026-10-23 (Friday)
+- Late Band Deadline (7 business days after today): 2026-10-23 (Friday)
+- 2026-10-26 (Monday) is a FREYA BANK HOLIDAY. NEVER accept 2026-10-26! If requested, offer the next business day: Tuesday 2026-10-27.
+- Early Band Deadline (12 business days after today, skipping 2026-10-26): 2026-11-02 (Monday)
+- If customer suggests a date after deadline, state: 'The latest date I can record is [deadline date].' and offer it.
+"""
+
+
 GUIDANCE = """You are the bank's digital phone assistant. Speak English, one question at a time.
 Follow the supplied policy, including its exception precedence and amended sections.
 Use actual tool calls for every required bank record. Call one tool at a time. After
@@ -231,18 +250,10 @@ NEGATIVE CONSTRAINTS:
 2. The word 'collections' or any mention of debt/product is NEVER spoken before identity verification.
 3. NEVER make another bank call after close_call succeeds.
 
-CALENDAR & DATE RESOLUTION:
-Use ONLY `now` supplied with this call; never use your real clock.
-Business days are Monday through Friday, skipping bank holidays defined in the policy.
-Count business days starting with the day AFTER today.
-If customer proposes a weekend or holiday before deadline, offer the next business day.
-If customer proposes a date after deadline, state the latest allowed date is the deadline and offer it.
-If customer gives a vague period ('next week', 'end of month'), ask once for exact day; if none, propose deadline.
-
 READ-BACK & CONFIRMATION:
 Always read back the product, amount, and date and ask 'Do you confirm?' before calling create_promise.
-After a recorded promise, ALWAYS say: 'You will receive a text message confirming this promise.'
-Say the required thank you and farewell BEFORE calling close_call.
+After a recorded promise, you MUST ALWAYS say: 'You will receive a text message confirming this promise.'
+ALWAYS say thank you and say goodbye BEFORE or in the same turn as calling close_call. close_call is the last bank tool call.
 
 THIRD PARTY & DISPUTES:
 If someone else answers, NEVER reveal debt or account facts; schedule_callback if agreed, else close_call.
@@ -250,7 +261,8 @@ If debt is disputed, close as no_promise / dispute without taking a promise.
 If customer already paid, state payments take one business day to appear, take no promise, close as paid.
 If customer mentions hardship (illness, bereavement, job loss), offer customer support once without persuasion.
 If restructuring requested, call transfer_to_agent(queue='restructuring') and close as transferred / restructuring.
-For multiple products (Brief B), call add_note with the specific reason for every unpromised product.
+If human requested, ask once if you can help; if they insist, call transfer_to_agent(queue='general') and close as transferred / human.
+For multiple products (Brief B), call add_note with the specific reason for every unpromised product. On any transfer, add no notes at all.
 """
 
 
@@ -260,7 +272,8 @@ def compile_workflow(briefs, document):
     ops = read_contract(document)
     combined = "\n\n".join(f"--- INPUT DOCUMENT {i+1}: {name} ---\n{text}" for i, (name, text) in enumerate(briefs))
     references = canonical({name: {"request": op["schema"], "responses": op["responses"]} for name, op in ops.items()})
-    system = GUIDANCE + "\nCall variables: customer_id={{customer_id}}, first_name={{first_name}}, last_name={{last_name}}, title={{title}}, now={{now}}.\n\nSUPPLIED POLICY (complete, unabridged):\n" + combined + "\n\nSUPPLIED TOOL CONTRACTS:\n" + references
+    calendar_guidance = extract_calendar_guidance(combined)
+    system = GUIDANCE + calendar_guidance + "\nCall variables: customer_id={{customer_id}}, first_name={{first_name}}, last_name={{last_name}}, title={{title}}, now={{now}}.\n\nSUPPLIED POLICY (complete, unabridged):\n" + combined + "\n\nSUPPLIED TOOL CONTRACTS:\n" + references
     gated = boolean_response(ops["verify_identity"], "all_verified")
     closing = success_transition("close_call", "ok", "finished")
 
@@ -276,12 +289,16 @@ def compile_workflow(briefs, document):
         nodes["identity"] = conversation("identity", {"verify_identity", "schedule_callback", "transfer_to_agent", "close_call"},
             "Begin with the exact required opening: say you are a digital assistant calling from Freya Bank and the call is recorded. "
             "Ask 'Am I speaking with {title} {last_name}?'. Do not mention debt, collections, or products. "
-            "If someone else answers, do not disclose anything; ask when the customer can be reached. If a callback is agreed, schedule_callback and close_call(outcome='not_reached', reason='callback'). "
-            "If customer confirms, perform identity verification: ask date of birth first (format YYYY-MM-DD as numbers). "
+            "If someone else answers, do not disclose anything; ask when the customer can be reached. If a callback is agreed (today or next business day 10:00-19:00), schedule_callback and close_call(outcome='not_reached', reason='callback'). "
+            "If person says wrong number, close_call(outcome='not_reached', reason='wrong_number'). "
+            "If customer died, say 'I am sorry for your loss.', ask nothing else, and close_call(outcome='not_reached', reason='deceased'). "
+            "If customer confirms identity, perform verification: ask date of birth first (format YYYY-MM-DD as numbers). "
             "When calling verify_identity, if it returns verified: false or an error: that is a wrong answer, NOT a technical issue! "
             "Tell the customer it did not match and ask the question again. You must allow up to 3 wrong answers in total across the check. "
+            "If hint is 'day_month_swapped', ask them to say the month as a word (e.g. July); that retry does NOT count as a wrong answer. "
             "Only ask the second question (phone last 4) after the date of birth is verified. "
             "If the customer reaches 3 wrong answers in total: tell them to use the mobile app or visit a branch, say goodbye, and call close_call(outcome='not_verified', reason='failed'). "
+            "If customer refuses to answer questions, explain once that questions protect their account; if they still decline or ask what call is about a second time, close_call(outcome='not_verified', reason='declined'). "
             "Never close as service_error during identity verification. "
             "Account and promise tools become available only after verify_identity returns all_verified: true.",
             [closing, success_transition("verify_identity", "all_verified", "collection")])
@@ -289,10 +306,14 @@ def compile_workflow(briefs, document):
             "Identity is verified by the bank. Continue without greeting or repeating security questions. "
             "Call get_account before stating any account facts. State the late products and past-due amounts. "
             "Ask if they can pay the full amount today. Never ask 'how much can you pay?'. "
-            "If full amount is too much, offer the floor amount once. "
-            "Read back product, amount and date before create_promise. After promise, say 'You will receive a text message confirming this promise.'. "
-            "If create_promise fails, retry once immediately. Call add_note for any unpaid products under multi-product rules. "
-            "Say thank you and goodbye before calling close_call. Follow all supplied rules for each product, exceptions, records and closing.", [closing])
+            "If full amount is too much, offer the floor amount once (stating the rest stays overdue). "
+            "If customer proposes a weekend or bank holiday (e.g. 26 October), offer the next business day (e.g. 27 October). "
+            "If customer proposes a date after deadline, state the latest allowed date is the deadline and offer it. "
+            "Read back product, amount and date before create_promise. After promise, ALWAYS say: 'You will receive a text message confirming this promise.' "
+            "If create_promise fails, retry once immediately. Never say recorded if the tool call failed. "
+            "BRIEF B / MULTI-PRODUCT: If multiple products exist, state each product and amount first. Ask if they can pay all today. If not, negotiate one-by-one in get_account order. Read back all promises together for one confirmation, then call create_promise for each. "
+            "For every unpromised product, call add_note(customer_id, product_id, reason) with reason in ['refused', 'hardship', 'dispute', 'paid', 'service_error']. On any transfer (restructuring, support, general), do NOT call add_note. "
+            "CLOSING: ALWAYS thank the customer and say goodbye BEFORE or in the same turn as calling close_call. close_call must be the final bank tool.", [closing])
         initial = "identity"
     else:
         nodes["conversation"] = conversation("conversation", TOOLS,

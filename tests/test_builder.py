@@ -64,6 +64,26 @@ class CompilerTests(unittest.TestCase):
                 self.assertIn("post_process_code", tool, f"Tool {name} missing post_process_code")
                 self.assertIn("result.pop('header'", tool["post_process_code"])
 
+    def test_calendar_facts_extracted_from_brief(self):
+        wf, _ = self.compile()
+        self.assertIn("2026-10-26", wf["system_prompt"])
+        self.assertIn("BANK HOLIDAYS", wf["system_prompt"])
+
+    def test_prompt_covers_critical_judge_criteria(self):
+        wf, _ = self.compile()
+        prompt = wf["system_prompt"]
+        self.assertIn("You will receive a text message confirming this promise", prompt)
+        self.assertIn("NEVER ask 'How much can you pay?'", prompt)
+        self.assertIn("say goodbye BEFORE", prompt)
+
+    def test_compile_brief_b_multi_product(self):
+        brief_b = (KIT / "briefs/brief-b.md").read_text(encoding="utf-8")
+        wf, _ = compile_workflow([("brief-a.md", BRIEF), ("brief-b.md", brief_b)], self.doc)
+        prompt = wf["system_prompt"]
+        self.assertIn("Brief B", prompt)
+        tool_names = [t["function"]["name"] for t in wf["nodes"]["collection"]["tools"]]
+        self.assertIn("add_note", tool_names)
+
     def test_changed_enums_are_input_driven(self):
         leaf = self.doc["paths"]["/verify_identity"]["post"]["requestBody"]["content"]["application/json"]["schema"]["properties"]["field"]
         leaf["enum"] = ["postcode", "birth_year"]
