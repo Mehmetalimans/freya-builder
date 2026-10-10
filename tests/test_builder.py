@@ -56,6 +56,14 @@ class CompilerTests(unittest.TestCase):
         self.assertEqual(tools["close_call"]["function"]["parameters"]["properties"]["body"]["properties"]["outcome"]["enum"],
                          API["paths"]["/close_call"]["post"]["requestBody"]["content"]["application/json"]["schema"]["properties"]["outcome"]["enum"])
 
+    def test_tools_include_post_process_hooks(self):
+        wf, _ = self.compile()
+        for node in wf["nodes"].values():
+            for tool in node.get("tools", []):
+                name = tool["function"]["name"]
+                self.assertIn("post_process_code", tool, f"Tool {name} missing post_process_code")
+                self.assertIn("result.pop('header'", tool["post_process_code"])
+
     def test_changed_enums_are_input_driven(self):
         leaf = self.doc["paths"]["/verify_identity"]["post"]["requestBody"]["content"]["application/json"]["schema"]["properties"]["field"]
         leaf["enum"] = ["postcode", "birth_year"]

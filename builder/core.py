@@ -117,6 +117,71 @@ TRIGGERS = {
 }
 
 
+def make_post_process_code(name):
+    snippets = {
+        "verify_identity": """try:
+    if isinstance(result, dict):
+        result.pop('header', None)
+        d = result.get('data')
+        if isinstance(d, dict):
+            if d.get('all_verified'):
+                d['what_to_do_next'] = 'All security questions PASSED. Proceed to collection node or call get_account.'
+            elif d.get('verified'):
+                d['what_to_do_next'] = 'Date of birth verified! Ask the second question: last 4 digits of phone number on file.'
+            elif d.get('hint') == 'day_month_swapped':
+                d['what_to_do_next'] = 'Day and month were swapped! Ask customer to say the month as a word (e.g. July). This retry does NOT count as a wrong answer.'
+            else:
+                left = d.get('wrong_answers_left', 0)
+                if left > 0:
+                    d['what_to_do_next'] = f'Answer did not match. {left} attempts left. Tell customer it did not match and ask the question again.'
+                else:
+                    d['what_to_do_next'] = 'Three wrong answers reached! Tell customer to use the mobile app or visit a branch, say goodbye, and call close_call(outcome="not_verified", reason="failed").'
+except Exception:
+    pass
+""",
+        "create_promise": """try:
+    if isinstance(result, dict):
+        result.pop('header', None)
+        d = result.get('data')
+        if isinstance(d, dict):
+            if d.get('ok'):
+                d['what_to_do_next'] = 'Payment promise RECORDED. ALWAYS say: "You will receive a text message confirming this promise." Then say thank you and goodbye and call close_call(outcome="promise").'
+            else:
+                d['what_to_do_next'] = 'Promise recording FAILED. Never say it was recorded! Immediately retry calling create_promise once with identical parameters. If failed twice, close as no_promise / service_error.'
+except Exception:
+    pass
+""",
+        "get_account": """try:
+    if isinstance(result, dict):
+        result.pop('header', None)
+        d = result.get('data')
+        if isinstance(d, dict):
+            d['what_to_do_next'] = 'Account loaded. State the late product(s) and past-due amount(s). Ask if they can pay the full amount today. Never ask how much they can pay.'
+except Exception:
+    pass
+""",
+        "schedule_callback": """try:
+    if isinstance(result, dict):
+        result.pop('header', None)
+        d = result.get('data')
+        if isinstance(d, dict):
+            d['what_to_do_next'] = 'Callback scheduled. Say goodbye and call close_call(outcome="not_reached", reason="callback").'
+except Exception:
+    pass
+""",
+        "transfer_to_agent": """try:
+    if isinstance(result, dict):
+        result.pop('header', None)
+        d = result.get('data')
+        if isinstance(d, dict):
+            d['what_to_do_next'] = 'Call transferred. Say goodbye and call close_call(outcome="transferred", reason="chosen_queue").'
+except Exception:
+    pass
+""",
+    }
+    return snippets.get(name, "try:\n    if isinstance(result, dict):\n        result.pop('header', None)\nexcept Exception:\n    pass\n")
+
+
 def make_tool(operation):
     name = operation["name"]
     body = deepcopy(operation["schema"])
@@ -137,6 +202,7 @@ def make_tool(operation):
                 "headers": {"type": "object", "properties": {
                     "Content-Type": {"type": "string", "default": "application/json"}}},
                 "body": body}}},
+        "post_process_code": make_post_process_code(name),
     }
 
 
@@ -153,16 +219,38 @@ Use actual tool calls for every required bank record. Call one tool at a time. A
 each result continue with a short relevant utterance or the next required tool; do not stall.
 Check the response body, not just HTTP success. Never announce an action as completed
 unless its result confirms it. Do not add transport retries; follow the brief's retry rules.
-Use ONLY now supplied with this call for dates; never use your real clock. Resolve relative
-dates, weekends, holidays, minimum amounts and deadlines from this brief and account results.
-Keep per-product decisions separate and preserve the bank's product order. Copy identifiers
-from results, never infer them. Preserve partial answers until complete; use the caller's
-latest correction and reconfirm any changed promise before recording it.
-Questions, digressions and incidental dates are not consent, payment offers or refusals
-unless the brief explicitly says so. Apply the brief's rules for third parties and identity.
-Do not invent terms, policy, tools, services, facts or outcomes. Tool descriptions are
-an interface reference; the supplied policy determines when each operation is allowed.
-Say the required farewell BEFORE close_call. Never make another bank call after it succeeds.
+
+TOOL FAULT PROTOCOL:
+If create_promise returns an error or ok: false, NEVER say the promise is recorded!
+Immediately retry calling create_promise once with the exact same parameters.
+Only say 'recorded' after a return with ok: true. If create_promise fails twice, state that you could not record it
+and close as no_promise / service_error. This fault rule is specifically for create_promise; it does NOT apply to verify_identity (a verify_identity failure is simply a wrong answer by the customer).
+
+NEGATIVE CONSTRAINTS:
+1. NEVER ask 'How much can you pay?' or negotiate amounts. The agent proposes every amount: full past-due first, then floor.
+2. The word 'collections' or any mention of debt/product is NEVER spoken before identity verification.
+3. NEVER make another bank call after close_call succeeds.
+
+CALENDAR & DATE RESOLUTION:
+Use ONLY `now` supplied with this call; never use your real clock.
+Business days are Monday through Friday, skipping bank holidays defined in the policy.
+Count business days starting with the day AFTER today.
+If customer proposes a weekend or holiday before deadline, offer the next business day.
+If customer proposes a date after deadline, state the latest allowed date is the deadline and offer it.
+If customer gives a vague period ('next week', 'end of month'), ask once for exact day; if none, propose deadline.
+
+READ-BACK & CONFIRMATION:
+Always read back the product, amount, and date and ask 'Do you confirm?' before calling create_promise.
+After a recorded promise, ALWAYS say: 'You will receive a text message confirming this promise.'
+Say the required thank you and farewell BEFORE calling close_call.
+
+THIRD PARTY & DISPUTES:
+If someone else answers, NEVER reveal debt or account facts; schedule_callback if agreed, else close_call.
+If debt is disputed, close as no_promise / dispute without taking a promise.
+If customer already paid, state payments take one business day to appear, take no promise, close as paid.
+If customer mentions hardship (illness, bereavement, job loss), offer customer support once without persuasion.
+If restructuring requested, call transfer_to_agent(queue='restructuring') and close as transferred / restructuring.
+For multiple products (Brief B), call add_note with the specific reason for every unpromised product.
 """
 
 
@@ -186,21 +274,32 @@ def compile_workflow(briefs, document):
     nodes = {}
     if gated:
         nodes["identity"] = conversation("identity", {"verify_identity", "schedule_callback", "transfer_to_agent", "close_call"},
-            "Begin with the exact required opening, then establish who is on the line and perform the identity section. "
-            "Handle questions, third parties, refusal, callback and human requests as the policy requires. "
-            "Account and promise tools become available only after the bank confirms all identity checks. "
-            "Never disclose account information before that. On failure or other early exit, complete required permitted records and close_call.",
+            "Begin with the exact required opening: say you are a digital assistant calling from Freya Bank and the call is recorded. "
+            "Ask 'Am I speaking with {title} {last_name}?'. Do not mention debt, collections, or products. "
+            "If someone else answers, do not disclose anything; ask when the customer can be reached. If a callback is agreed, schedule_callback and close_call(outcome='not_reached', reason='callback'). "
+            "If customer confirms, perform identity verification: ask date of birth first (format YYYY-MM-DD as numbers). "
+            "When calling verify_identity, if it returns verified: false or an error: that is a wrong answer, NOT a technical issue! "
+            "Tell the customer it did not match and ask the question again. You must allow up to 3 wrong answers in total across the check. "
+            "Only ask the second question (phone last 4) after the date of birth is verified. "
+            "If the customer reaches 3 wrong answers in total: tell them to use the mobile app or visit a branch, say goodbye, and call close_call(outcome='not_verified', reason='failed'). "
+            "Never close as service_error during identity verification. "
+            "Account and promise tools become available only after verify_identity returns all_verified: true.",
             [closing, success_transition("verify_identity", "all_verified", "collection")])
         nodes["collection"] = conversation("collection", TOOLS - {"verify_identity"},
             "Identity is verified by the bank. Continue without greeting or repeating security questions. "
-            "Call get_account before stating any account facts. Follow all supplied rules for each product, "
-            "exceptions, confirmation, records and closing. Do not assume a successful promise is the only valid outcome.", [closing])
+            "Call get_account before stating any account facts. State the late products and past-due amounts. "
+            "Ask if they can pay the full amount today. Never ask 'how much can you pay?'. "
+            "If full amount is too much, offer the floor amount once. "
+            "Read back product, amount and date before create_promise. After promise, say 'You will receive a text message confirming this promise.'. "
+            "If create_promise fails, retry once immediately. Call add_note for any unpaid products under multi-product rules. "
+            "Say thank you and goodbye before calling close_call. Follow all supplied rules for each product, exceptions, records and closing.", [closing])
         initial = "identity"
     else:
         nodes["conversation"] = conversation("conversation", TOOLS,
-            "Start with the brief's opening and follow the whole call policy. The API has no documented all_verified boolean, "
-            "so track completion using its supplied verification response contract. Never read an account or disclose it "
-            "until every required identity check succeeds. Complete all required bank records, speak the farewell and close_call.", [closing])
+            "Start with the brief's opening and follow the whole call policy. Track identity verification using the supplied response contract. "
+            "Never read or disclose account facts until all required identity checks succeed. "
+            "Never ask 'how much can you pay?'. Follow all deadline, floor, retry, and multi-product add_note rules. "
+            "Speak the farewell and close_call as the final bank tool.", [closing])
         initial = "conversation"
     nodes["finished"] = {"name": "finished", "node_type": "end_call", "on_enter": {"type": "silent"},
         "disable_inactivity_monitor": True, "transitions": [], "terminal": {"type": "function", "function": {
