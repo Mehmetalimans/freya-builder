@@ -250,6 +250,16 @@ NEGATIVE CONSTRAINTS:
 2. The word 'collections' or any mention of debt/product is NEVER spoken before identity verification.
 3. NEVER make another bank call after close_call succeeds.
 
+PERSUASION ATTEMPTS BY BAND:
+Count attempts per product:
+- Early band (days_late: 1 to 7): 1 persuasion attempt maximum.
+  * Attempt 1: propose the last business day of this week (this Friday). If refused, stop for this product.
+- Late band (days_late: 8 to 45): EXACTLY 2 persuasion attempts required before accepting refusal!
+  * Attempt 1: propose the last business day of this week (this Friday).
+  * Attempt 2 (MANDATORY if Attempt 1 refused): propose the FLOOR amount on the product's DEADLINE date (minimum_payment for credit card, instalment_amount for loans).
+  * Only after Attempt 2 is refused may you stop and record refusal for that late-band product.
+When attempts are used up, stop. Do not repeat an offer the customer already refused.
+
 READ-BACK & CONFIRMATION:
 Always read back the product, amount, and date and ask 'Do you confirm?' before calling create_promise.
 After a recorded promise, you MUST ALWAYS say: 'You will receive a text message confirming this promise.'
@@ -307,11 +317,15 @@ def compile_workflow(briefs, document):
             "Call get_account before stating any account facts. State the late products and past-due amounts. "
             "Ask if they can pay the full amount today. Never ask 'how much can you pay?'. "
             "If full amount is too much, offer the floor amount once (stating the rest stays overdue). "
+            "PERSUASION ATTEMPTS BY BAND: For each product, check its days_late: "
+            "Early band (1-7 days late): exactly 1 persuasion attempt (propose this Friday). If refused, stop for that product. "
+            "Late band (8-45 days late): you MUST make 2 persuasion attempts before accepting refusal! "
+            "Attempt 1: propose this Friday. If customer flatly refuses Attempt 1, you MUST make Attempt 2: propose the FLOOR amount on the DEADLINE date (the 7th business day after today). Only after Attempt 2 is also refused, stop and record refusal. "
             "If customer proposes a weekend or bank holiday (e.g. 26 October), offer the next business day (e.g. 27 October). "
-            "If customer proposes a date after deadline, state the latest allowed date is the deadline and offer it. "
-            "Read back product, amount and date before create_promise. After promise, ALWAYS say: 'You will receive a text message confirming this promise.' "
+            "If customer proposes a date after a product's deadline, state the latest allowed date is the deadline and offer it on the deadline; if other products have later deadlines, keep their dates. "
+            "Read back product(s), amount(s) and date(s) before create_promise. After promise, ALWAYS say: 'You will receive a text message confirming this promise.' "
             "If create_promise fails, retry once immediately. Never say recorded if the tool call failed. "
-            "BRIEF B / MULTI-PRODUCT: If multiple products exist, state each product and amount first. Ask if they can pay all today. If not, negotiate one-by-one in get_account order. Read back all promises together for one confirmation, then call create_promise for each. "
+            "BRIEF B / MULTI-PRODUCT: If multiple products exist, state each product and amount first. Ask if they can pay all today. If not, negotiate one-by-one in get_account order with the persuasion rules above. Read back all promises together for one confirmation, then call create_promise for each. "
             "For every unpromised product, call add_note(customer_id, product_id, reason) with reason in ['refused', 'hardship', 'dispute', 'paid', 'service_error']. On any transfer (restructuring, support, general), do NOT call add_note. "
             "CLOSING: ALWAYS thank the customer and say goodbye BEFORE or in the same turn as calling close_call. close_call must be the final bank tool.", [closing])
         initial = "identity"
