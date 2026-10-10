@@ -1,4 +1,4 @@
-{"status": "offline_validated", "run_directory": "C:\\Users\\asus\\.codex\\.chatgpt-projects\\g-p-6aca2978a33481919b0eeebee0f0aae4\\freya-builder\\dist\\clean-408c11d9\\runs\\test-temp\\tmpg51b7nvl\\20261010T154832Z-cb253e4d", "error": null, "error_type": null}
+{"status": "offline_validated", "run_directory": "C:\\Users\\asus\\.codex\\.chatgpt-projects\\g-p-6aca2978a33481919b0eeebee0f0aae4\\freya-builder\\dist\\clean-56b36ec8\\runs\\test-temp\\tmp2k00ae0i\\20261010T155017Z-a3e66687", "error": null, "error_type": null}
 test_all_seven_tools_and_schema_enums (test_builder.CompilerTests.test_all_seven_tools_and_schema_enums) ... ok
 test_calendar_counts_after_today_and_crosses_holiday_year_boundary (test_builder.CompilerTests.test_calendar_counts_after_today_and_crosses_holiday_year_boundary) ... ok
 test_changed_enums_are_input_driven (test_builder.CompilerTests.test_changed_enums_are_input_driven) ... ok
@@ -40,6 +40,6 @@ test_publish_on_initial_create_then_readback (test_builder.RuntimeTests.test_pub
 test_readback_rejects_dropped_tools (test_builder.RuntimeTests.test_readback_rejects_dropped_tools) ... ok
 
 ----------------------------------------------------------------------
-Ran 39 tests in 0.080s
+Ran 39 tests in 0.078s
 
 OK

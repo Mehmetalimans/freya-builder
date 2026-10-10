@@ -190,8 +190,10 @@ python -m venv --without-pip .venv
 .venv/Scripts/python.exe builder/build.py starter-v3/build-the-builder/briefs/brief-a.md starter-v3/build-the-builder/tools/openapi.json
 ```
 
-Linux/macOS'ta sanal ortam Python yolu `.venv/bin/python` olur. Bu platformlar
-henüz denenmedi; Windows temiz sanal ortam kontrolü raporda belirtilir.
+Linux/macOS'ta sanal ortam Python yolu `.venv/bin/python` olur. Windows temiz
+sanal ortam kontrolü raporda belirtilir. Linux'ta birim testleri, Git güvenlik
+kontrolü ve A/A+B üretimleri [GitHub Actions'ta geçti](https://github.com/Mehmetalimans/freya-builder/actions/runs/38065145260).
+macOS üzerinde doğrulama yapılmadı.
 
 Finalde dosya hash'i tek başına yeterli değildir: organizatör GitHub repo URL'si
 ve kesin commit ister. Gizli brief'lerden otomatik üretilmiş **iki platform export'u**
