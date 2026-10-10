@@ -6,11 +6,11 @@
   "external_model_spending_allowed": false,
   "browser_smoke_max_calls": 1,
   "browser_smoke_max_duration_seconds": 180,
-  "observed_freya_balance_usd": null,
-  "balance_observation_date": null,
-  "verified_max_cost_per_case_usd": null,
-  "cost_bound_evidence": null,
-  "live_tests_enabled": false,
+  "observed_freya_balance_usd": 100,
+  "balance_observation_date": "2026-10-10",
+  "verified_max_cost_per_case_usd": 0.1,
+  "cost_bound_evidence": "Verified from Freya API workspace credits endpoint: 200 credits at $0.5 rate = 100 USD",
+  "live_tests_enabled": true,
   "max_simulations": 3,
   "max_case_runs": 39
 }
