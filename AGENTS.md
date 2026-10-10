@@ -13,7 +13,7 @@ Bu dosyadaki kurallar insanın güncel talimatlarının yerini almaz.
   `builder/evaluate.py` ve sonuç kayıtlarından sorumludur. `builder/build.py`,
   `budget.json`, `docs/contracts.md` ve sürüm dosyalarını etkileyen değişiklikleri
   ayrı PR'de açıkça bildir; diğer parçanın testlerini çalıştır.
-- Her kişi kendi görev dalında çalışır. `master` dalına doğrudan geliştirme push'u,
+- Her kişi kendi görev dalında çalışır. GitHub `main` dalına doğrudan geliştirme push'u,
   zorla push veya izinsiz birleştirme yapma. PR'de değişen davranış, test,
   Freya isteği ve maliyet belirt; diğer kişi incelemeli.
 - Telefon agent'ının modelini değiştirme; platform rotası veya davranışı uydurma.

@@ -1,4 +1,4 @@
-{"status": "offline_validated", "run_directory": "C:\\Users\\asus\\.codex\\.chatgpt-projects\\g-p-6aca2978a33481919b0eeebee0f0aae4\\freya-builder\\dist\\clean-00651a08\\runs\\test-temp\\tmpotfc1f4r\\20261010T134701Z-d34dcf98", "error": null, "error_type": null}
+{"status": "offline_validated", "run_directory": "C:\\Users\\asus\\.codex\\.chatgpt-projects\\g-p-6aca2978a33481919b0eeebee0f0aae4\\freya-builder\\dist\\clean-7349a86b\\runs\\test-temp\\tmp1kih_xps\\20261010T134947Z-a98b3242", "error": null, "error_type": null}
 test_all_seven_tools_and_schema_enums (test_builder.CompilerTests.test_all_seven_tools_and_schema_enums) ... ok
 test_changed_enums_are_input_driven (test_builder.CompilerTests.test_changed_enums_are_input_driven) ... ok
 test_changed_required_field_is_preserved (test_builder.CompilerTests.test_changed_required_field_is_preserved) ... ok
@@ -30,6 +30,6 @@ test_publish_on_initial_create_then_readback (test_builder.RuntimeTests.test_pub
 test_readback_rejects_dropped_tools (test_builder.RuntimeTests.test_readback_rejects_dropped_tools) ... ok
 
 ----------------------------------------------------------------------
-Ran 29 tests in 0.063s
+Ran 29 tests in 0.066s
 
 OK

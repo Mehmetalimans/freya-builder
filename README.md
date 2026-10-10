@@ -15,15 +15,16 @@ girdi/çıktı sözleşmesi [docs/contracts.md](docs/contracts.md), görevler
 [docs/hackathon-rules.md](docs/hackathon-rules.md) içindedir. AI araçları önce
 [AGENTS.md](AGENTS.md) dosyasını okumalıdır.
 
-Her kişi `master` tabanından kendi dalını açar; örnekler `builder/policy-analysis`
+Her kişi GitHub'daki `main` tabanından kendi dalını açar; örnekler `builder/policy-analysis`
 ve `integration/first-live-run`. Değişiklikleri test edip pull request açar, diğer
 kişi inceleyince birleştirir. Ana dala doğrudan geliştirme push'u yapılmaz.
-Başlangıç dalı `master` olarak korunur. GitHub erişimi olan ikinci bilgisayarda:
+Yereldeki eski `master` geçmişi GitHub'da `main` adıyla korundu.
+GitHub erişimi olan ikinci bilgisayarda:
 
 ```console
 git clone https://github.com/Mehmetalimans/freya-builder.git
 cd freya-builder
-git switch master
+git switch main
 git switch -c integration/first-live-run
 python -m unittest discover -s tests -v
 ```
