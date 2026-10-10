@@ -130,7 +130,7 @@ def make_post_process_code(name):
                 d['what_to_do_next'] = 'Date of birth verified! Ask the second question: last 4 digits of phone number on file.'
             elif d.get('hint') == 'day_month_swapped':
                 d['what_to_do_next'] = 'Day and month were swapped! Ask customer to say the month as a word (e.g. July). This retry does NOT count as a wrong answer.'
-            else:
+            elif d.get('verified') is False:
                 left = d.get('wrong_answers_left', 0)
                 if left > 0:
                     d['what_to_do_next'] = f'Answer did not match. {left} attempts left. Tell customer it did not match and ask the question again.'
@@ -145,9 +145,9 @@ except Exception:
         d = result.get('data')
         if isinstance(d, dict):
             if d.get('ok'):
-                d['what_to_do_next'] = 'Payment promise RECORDED. ALWAYS say: "You will receive a text message confirming this promise." Then say thank you and goodbye and call close_call(outcome="promise").'
+                d['what_to_do_next'] = 'Payment promise RECORDED. ALWAYS say: "You will receive a text message confirming this promise." If other products remain, continue negotiating or recording notes for them. Once all products are handled, say thank you and goodbye and call close_call(outcome="promise").'
             else:
-                d['what_to_do_next'] = 'Promise recording FAILED. Never say it was recorded! Immediately retry calling create_promise once with identical parameters. If failed twice, close as no_promise / service_error.'
+                d['what_to_do_next'] = 'Promise recording FAILED. Never say it was recorded! Immediately retry calling create_promise once with identical parameters. If failed twice, record add_note(reason="service_error") for this product if multi-product, or close as no_promise / service_error.'
 except Exception:
     pass
 """,
@@ -164,8 +164,8 @@ except Exception:
     if isinstance(result, dict):
         result.pop('header', None)
         d = result.get('data')
-        if isinstance(d, dict):
-            d['what_to_do_next'] = 'Callback scheduled. Say goodbye and call close_call(outcome="not_reached", reason="callback").'
+        if isinstance(d, dict) and d.get('ok'):
+            d['what_to_do_next'] = 'Callback scheduled successfully. Say goodbye and call close_call(outcome="not_reached", reason="callback").'
 except Exception:
     pass
 """,
@@ -173,13 +173,14 @@ except Exception:
     if isinstance(result, dict):
         result.pop('header', None)
         d = result.get('data')
-        if isinstance(d, dict):
-            d['what_to_do_next'] = 'Call transferred. Say goodbye and call close_call(outcome="transferred", reason="chosen_queue").'
+        if isinstance(d, dict) and d.get('ok'):
+            d['what_to_do_next'] = 'Call transferred. Say goodbye and call close_call with outcome="transferred" and reason matching the transfer queue (restructuring, human, or support).'
 except Exception:
     pass
 """,
     }
     return snippets.get(name, "try:\n    if isinstance(result, dict):\n        result.pop('header', None)\nexcept Exception:\n    pass\n")
+
 
 
 def make_tool(operation):
