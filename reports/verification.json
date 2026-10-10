@@ -1,13 +1,13 @@
 {
-  "verified_at_utc": "2026-10-10T21:14:28.705028+00:00",
+  "verified_at_utc": "2026-10-10T21:43:42.669231+00:00",
   "python": "3.12.14",
   "platform": "Windows-11-10.0.26200-SP0",
   "archive": {
-    "archive": "freya-builder-0.1.13-b57aea4593d4.zip",
-    "sha256": "e1f8454d869c8037e89acdcd654d4a0ebb804ec2e7abbb07c5720c9d82b002cb",
-    "manifest_fingerprint": "b57aea4593d4"
+    "archive": "freya-builder-0.1.14-ac49a7629ade.zip",
+    "sha256": "994b1dd511afb0f27db2d4b58698b2ca37cff36e31989e77a378426c8a9f207d",
+    "manifest_fingerprint": "ac49a7629ade"
   },
-  "verified_source_files": 73,
+  "verified_source_files": 74,
   "clean_venv_without_pip": true,
   "third_party_dependencies": 0,
   "credential_environment_cleared": true,
@@ -15,18 +15,18 @@
   "offline_builds": {
     "A": {
       "repeat_workflow_hash_equal": true,
-      "workflow_sha256": "a369e647a0feee4fb3a9b1e3af37e35370f5b7f6d696044ac4fe0445e640fa1c",
+      "workflow_sha256": "39fc05460aa2012c0120ebfec5e567287a87cb2b284b4716ac91ab8b5849d658",
       "wall_seconds": [
-        0.218,
-        0.282
+        0.328,
+        0.25
       ]
     },
     "B": {
       "repeat_workflow_hash_equal": true,
-      "workflow_sha256": "410a362e3a05bc5d538e973ae7225830e9cdf5005d634ca58a279a8d3b29e03b",
+      "workflow_sha256": "96315fea60803cb073c96153f501bd16cc7ad234e3fe73c83292de3de01fb4d3",
       "wall_seconds": [
-        0.281,
-        0.234
+        0.219,
+        0.203
       ]
     }
   },
@@ -36,5 +36,5 @@
   "benchmark_pass_rate": null,
   "live_api_validation": "not_run",
   "holdout_behavioral_evaluation": "not_run",
-  "clean_directory": "C:\\Users\\asus\\.codex\\.chatgpt-projects\\g-p-6aca2978a33481919b0eeebee0f0aae4\\freya-builder\\dist\\clean-a33e2018"
+  "clean_directory": "C:\\Users\\asus\\.codex\\.chatgpt-projects\\g-p-6aca2978a33481919b0eeebee0f0aae4\\freya-builder\\dist\\clean-ffea1ed9"
 }
