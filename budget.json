@@ -12,5 +12,7 @@
   "cost_bound_evidence": null,
   "live_tests_enabled": false,
   "max_simulations": 3,
-  "max_case_runs": 39
+  "max_case_runs": 39,
+  "credit_pilot_authorized": true,
+  "credit_pilot_authorization_source": "User on 2026-10-10 explicitly authorized starting tests using the existing 100 USD Freya credit after repository review; first measurement limited to one development case and no retry."
 }

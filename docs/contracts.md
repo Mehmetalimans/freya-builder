@@ -57,6 +57,20 @@ bitmesini kanıtlamaz; rezerv iade edilmez. Ham scorer/log/telemetry
 Tek vakalık ilk ölçüm böyle yapılır. Boş, tekrar eden veya split dışı kimlikler
 bütçe ayırmadan reddedilir. Wrapper ve resmî scorer aynı kimlik listesini kullanır.
 
+`--credit-pilot` yalnız açık kullanıcı izni (`credit_pilot_authorized`) ile bir
+geliştirme vakası/tek tekrar kabul eder. Kalan bütçenin tümü yerel olarak ayrılır;
+`authorization_reserved_usd` izin rezervidir, fiyat tavanı değildir.
+`reserved_upper_bound_usd=null` kalır. `credits_before`, `credits_after` ve
+`observed_balance_delta_usd` anlık faturalama kanıtıdır; gecikmeli/başka işlerin
+ücretlerinden dolayı `actual_cost_usd` bunlarla otomatik doldurulmaz.
+Rezerv ikinci denemeyi engeller ve otomatik serbest bırakılmaz.
+
+Her simülasyon isteği belgeli `maxRetries=0` ve `maxConcurrentCalls=1` kullanır;
+kitin modeli, persona metni, scorer'ı ve 420 saniye çağrı sınırı korunur. Başlatma
+yanıtı hemen `remote-simulation.json` dosyasına kaydedilir; tamamlanmamış uzak
+işin sonucu benchmark olarak yayımlanmaz. Yeni işten önce sunucu çalışan
+simülasyon kontrolü yapılır; yarış durumunda sunucunun tek simülasyon kuralı da geçerlidir.
+
 Üretim tarafındaki gelecekteki otomatik düzeltme yalnız **geliştirme** geri
 bildirimini okuyabilir; `holdout` veya gizli vaka değerleri kod/prompt kuralına
 elle eklenemez. Düzeltme arayüzü için yeni alan gerekecekse önce bu sözleşme

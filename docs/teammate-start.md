@@ -8,7 +8,9 @@ diğer kişi görev analizi, agent üretimi ve otomatik düzeltmeyi geliştiriyo
 paketini oku. Kendi `integration/first-live-run` dalını aç; ana dala doğrudan
 push yapma. API dağıtımı artık [Mirac Birlik's Workspace](https://staging-app.freyavoice.ai/?workspaceId=8783bb12-56fc-489a-8608-590676971f6c)
 içinde doğrulandı: `Brief A - Builder Baseline` v4; workflow
-`82c69318-2c6a-43d3-9661-a93ea8b9b99d`. Benchmark henüz çalışmadı.
+`82c69318-2c6a-43d3-9661-a93ea8b9b99d`. İlk geliştirme testi PUB-01 1/1 geçti;
+genel benchmark/holdout ölçülmedi. Eklediğin belgeler `docs/reference-index.md`
+ile değerlendirildi; çalışma koduyla birlikte inceleme dalında korunuyor.
 İlk görev: birim testlerini çalıştır, `docs/cost-analysis.md` ve
 `docs/kickoff-mail.md` kayıtlarını oku; simülasyon fiyat bilgisini doğrula.
 Kullanıcı şimdilik diğer bilgisayardaki asistanı tek test operatörü seçti;

@@ -1,9 +1,11 @@
-# Freya builder 0.1.3 — API dağıtımı doğrulanmış başlangıç sürümü
+# Freya builder 0.1.4 — ilk canlı geliştirme vakası ölçüldü
 
 Resmî Build the Builder **v3** paketi üzerine kurulu, bağımlılıksız Python builder.
 Brief A için resmî istemciyle doğrulama, yayınlama, platform export'u ve geri okuma
 Miraç workspace'inde tamamlandı: mevcut baseline **v4**, `deployed_verified`.
-Ücretli simülasyon, ölçülmüş yarışma skoru ve final teslimi henüz yoktur.
+Resmî kit ile ilk tek vakalık geliştirme ölçümü tamamlandı: **PUB-01 1/1 geçti**,
+41 saniye simülasyon, anlık bakiye farkı 0,01995 USD. Bu yalnız kolay public
+geliştirme vakasıdır; bütün benchmark, holdout veya final skoru değildir.
 [Kickoff e-postası ve uygulama kaydı](docs/kickoff-mail.md),
 [fiyat analizi](docs/cost-analysis.md) güncel kaynakları ve belirsizlikleri ayırır.
 
@@ -31,8 +33,7 @@ git switch -c integration/first-live-run
 python -m unittest discover -s tests -v
 ```
 
-`mbirlik24` için private repo daveti gönderildi; kabulü bekleniyor. Kabulden
-sonra PR inceleyicisi atanabilir. GitHub bu kişisel private depoda dal koruma
+`mbirlik24` için GitHub yazma erişimi API ile doğrulandı; PR inceleyicisi atanabilir. GitHub bu kişisel private depoda dal koruma
 kurallarının Team/Enterprise organizasyonuna taşınmadan uygulanmayacağını
 gösteriyor; PR ve diğer kişinin incelemesi şimdilik ekip kuralıdır.
 
@@ -89,6 +90,13 @@ yetkilendirmedi; bu bütçe yalnız Freya içindir ve iki bilgisayar arasında o
 Yerel rezerv defteri servis tarafında bir harcama kilidi değildir; güvenilir fiyat
 üst sınırı olmadan 100 USD'yi garanti edemez, bu yüzden çalışmayı reddeder.
 
+Kullanıcının sonraki açık izniyle tarifesi bilinmeyen ilk ölçüm için ayrı
+`--credit-pilot` yolu eklendi. Yalnız tek geliştirme vakası/tek tekrar kabul eder,
+otomatik tekrarları kapatır ve kalan harcama yetkisinin tamamını ayırır. Bu bir
+servis harcama tavanı değildir. İlk ölçüm tamamlandı; rezerv otomatik bırakılmadı.
+Başka bilgisayarın harcaması da aynı toplamın içindedir. Faturalama ve sonuç
+uzlaştırılmadan ikinci pilot veya toplu test başlatılamaz.
+
 Hesap ve fiyat doğrulandıktan sonra tek komutla üretim ve geliştirme testi:
 
 ```console
@@ -132,7 +140,7 @@ kapanış adımları vardır. İş günü/istisna hesabı hâlâ telefon modelin
 Gizli brief'e ait sayı, tatil, banka adı, sonuç kodu veya kimlik sorusu kodda sabit değildir.
 Sadece skaler POST JSON gövdeleri desteklenir; desteklenmeyen şema açık hata verir.
 
-Sırada: simülasyon fiyat doğrulaması → tek vaka ilk ölçüm → 7 geliştirme vakası →
+Sırada: ilk ölçümün bütçe uzlaştırması → kalan geliştirme vakaları →
 gerekirse genel politika derleyici/tarih kodu iyileştirmesi → sabit sürümün ayrılan
 6 public vakada tekrarlı ölçümü → final commit ve iki export/iz dosyası.
 Gerçek skoru görmeden bu baseline'ın güçlü olduğu varsayılmamalıdır.

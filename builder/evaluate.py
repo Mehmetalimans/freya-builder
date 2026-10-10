@@ -28,11 +28,11 @@ def selected_cases(brief, split, only=None):
     return selected
 
 
-def reserve_budget(policy, state, case_runs, simulations):
+def reserve_budget(policy, state, case_runs, simulations, credit_pilot=False):
     rate = policy.get("verified_max_cost_per_case_usd")
     cap = policy.get("total_authorized_usd")
     valid_number = lambda x: isinstance(x, (int, float)) and not isinstance(x, bool) and math.isfinite(x)
-    if (policy.get("live_tests_enabled") is not True or not valid_number(rate) or rate < 0
+    if not credit_pilot and (policy.get("live_tests_enabled") is not True or not valid_number(rate) or rate < 0
             or not policy.get("cost_bound_evidence")):
         raise ContractError("Live tests disabled: verify a maximum per-case cost (or confirmed free credits) first")
     if not valid_number(cap) or not 0 <= cap <= 100:
@@ -43,12 +43,36 @@ def reserve_budget(policy, state, case_runs, simulations):
         limit = policy.get("max_" + key)
         if not isinstance(limit, int) or limit < 0 or state.get(key, 0) + amount > limit:
             raise ContractError("Evaluation exceeds the configured test quota")
-    reserve = round(case_runs * rate, 6)
+    if credit_pilot:
+        if policy.get("credit_pilot_authorized") is not True or case_runs != 1 or simulations != 1:
+            raise ContractError("Credit pilot requires explicit authorization and exactly one case/repetition")
+        if state.get("credit_pilot_started"):
+            raise ContractError("Credit pilot already reserved; reconcile its result and billing before more tests")
+        reserve = round(cap - state.get("reserved_usd", 0) - state.get("other_spend_usd", 0), 6)
+        if reserve <= 0: raise ContractError("No remaining authorized credit")
+    else:
+        reserve = round(case_runs * rate, 6)
     if state.get("reserved_usd", 0) + state.get("other_spend_usd", 0) + reserve > cap:
         raise ContractError("Evaluation exceeds remaining authorized budget")
-    return {**state, "reserved_usd": round(state.get("reserved_usd", 0) + reserve, 6),
+    return {**state, **({"credit_pilot_started": True} if credit_pilot else {}),
+            "reserved_usd": round(state.get("reserved_usd", 0) + reserve, 6),
             "case_runs": state.get("case_runs", 0) + case_runs,
             "simulations": state.get("simulations", 0) + simulations}, reserve
+
+
+def credit_snapshot(client):
+    snapshot = client.api("GET", "/api/v2/workspaces/" + os.environ["FREYA_WORKSPACE_ID"] + "/credits")
+    for key in ("creditsLeft", "creditUsdRate"):
+        value = snapshot.get(key)
+        if not isinstance(value, (int, float)) or isinstance(value, bool) or not math.isfinite(value) or value < 0:
+            raise ContractError("Invalid workspace credit snapshot")
+    return {k: snapshot[k] for k in ("creditsLeft", "creditUsdRate")}
+
+
+def bounded_simulation_body(body):
+    if body.get("mode") != "chat" or body.get("runsPerPersona") != 1:
+        raise ContractError("Only a single text repetition per simulation is allowed")
+    return {**body, "maxRetries": 0, "maxConcurrentCalls": 1}
 
 
 def validate_results(report, ids, reps):
@@ -75,11 +99,29 @@ def worker(run_dir, runtime, brief, split, reps, style, seconds, only=None):
     sys.path.insert(0, str(runtime))
     trace = Trace(run_dir / "evaluation.trace.jsonl")
     freya = official_client(time.monotonic() + seconds, trace)
+    original_api = freya.api
+    def tracked_api(method, path, body=None, **params):
+        if method == "POST" and path == "/api/v2/simulations":
+            body = bounded_simulation_body(body)
+        result = original_api(method, path, body, **params)
+        if method == "POST" and path == "/api/v2/simulations":
+            sim = result.get("simulation", result)
+            write_json(run_dir / "remote-simulation.json", {"simulation_id": sim["id"], "status": sim.get("status")})
+        return result
+    freya.api = tracked_api
+    original_run = freya.run_simulation
+    def run_simulation(*args, **kwargs):
+        sim_id, iteration_id, status = original_run(*args, **kwargs)
+        write_json(run_dir / "remote-simulation.json", {"simulation_id": sim_id, "iteration_id": iteration_id, "status": status})
+        if status != "completed": raise ContractError("Simulation did not complete; no benchmark score is valid")
+        return sim_id, iteration_id, status
+    freya.run_simulation = run_simulation
     sys.modules["freya"] = freya
     telemetry = {}
     original_get_call = freya.get_call
     def get_call(call_id):
         call = original_get_call(call_id)
+        (run_dir / ("call-" + call_id + ".json")).write_text(redact(json.dumps(call, ensure_ascii=False, indent=2)), encoding="utf-8")
         errors, completions = 0, 0
         for message in call.get("messages", []):
             if message.get("role") != "system": continue
@@ -116,6 +158,7 @@ def main(argv=None):
     parser.add_argument("--split", default="dev", choices=["dev", "holdout"])
     parser.add_argument("--reps", type=int, default=1, choices=[1, 3])
     parser.add_argument("--only", help="Comma-separated case IDs within the chosen split; use one for an initial smoke test")
+    parser.add_argument("--credit-pilot", action="store_true", help="Explicitly authorized single-case measurement with unknown tariff; reserves all remaining budget")
     parser.add_argument("--style", choices=["pieces", "corrects", "talkative", "asks_back", "in_words"])
     parser.add_argument("--max-seconds", type=int, default=1200)
     parser.add_argument("--worker", action="store_true", help=argparse.SUPPRESS)
@@ -126,9 +169,11 @@ def main(argv=None):
         worker(run_dir, run_dir / "evaluation-runtime", args.brief, args.split, args.reps, args.style, args.max_seconds, args.only)
         return 0
     summary = {"status": "blocked", "benchmark_success": None, "actual_cost_usd": None,
+               "evaluator_sha256": digest(Path(__file__).read_bytes()),
                "brief": args.brief, "split": args.split, "reps": args.reps, "style": args.style,
                "remote_job_may_still_be_running": False}
     start = time.monotonic()
+    billing_client = None
     try:
         saved = json.loads((run_dir / "result.json").read_text(encoding="utf-8"))
         if saved["status"] != "deployed_verified": raise ContractError("First deploy and verify this build on Freya")
@@ -137,24 +182,40 @@ def main(argv=None):
         check_run_workspace(saved, os.environ["FREYA_WORKSPACE_ID"])
         summary["workspace_id"] = saved["workspace_id"]
         ids = [c["id"] for c in selected_cases(args.brief, args.split, args.only)]
+        if args.credit_pilot and (args.split != "dev" or len(ids) != 1 or args.reps != 1):
+            raise ContractError("Credit pilot is limited to one development case and one repetition")
         scope = digest(os.environ["FREYA_WORKSPACE_ID"])[:16]
         with exclusive(ROOT / "state" / "budget.lock"), exclusive(ROOT / "state" / f"{scope}.lock"):
             policy = json.loads((ROOT / "budget.json").read_text(encoding="utf-8"))
             ledger_path = ROOT / "state" / "budget-ledger.json"
             ledger = json.loads(ledger_path.read_text(encoding="utf-8")) if ledger_path.exists() else {}
-            updated, reserve = reserve_budget(policy, ledger, len(ids) * args.reps, args.reps)
+            updated, reserve = reserve_budget(policy, ledger, len(ids) * args.reps, args.reps, args.credit_pilot)
+            billing_client = official_client(time.monotonic() + args.max_seconds + 120, Trace(run_dir / "billing.trace.jsonl"))
+            running = billing_client.api("GET", "/api/v2/simulations", workspaceId=os.environ["FREYA_WORKSPACE_ID"], status="running", limit=1)
+            if not isinstance(running.get("simulations"), list) or running["simulations"]:
+                raise ContractError("Workspace already has a running simulation, or its status is ambiguous")
+            summary["credits_before"] = credit_snapshot(billing_client)
+            if summary["credits_before"]["creditsLeft"] <= 0:
+                raise ContractError("No available workspace credit")
             # Reservation persists on crash/timeout; never silently refund an uncertain remote run.
             write_json(ledger_path, updated)
-            summary.update(reserved_upper_bound_usd=reserve, case_ids=ids)
+            summary.update(reserved_upper_bound_usd=None if args.credit_pilot else reserve,
+                           authorization_reserved_usd=reserve, cost_mode="authorized_credit_pilot" if args.credit_pilot else "verified_rate", case_ids=ids)
             runtime = run_dir / "evaluation-runtime"
             shutil.copytree(KIT, runtime, ignore=shutil.ignore_patterns("__pycache__", "results", "traces", ".personas.json", ".freya-agents.json"))
             command = [sys.executable, "-I", str(Path(__file__).resolve()), str(run_dir), "--brief", args.brief,
                        "--split", args.split, "--reps", str(args.reps), "--max-seconds", str(args.max_seconds), "--worker"]
             if args.style: command += ["--style", args.style]
             if args.only: command += ["--only", args.only]
+            summary["remote_job_may_still_be_running"] = True
             child = subprocess.run(command, capture_output=True, text=True, encoding="utf-8", errors="replace",
                                    timeout=args.max_seconds, env={**os.environ, "PYTHONUTF8": "1"})
             (run_dir / "evaluation.log").write_text(redact(child.stdout + child.stderr), encoding="utf-8")
+            remote_file = run_dir / "remote-simulation.json"
+            if remote_file.exists():
+                remote = json.loads(remote_file.read_text(encoding="utf-8"))
+                summary["remote_simulation"] = remote
+                summary["remote_job_may_still_be_running"] = remote.get("status") not in ("completed", "failed", "paused")
             if child.returncode: raise ContractError("Official runner failed; see the redacted evaluation log")
             report = json.loads((run_dir / "evaluation.raw.json").read_text(encoding="utf-8"))
             validate_results(report, ids, args.reps)
@@ -166,6 +227,14 @@ def main(argv=None):
     except Exception as error:
         summary.update(error_type=type(error).__name__)
         if isinstance(error, ContractError): summary["error"] = str(error)
+    if billing_client is not None and "credits_before" in summary:
+        try:
+            summary["credits_after"] = credit_snapshot(billing_client)
+            before, after = summary["credits_before"], summary["credits_after"]
+            summary["observed_balance_delta_usd"] = round((before["creditsLeft"] - after["creditsLeft"]) * before["creditUsdRate"], 6) if before["creditUsdRate"] == after["creditUsdRate"] else None
+            summary["cost_note"] = "Balance delta is a snapshot, not a settled per-call invoice; reservation remains held"
+        except Exception:
+            summary["billing_after_status"] = "unavailable_reservation_retained"
     summary["seconds"] = round(time.monotonic() - start, 3)
     # A rejected second attempt must not overwrite previous evidence.
     target = run_dir / ("evaluation.blocked.json" if (run_dir / "evaluation.json").exists() else "evaluation.json")

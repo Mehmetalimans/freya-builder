@@ -71,10 +71,10 @@ okunur uç noktaları kullanır; bunlar workflow oluşturma şeması yerine geç
 - Freya simülasyon kredi tarifesi, gerçekten tahsis edilmiş ücretsiz kredi ve bir vaka için doğrulanmış azami maliyet.
 - Builder token, RAM/CPU veya dış model istek kotası için ek katılımcı sınırı: kamu kaynaklarında ayrıca belirtilmiyor.
 - Takım adı ve ikinci geliştiricinin private depo davetini kabul durumu.
-  `mbirlik24` daveti gönderildi, kabul bekleniyor.
+  `mbirlik24` yazma erişimi GitHub API ile doğrulandı.
   Depo: https://github.com/Mehmetalimans/freya-builder .
-- Miraç workflow'u API üzerinden v4 olarak yayınlandı. Başlangıç benchmark
-  skoru ve genelleme başarısı henüz **ölçülmedi**.
+- Miraç workflow'u API üzerinden v4 olarak yayınlandı. İlk geliştirme vakası
+  PUB-01 1/1 geçti; tüm geliştirme/holdout/genelleme başarısı henüz ölçülmedi.
 
 Güncel sitenin ayrıntılı Submit bölümü birden çok üretim çalıştırmasından birini
 seçmeye açıkça izin veriyor; Overview/README'nin final özetinde “bir kez” deniyor.
