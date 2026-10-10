@@ -21,6 +21,11 @@ hâlâ modele bağlıdır. Desteklenmeyen ifadeler ek netleştirme gerektirebili
 
 ## Girdi ve saf üretim
 
+Konuşma dili İngilizce, resmî test taşıması metindir (`mode=chat`).
+`compile_workflow` genel talimatında İngilizce konuşmayı belirtir; bu,
+Freya yönetim arayüzünün dilinden bağımsızdır. TTS/STT yapılandırması mevcut
+metin benchmark sözleşmesinin parçası değildir; sesli başarı ayrıca ölçülür.
+
 `builder.core.compile_workflow(briefs, document)` alır:
 
 - `briefs`: sıralı `(dosya_adı, UTF-8 metin)` çiftleri; A+B halinde A önce.

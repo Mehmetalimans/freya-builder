@@ -47,6 +47,13 @@ başlatma; kullanıcı devam dediğinde önce aşağıdaki uzlaştırmayı yap.*
 
 ## Devam sırası ve sınırlar
 
+Sonraki dil/Git kontrolünde resmî İngilizce ve metin şartı yeniden doğrulandı.
+Mevcut prompt ve simülasyon modu buna uygun; davranış hash'leri değişmedi.
+Uzak `integration/v3-final`, `5494a2ee7de304351ce7802550aa9b287d0d5c16`
+commit'ine ilerledi (`1aefb49`, `803203f`, `5494a2e`). Bu üç commit önceki
+Miraç incelemesinin kapsamında değildi. PR birleştirmeden veya yeni ortak
+aday belirlemeden önce bunları incele; bu dalın test sonuçlarını onlara atfetme.
+
 1. API anahtarını yalnız güvenli yerel süreç ortamından yükle; sohbete/repoya yazma.
    Banka takım anahtarı mevcut yerel `state/browser-bank-team-key` dosyasındadır;
    yeni anahtar oluşturma. Ekip adına tek simülasyon operatörü bu asistandır.

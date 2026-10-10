@@ -3,6 +3,14 @@
 **Ara verildi.** [Devam kaydı](resume-checkpoint.md) okunmadan yeni test başlatma.
 0.1.12 kodu hazır; canlıda 0.1.11 var, son üç tekrarlı ölçüm tamamlanmadı.
 
+Dil kontrolü tamamlandı: resmî yarışma İngilizce/metin; kod mevcut haliyle
+uyumlu. Yeni sesli ayar veya ücretli test açılmadı.
+Git kontrolünde `integration/v3-final` dalında üç yeni Miraç commit'i görüldü:
+`1aefb49`, `803203f`, `5494a2e`. Önceki inceleme `7dc5e56` üzerindeydi;
+yeni değişiklikler henüz bu daldaki 98-test/ölçüm kanıtına dahil değil.
+PR birleştirilmeden önce bu değişikliklerin ayrı incelemesi ve varsa birleştirme
+çatışmalarının çözülmesi gerekir; mevcut kodun üzerine körlemesine alınmadı.
+
 Son güncelleme: 10 Ekim 2026. Durumlar yalnız bu repodaki kanıta dayanır.
 Son kod adayı **0.1.12**: Miraç'ın `7dc5e56` entegrasyonu incelendi ve
 [bulunan hatalar düzeltildi](mirac-integration-review.md); 98 yerel test geçti.

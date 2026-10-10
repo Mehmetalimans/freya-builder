@@ -21,6 +21,9 @@ veya fiyat garantisi olarak yorumlama.
   Freya isteği ve maliyet belirt; diğer kişi incelemeli.
 - Telefon agent'ının modelini değiştirme; platform rotası veya davranışı uydurma.
   Yalnız resmî v3 kitindeki istemci ve doğrulanmış cevapları kullan.
+- Yarışma konuşmaları İngilizce, resmî simülasyon metindir (`mode=chat`).
+  Türkçe arayüz veya ses varsayılanlarına bakıp agent promptunu Türkçeye çevirme.
+  Sesli demo ayrı kapsamdır; TTS/STT ayarını benchmark zorunluluğu sayma.
 - Ücretli testleri yalnız entegrasyon sorumlusu yönetsin: ortak 100 USD Freya
   üst sınırı, doğrulanmış vaka maliyeti, tek workspace'te tek simülasyon.
   Yerel kilit farklı bilgisayarları koordine etmez. Belirsiz timeout sonrası

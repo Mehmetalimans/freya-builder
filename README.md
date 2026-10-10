@@ -4,6 +4,13 @@
 [devam kaydını](docs/resume-checkpoint.md) oku. Canlıda 0.1.11 var;
 0.1.12 kodu hazır, henüz yayımlanmadı.
 
+**Yarışma dili İngilizce, değerlendirme biçimi metindir.** Üretilen agent'ın
+promptunda `Speak English` bulunur; resmî simülasyon `mode=chat` kullanır.
+Freya arayüzünün veya varsayılan ses ayarlarının Türkçe görünmesi bu sözleşmeyi
+değiştirmez. Sesli demo ayrıca istenirse İngilizce TTS/STT ayarları ayrı
+doğrulanmalıdır; mevcut metin testleri sesli başarı kanıtı değildir.
+[Kaynak ve uygulama ayrımı](docs/hackathon-rules.md#dil-ve-değerlendirme-biçimi).
+
 0.1.10 canlı yayımlandı ve geri okuması doğrulandı. Üç geliştirme tekrarı
 7/7, 6/7, 6/7 oldu: tüm tekrarları geçme hesabıyla 6/7. 0.1.11 müşterinin ödeme
 günü ifadesini ayrıca denetliyor; 0.1.12 yazıyla söylenen günlerin reddedilmesi
