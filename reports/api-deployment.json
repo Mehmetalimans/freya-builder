@@ -1,0 +1,38 @@
+{
+  "builder_version": "0.1.3",
+  "run_id": "20261010T143548Z-dcb3f232",
+  "started_at": "2026-10-10T14:35:48.169775+00:00",
+  "status": "deployed_verified",
+  "mode": "live",
+  "benchmark_success": null,
+  "builder_model_calls": 0,
+  "builder_model_cost_usd": 0,
+  "platform_cost_usd": null,
+  "tests": "not_run",
+  "workflow_sha256": "f626bd40b032e5b3da44e7bea67fa7828b2e8dd981af96fb6355256cfc2ecee3",
+  "nodes": 3,
+  "tools": 7,
+  "workspace_id": "8783bb12-56fc-489a-8608-590676971f6c",
+  "workflow_id": "82c69318-2c6a-43d3-9661-a93ea8b9b99d",
+  "agent_id": "7e5da178-7701-4c97-a394-b4c93c4dc953",
+  "platform_version": 4,
+  "ended_at": "2026-10-10T14:35:49.785705+00:00",
+  "seconds": 1.625,
+  "evidence_scope": "Live API deployment only; no simulation or behavioral benchmark",
+  "credits_after_deployment": {
+    "creditsLeft": 200,
+    "creditUsdRate": 0.5,
+    "billingUnit": "usd",
+    "minuteLimit": null,
+    "minutePeriodStart": null
+  },
+  "workspace_usage_snapshot": {
+    "creditsData": {
+      "dailyCredits": {},
+      "totalTransactions": 2,
+      "totalCreditsUsed": 0,
+      "dailyCostByCategory": {}
+    }
+  },
+  "raw_evidence_directory": "runs/20261010T143548Z-dcb3f232"
+}

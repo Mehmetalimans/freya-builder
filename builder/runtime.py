@@ -89,6 +89,14 @@ def check_run_workspace(saved, workspace_id):
         raise ContractError("Build workspace does not match the evaluation workspace; deploy separately in the intended workspace")
 
 
+def verify_key_workspace(response, workspace_id):
+    """Create routes infer the workspace from the key, so require one exact scope."""
+    items = response.get("workspaces", response.get("items")) if isinstance(response, dict) else response
+    if (not isinstance(items, list) or len(items) != 1 or not isinstance(items[0], dict)
+            or items[0].get("id") != workspace_id):
+        raise ContractError("API key workspace is ambiguous or differs from FREYA_WORKSPACE_ID; no mutation was sent")
+
+
 class NoRedirect(urllib.request.HTTPRedirectHandler):
     def redirect_request(self, *args, **kwargs):
         return None
@@ -136,6 +144,8 @@ def official_client(deadline, trace):
     spec.loader.exec_module(module)
     module.api = FreyaTransport(deadline, trace)
     module._ws = os.environ["FREYA_WORKSPACE_ID"]
+    verify_key_workspace(module.api("GET", "/api/v2/workspaces"), module._ws)
+    trace.emit("workspace_verified", workspace_id=module._ws)
     return module
 
 

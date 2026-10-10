@@ -24,6 +24,8 @@ ve `result.json` yazar. `workflow.local.json` platform export'u değildir.
 ## Dağıtım ve doğrulama
 
 `--deploy` için süreç ortamında `FREYA_API_KEY` ve `FREYA_WORKSPACE_ID` gerekir.
+İstemci önce `GET /api/v2/workspaces` ile anahtarın tek ve doğru workspace'e
+bağlı olduğunu doğrular; belirsiz eşleşmede yazma yapılmaz.
 `builder.build.deploy_workflow` resmî v3 istemcisiyle validate → aynı `slot`ta
 save/update → publish → export → readback kontrolü yapar. Başarıda
 `workflow.export.json` ile `result.json` içine `workspace_id`, `workflow_id`,
@@ -50,6 +52,10 @@ eder. `FREYA_BANK_TEAM_KEY` de yerel ortamda gereklidir. Çıktı
 `status=measured` dışındaki kayıtlar başarı değildir. Timeout uzaktaki işin
 bitmesini kanıtlamaz; rezerv iade edilmez. Ham scorer/log/telemetry
 `runs/` altında yerel kalır.
+
+İsteğe bağlı `--only ID[,ID]`, seçilen brief/split içinden bir altküme seçer.
+Tek vakalık ilk ölçüm böyle yapılır. Boş, tekrar eden veya split dışı kimlikler
+bütçe ayırmadan reddedilir. Wrapper ve resmî scorer aynı kimlik listesini kullanır.
 
 Üretim tarafındaki gelecekteki otomatik düzeltme yalnız **geliştirme** geri
 bildirimini okuyabilir; `holdout` veya gizli vaka değerleri kod/prompt kuralına
