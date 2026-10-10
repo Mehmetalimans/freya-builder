@@ -182,6 +182,15 @@ except Exception:
 except Exception:
     pass
 """,
+        "add_note": """try:
+    if isinstance(result, dict):
+        result.pop('header', None)
+        d = result.get('data')
+        if isinstance(d, dict) and d.get('ok'):
+            d['what_to_do_next'] = 'Note recorded. If other unpromised products remain, add note for each in get_account order. When all products are handled, say thank you and goodbye and call close_call.'
+except Exception:
+    pass
+""",
     }
     return snippets.get(name, "try:\n    if isinstance(result, dict):\n        result.pop('header', None)\nexcept Exception:\n    pass\n")
 
@@ -209,12 +218,13 @@ def make_tool(operation):
             "parameters": {"type": "object", "properties": {
                 "url": {"type": "string", "default": operation["url"]},
                 "method": {"type": "string", "default": "POST"},
-                "connect_retries": {"type": "number", "default": 0},
+                "connect_retries": {"type": "number", "default": 2},
                 "headers": {"type": "object", "properties": {
                     "Content-Type": {"type": "string", "default": "application/json"}}},
                 "body": body}}},
         "post_process_code": make_post_process_code(name),
     }
+
 
 
 def success_transition(tool, field, target):
@@ -298,7 +308,7 @@ When attempts are used up, stop. Do not repeat an offer the customer already ref
 READ-BACK & CONFIRMATION:
 Always read back the product, amount, and date and ask 'Do you confirm?' before calling create_promise.
 After a recorded promise, you MUST ALWAYS say: 'You will receive a text message confirming this promise.'
-ALWAYS say thank you and say goodbye BEFORE or in the same turn as calling close_call. close_call is the last bank tool call.
+SPOKEN RESPONSE MANDATORY: Never return an empty message or a bare tool call without words spoken to the customer. ALWAYS say thank you and say goodbye BEFORE or in the same turn as calling close_call ('Thank you for your time, goodbye.'). close_call is the last bank tool call.
 
 THIRD PARTY & DISPUTES:
 If someone else answers, NEVER reveal debt or account facts; schedule_callback if agreed, else close_call.
@@ -348,11 +358,12 @@ def compile_workflow(briefs, document):
             "If someone else answers, do not disclose anything; ask when the customer can be reached. If a callback is agreed (today or next business day 10:00-19:00), schedule_callback and close_call(outcome='not_reached', reason='callback'). "
             "If person says wrong number, close_call(outcome='not_reached', reason='wrong_number'). "
             "If customer died, say 'I am sorry for your loss.', ask nothing else, and close_call(outcome='not_reached', reason='deceased'). "
-            "If customer confirms identity, perform verification: ask date of birth first (format YYYY-MM-DD as numbers). "
+            "If customer confirms identity, perform verification following the exact questions and order in the supplied brief (for Brief A: ask date of birth first formatted YYYY-MM-DD, and only after it passes ask phone last 4). Ask one question at a time. "
             "When calling verify_identity, if it returns verified: false or an error: that is a wrong answer, NOT a technical issue! "
             "Tell the customer it did not match and ask the question again. You must allow up to 3 wrong answers in total across the check. "
             "If hint is 'day_month_swapped', ask them to say the month as a word (e.g. July); that retry does NOT count as a wrong answer. "
             "Only ask the second question (phone last 4) after the date of birth is verified. "
+
             "If the customer reaches 3 wrong answers in total: tell them to use the mobile app or visit a branch, say goodbye, and call close_call(outcome='not_verified', reason='failed'). "
             "If customer refuses to answer questions, explain once that questions protect their account; if they still decline or ask what call is about a second time, close_call(outcome='not_verified', reason='declined'). "
             "Never close as service_error during identity verification. "
