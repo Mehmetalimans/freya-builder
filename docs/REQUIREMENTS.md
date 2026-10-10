@@ -58,8 +58,9 @@ Kit bazı eski açıklamaları “not confirmed” işaretliyor; uygulama yalnı
 - Katılımcı e-postasındaki son değişiklikler, destek kanalı, kendi teslim workspace'inin API erişimi ve teslim adresi.
 - Freya simülasyon kredi tarifesi, gerçekten tahsis edilmiş ücretsiz kredi ve bir vaka için doğrulanmış azami maliyet.
 - Builder token, RAM/CPU veya dış model istek kotası için ek katılımcı sınırı: kamu kaynaklarında ayrıca belirtilmiyor.
-- Takım adı ve ikinci geliştiricinin GitHub kullanıcı adı/erişim daveti. Private
-  depo oluşturuldu: https://github.com/Mehmetalimans/freya-builder .
+- Takım adı ve ikinci geliştiricinin private depo davetini kabul durumu.
+  `mbirlik24` daveti gönderildi, kabul bekleniyor.
+  Depo: https://github.com/Mehmetalimans/freya-builder .
 - Tarayıcıdan oluşturulan workflow'un v2 sürümü 10 Ekim'de yayınlandı. Otomatik API
   dağıtımı, başlangıç benchmark skoru ve genelleme başarısı henüz **ölçülmedi**.
 

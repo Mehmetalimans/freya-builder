@@ -2,8 +2,9 @@
 
 Son güncelleme: 10 Ekim 2026. Durumlar yalnız bu repodaki kanıta dayanır.
 Ortak özel depo `Mehmetalimans/freya-builder`; geliştirme dalı → pull request →
-diğer kişinin incelemesi → ana dal sırasıyla çalışılır. GitHub kullanıcı adı
-bilinmeyen ekip arkadaşına henüz erişim daveti gönderilmedi.
+diğer kişinin incelemesi → ana dal sırasıyla çalışılır. `mbirlik24` daveti
+gönderildi, kabul bekleniyor. GitHub kişisel private depoda dal korumasını
+bu planda uygulamıyor; zorunlu PR incelemesi ekip sürecidir.
 
 | Sahip | İş | Durum / kabul ölçütü |
 | --- | --- | --- |
@@ -18,8 +19,8 @@ bilinmeyen ekip arkadaşına henüz erişim daveti gönderilmedi.
 
 ## Sıradaki çalışma sırası
 
-1. İlk depo push'u ve iş bölümü PR'si; ikinci kişinin GitHub kullanıcı adıyla
-   private erişim daveti ve her bilgisayarda ayrı klon/dal.
+1. İş bölümü PR'si açıldı, çevrimdışı GitHub kontrolü geçti. `mbirlik24`
+   daveti kabul edince her bilgisayarda ayrı klon/dal ve PR incelemesi.
 2. Arkadaş kendi hesabının Freya erişimini ve resmî kit dağıtımını doğrular.
 3. Gerçek harcama üst sınırı/tek operatör kesinleşince küçük resmî geliştirme
    ölçümü; sonuç üretim tarafına `docs/contracts.md` biçiminde iletilir.

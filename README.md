@@ -28,10 +28,10 @@ git switch -c integration/first-live-run
 python -m unittest discover -s tests -v
 ```
 
-Private repo için arkadaşın GitHub kullanıcı adına erişim daveti gerekecek;
-henüz kullanıcı adı bildirilmedi. GitHub dal koruma ve zorunlu inceleme ayarları
-ayrıca doğrulanana kadar bu akış ekip kuralıdır, etkinleştirilmiş depo koruması
-olduğu varsayılmaz.
+`mbirlik24` için private repo daveti gönderildi; kabulü bekleniyor. Kabulden
+sonra PR inceleyicisi atanabilir. GitHub bu kişisel private depoda dal koruma
+kurallarının Team/Enterprise organizasyonuna taşınmadan uygulanmayacağını
+gösteriyor; PR ve diğer kişinin incelemesi şimdilik ekip kuralıdır.
 
 ## Hızlı çalıştırma
 
