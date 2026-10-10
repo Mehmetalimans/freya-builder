@@ -1,6 +1,11 @@
 # İki kişilik görev takibi
 
 Son güncelleme: 10 Ekim 2026. Durumlar yalnız bu repodaki kanıta dayanır.
+Güncel geniş test: 19 gerçek çağrı (önceki pilot hariç); 17'si birleşik scorer
+ile puanlandı, son ikisinin ledger okuması servis 500/1101 hatasında engellendi.
+En iyi tamamlanmış geniş tur 0.1.6 ile 6/7; 0.1.9 adayının tam skoru bilinmiyor.
+Kanıt ve sürüm ayrımı: `reports/extended-evaluation.json`,
+`docs/extended-test-notes.md`. Aşağıdaki ilk pilot bilgileri tarihsel kayıttır.
 Ortak özel depo `Mehmetalimans/freya-builder`; geliştirme dalı → pull request →
 diğer kişinin incelemesi → ana dal sırasıyla çalışılır. `mbirlik24` yazma
 erişimi doğrulandı. GitHub kişisel private depoda dal korumasını
@@ -20,10 +25,10 @@ tamamlandı: **PUB-01 1/1 geçti**, simülasyon 41 saniye, gözlenen bakiye fark
 
 | Sahip | İş | Durum / kabul ölçütü |
 | --- | --- | --- |
-| Kullanıcı | Brief + OpenAPI okuma, workflow üretimi (`builder/core.py`) | 33 birim testi geçti; tek kolay public vakada 1/1, genel başarı bilinmiyor. |
-| Kullanıcı | Geliştirme vakalarından genel hata analizi ve otomatik düzeltme | İlk gerçek resmî başarısızlık, maliyet ve süre görülünce başlanacak; henüz uygulanmadı. |
+| Kullanıcı | Brief + OpenAPI okuma, workflow üretimi (`builder/core.py`, `builder/calendar.py`) | Kimlik yanıtı ve takvim/ürün son tarihi düzeltmeleri uygulandı; 0.1.9 adayının tam canlı ölçümü servis düzelmesini bekliyor. |
+| Kullanıcı | Geliştirme vakalarından genel hata analizi ve otomatik düzeltme | Hatalar incelendi, birkaç aday karşılaştırıldı. Genel otomatik onarım motoru henüz yok; düzeltmeler asistan tarafından geliştirildi. |
 | Arkadaş | Miraç Freya workspace'inde `builder/runtime.py` dağıtımını doğrulama | Tamamlandı: API doğrulama/yayınlama/export/geri okuma v4. Anahtar-workspace kontrolü otomatik. |
-| Arkadaş | `builder/evaluate.py` ile resmî public geliştirme vakalarını ölçme | İlk ölçüm tamam, status=measured. Kullanıcı tek operatör olarak bu oturumdaki asistanı seçti. Bütçe rezervi inceleme için tutuluyor. |
+| Arkadaş | `builder/evaluate.py` ile resmî public geliştirme vakalarını ölçme | Geniş ölçümler raporda. Son iki çağrı tamamlandı fakat puanlanamadı; `builder/recover.py` salt okuma kurtarması ve bekleyen rezerv var. Tek test operatörü bu oturumdaki asistan. |
 | Arkadaş | Hata/timeout ve sonuç kaydı | Araç hatası, uzakta hâlâ çalışan iş olasılığı ve hesaplanan/gerçek maliyet ayrı. Belirsiz toplam `null`. |
 | Ortak | `builder/build.py`, sözleşme, bütçe, sürüm | Değişiklik için ilgili iki parça testi ve PR incelemesi. |
 | Ortak | Ayrılmış 3 A + 3 B public vaka ile genelleme | Geliştirme sabitlendikten sonra üç tekrar; gizli final skoru iddiası yok. |
@@ -34,13 +39,16 @@ tamamlandı: **PUB-01 1/1 geçti**, simülasyon 41 saniye, gözlenen bakiye fark
 1. İş bölümü PR'si açıldı; `mbirlik24` yazma erişimi doğrulandı. Her bilgisayarda ayrı klon/dal ve PR incelemesi.
 2. API dağıtımı tamam. Kullanıcı bu oturumda test operatörü olarak asistanı seçti;
    arkadaş aynı anda simülasyon başlatmamalı. Banka anahtarı sabit ve yerel tutulmalı.
-3. Kullanıcının istediği fiyat analizi [cost-analysis.md](cost-analysis.md) içinde.
-   İlk `--only` ölçümü tamamlandı; rezerv ve workspace kullanım farkları
-   uzlaştırıldıktan sonra kalan geliştirme vakaları ölçülecek.
+3. Banka ledger servisi düzeldiğinde son tamamlanan turu yeni simülasyon açmadan
+   kurtar. Sonra güncel adayın yedi geliştirme vakasını ve üç tekrar tutarlılığını ölç.
+   Fiyat belirsizliği ve açık kampanya izni [cost-analysis.md](cost-analysis.md) içinde.
 4. Kullanıcı genel üretim hatalarını düzeltir. Geliştirmede kullanılmamış public
    vakalarla ayrı kontrol; başarısı ölçülmemiş özellik iddiası yok.
 5. Son commit ve temiz ortam tekrarı; kickoff e-postası işlendi, ayrıca geleceği
    belirtilen teslim adımları/bağlantısı hâlâ bekleniyor.
+6. Arkadaşın `feat/agent-core-optimization` dalını birleştirmeden önce
+   [kod incelemesi](teammate-code-review.md) bulgularını çöz. Sabit örnekleri ve
+   doğrulanmamış vaka fiyatını geri getirme; iki taraftaki kodu ezme.
 
 Arkadaşın kendi AI aracına verilecek kısa başlangıç metni
 [teammate-start.md](teammate-start.md) içindedir.

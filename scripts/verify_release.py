@@ -45,7 +45,7 @@ def main():
     tests = run([str(python), "-m", "unittest", "discover", "-s", "tests", "-v"], clean, env)
     report_dir = ROOT / "reports"
     report_dir.mkdir(exist_ok=True)
-    (report_dir / "unit-tests.txt").write_text(tests.stdout + tests.stderr, encoding="utf-8")
+    (report_dir / "unit-tests.txt").write_text(tests.stdout + tests.stderr, encoding="utf-8", newline="\n")
     cases = {}
     for brief in ("A", "B"):
         hashes, times = [], []
@@ -70,7 +70,7 @@ def main():
               "unit_test_exit_code": tests.returncode, "offline_builds": cases, "freya_requests": 0,
               "model_calls": 0, "cost_usd": 0, "benchmark_pass_rate": None,
               "live_api_validation": "not_run", "holdout_behavioral_evaluation": "not_run", "clean_directory": str(clean)}
-    (report_dir / "verification.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+    (report_dir / "verification.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8", newline="\n")
     print(json.dumps(report))
 
 

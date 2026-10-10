@@ -97,3 +97,22 @@ Bu nedenle `actual_cost_usd=null` ve gözlenen bakiye farkı ayrı tutuldu.
 Bir kolay vakadaki maliyet tüm zor vakalar için azami fiyat değildir.
 Rezerv henüz bırakılmadı; sınırsız/toplu test döngüsü açılmadı.
 Kanıt: `reports/first-live-evaluation.json`; özel ham kanıt `runs/` altında.
+
+## Sonraki geniş kampanya — güncel karar
+
+Kullanıcının geniş test/düzeltme talimatı önceki tek-pilot sınırını genişletti.
+İlk rezerv, tamamlanan uzak iş doğrulandıktan sonra kaydı korunarak kapatıldı.
+`--monitored-credit`: toplam 100 USD Freya izni, en az 20 USD kalan kredi
+tamponu, 20 simülasyon/84 vaka koşusu kotası ve her başlangıçta bakiye kontrolü.
+Bu kullanıcı iznidir; vaka fiyatının doğrulandığı anlamına gelmez.
+
+Son gözlenen bakiye 197,6711 kredi × 0,5 = **98,83555 USD**. İlk 100 USD'den
+workspace toplam düşüşü 1,16445 USD; başka operatörün çağrıları da bulunduğundan
+tamamı bu kampanyaya atfedilemez. Tur bazında gözlenen farklar
+`reports/extended-evaluation.json` içindedir. `actual_cost_usd` hâlâ `null`.
+Ek dış model API harcaması ve kredi satın alımı yapılmadı.
+
+Son iki çağrıdan sonra banka test servisi HTTP 500 / Cloudflare 1101 verdi.
+Yeni ücretli testler durduruldu; bu turun rezervi sonuç kurtarılana kadar tutulur.
+Arkadaşın dalındaki 0,10 USD "verified" vaka fiyatı yalnız bakiyeye dayanıyor;
+geçerli tarife kanıtı olmadığı için bu daldaki bütçeye alınmadı.

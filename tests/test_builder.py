@@ -1,15 +1,19 @@
 from copy import deepcopy
+import io
 import json
 import os
 from pathlib import Path
 import tempfile
 import time
 import unittest
+import urllib.error
 from unittest.mock import patch
 
 from builder.build import deploy_workflow, main
 from builder.core import ContractError, TOOLS, canonical, compile_workflow, read_contract, validate_workflow
-from builder.evaluate import reserve_budget, selected_cases, validate_results, bounded_simulation_body
+from builder.evaluate import reserve_budget, selected_cases, validate_results, bounded_simulation_body, retry_ledger_read, call_telemetry
+from builder.campaign import check_campaign, reserve_campaign, settle_campaign
+from builder.calendar import calendar_code, calendar_spec, deadline_bands, offer_code
 from builder.runtime import KIT, Trace, FreyaTransport, check_environment, check_run_workspace, exclusive, redact, verify_readback, verify_key_workspace
 
 API = json.loads((KIT / "tools/openapi.json").read_text(encoding="utf-8"))
@@ -41,6 +45,24 @@ class CompilerTests(unittest.TestCase):
     def test_deterministic(self):
         self.assertEqual(canonical(self.compile()[0]), canonical(self.compile()[0]))
 
+    def test_calendar_counts_after_today_and_crosses_holiday_year_boundary(self):
+        spec = calendar_spec([("policy", "Business days are Monday to Friday, except Example Bank holidays: 2030-01-01.")])
+        snippet = calendar_code(spec)
+        values = {"now": "2029-12-28T11:00"}
+        exec(snippet, {"vars": values})
+        facts = values["calendar_facts"]
+        self.assertIn("2029-12-31 Monday | business day AFTER today #1", facts)
+        self.assertIn("2030-01-01 Tuesday | NON-BUSINESS DAY", facts)
+        self.assertIn("2030-01-01 Tuesday | NON-BUSINESS DAY; NEXT BUSINESS DAY = 2030-01-02 Wednesday", facts)
+        self.assertIn("2030-01-02 Wednesday | business day AFTER today #2", facts)
+        self.assertNotIn("{{", snippet)
+        self.assertNotIn("}}", snippet)
+        fallback = {"now": "invalid"}
+        exec(snippet, {"vars": fallback})
+        self.assertIn("unavailable", fallback["calendar_facts"])
+        self.assertIsNone(calendar_spec([("policy", "Holidays depend on the account's country.")]))
+        self.assertIsNone(calendar_spec([("policy", "Business days are Monday to Friday, except bank holidays: 2030-02-30.")]))
+
     def test_identity_tools_unavailable_before_bank_verification(self):
         wf, _ = self.compile()
         names = {t["function"]["name"] for t in wf["nodes"]["identity"]["tools"]}
@@ -48,6 +70,24 @@ class CompilerTests(unittest.TestCase):
         self.assertNotIn("create_promise", names)
         transition = wf["nodes"]["identity"]["transitions"][1]
         self.assertEqual({c["operand"] for c in transition["condition"]["conditions"]}, {"true", "True"})
+
+    def test_offer_calculation_uses_input_bands_and_each_account_product(self):
+        policy = "Business days are Monday to Friday, except Example holidays: 2030-01-01.\n| 1 to 9 | early | the 4th business day after today | 1 |\n| 10 to 90 | late | the 2nd business day after today | 2 |"
+        briefs = [("policy", policy)]
+        values = {"now": "2029-12-28T11:00", "payment_offer_date": "2030-01-01", "payment_offer_action": "resolve",
+                  "get_account_response.data.products.0.product_id": "x", "get_account_response.data.products.0.days_late": 3,
+                  "get_account_response.data.products.1.product_id": "y", "get_account_response.data.products.1.days_late": 15}
+        code = offer_code(calendar_spec(briefs), deadline_bands(briefs))
+        exec(code, {"vars": values})
+        self.assertEqual(values["payment_offer_action"], "none")
+        self.assertIn("DATE TO OFFER FOR THIS PRODUCT: 2030-01-02", values["payment_date_facts"])
+        self.assertIn("PRODUCT x: days_late=3; DEADLINE=2030-01-04", values["payment_date_facts"])
+        self.assertIn("PRODUCT y: days_late=15; DEADLINE=2030-01-02", values["payment_date_facts"])
+        values["payment_offer_date"] = "2030-01-03"
+        exec(code, {"vars": values})
+        self.assertIn("outside the allowed window", values["payment_date_facts"])
+        self.assertNotIn("{{", code)
+        self.assertNotIn("}}", code)
 
     def test_all_seven_tools_and_schema_enums(self):
         wf, _ = self.compile()
@@ -75,7 +115,7 @@ class CompilerTests(unittest.TestCase):
         self.doc["paths"]["/verify_identity"]["post"]["responses"]["200"]["content"]["application/json"]["schema"]["properties"].pop("all_verified")
         wf, analysis = self.compile()
         self.assertEqual(analysis["identity_gate"], "dialogue_only")
-        self.assertEqual(wf["initial_node"], "conversation")
+        self.assertEqual(wf["nodes"]["calendar_setup"]["passthrough_default_transition"], "conversation")
 
     def test_unknown_close_success_signal_fails(self):
         self.doc["paths"]["/close_call"]["post"]["responses"]["200"]["content"]["application/json"]["schema"]["properties"].pop("ok")
@@ -185,6 +225,18 @@ class RuntimeTests(unittest.TestCase):
             transport = FreyaTransport(time.monotonic()-1, Trace(Path(td)/"trace"))
             with self.assertRaises(TimeoutError): transport("POST", "/api/v2/workflow", {})
 
+    def test_only_explicit_simulation_conflict_is_waitable(self):
+        with temporary_directory() as td, patch.dict(os.environ, {"FREYA_API_KEY": "test-fixture"}):
+            trace_path = Path(td) / "trace"
+            transport = FreyaTransport(time.monotonic()+30, Trace(trace_path))
+            for status, body, expected in ((403, b'{"message":"concurrent simulations limit"}', RuntimeError),
+                                           (403, b'{"message":"permission denied"}', ContractError),
+                                           (500, b'concurrent simulations', ContractError)):
+                error = urllib.error.HTTPError("https://example.invalid", status, "error", {}, io.BytesIO(body))
+                with patch.object(transport.opener, "open", side_effect=error):
+                    with self.assertRaises(expected): transport("POST", "/api/v2/simulations", {})
+            self.assertNotIn("permission denied", trace_path.read_text())
+
     def test_exclusive_state(self):
         with temporary_directory() as td:
             lock = Path(td)/"lock"
@@ -195,6 +247,41 @@ class RuntimeTests(unittest.TestCase):
 
 
 class EvaluationTests(unittest.TestCase):
+    def test_tool_exceptions_are_counted_but_rejected_identity_is_not_transport_failure(self):
+        events = [{"event": "function_call_error", "function": "verify_identity"},
+                  {"event": "function_call_complete", "result": {"status": "success", "data": {"ok": True, "verified": False}}},
+                  {"event": "function_call_complete", "result": {"status": "error"}}]
+        telemetry = call_telemetry({"messages": [{"role": "system", "message": json.dumps(event)} for event in events]})
+        self.assertEqual(telemetry, {"observed_tool_completions": 2, "observed_failed_tool_results": 2})
+
+    def test_transient_ledger_read_retries_but_session_creation_does_not(self):
+        from unittest.mock import Mock
+        failed = json.JSONDecodeError("upstream HTML", "", 0)
+        read = Mock(side_effect=[failed, {"promises": []}])
+        with patch("builder.evaluate.time.sleep"):
+            self.assertEqual(retry_ledger_read(read, "/v1/practice/ledger/example"), {"promises": []})
+        self.assertEqual(read.call_count, 2)
+        write = Mock(side_effect=failed)
+        with self.assertRaises(json.JSONDecodeError): retry_ledger_read(write, "/v1/practice/sessions", {"case": "example"})
+        self.assertEqual(write.call_count, 1)
+
+    def test_monitored_campaign_checks_credit_and_unresolved_jobs(self):
+        policy = {"monitored_campaign_authorized": True, "total_authorized_usd": 100,
+                  "campaign_stop_balance_usd": 20, "max_case_runs": 84, "max_simulations": 16}
+        snapshot = {"creditsLeft": 199, "creditUsdRate": 0.5}
+        state = reserve_campaign(policy, {}, snapshot, 7, 3, "run-a")
+        self.assertEqual(state["case_runs"], 21)
+        self.assertEqual(state["observed_workspace_spend_usd"], 0.5)
+        with self.assertRaises(ContractError): reserve_campaign(policy, state, snapshot, 1, 1, "run-b")
+        with self.assertRaises(ContractError): settle_campaign(state, snapshot, "run-b")
+        settled = settle_campaign(state, {"creditsLeft": 198, "creditUsdRate": 0.5}, "run-a")
+        self.assertIsNone(settled["monitored_pending_run"])
+        self.assertEqual(settled["observed_workspace_spend_usd"], 1)
+        for bad in (0, 39, float("nan"), True):
+            with self.assertRaises(ContractError): check_campaign(policy, {"creditsLeft": bad, "creditUsdRate": 0.5}, 7)
+        with self.assertRaises(ContractError): check_campaign(policy, snapshot, 8)
+        with self.assertRaises(ContractError): check_campaign({**policy, "monitored_campaign_authorized": False}, snapshot, 1)
+
     def test_credit_pilot_requires_authorization_and_reserves_remaining_budget(self):
         policy = self.policy()
         with self.assertRaises(ContractError): reserve_budget(policy, {}, 1, 1, True)
