@@ -21,6 +21,18 @@ Varsayılanı çevrimdışı; `--deploy` entegrasyon katmanını açar. Her koş
 `runs/<run_id>/` altında `workflow.local.json`, `analysis.json`, `trace.jsonl`
 ve `result.json` yazar. `workflow.local.json` platform export'u değildir.
 
+`builder/calendar.py`, brief'teki açık "Monday to Friday ... holidays: ISO tarihleri"
+tanımını tanıdığında `calendar_setup` kod düğümü üretir. Tatiller girdiden gelir;
+çağrıdaki `now` üzerinden bugünden sonraki iş günlerini ve bu/gelecek haftayı
+hesaplar. Müşteri veya test cevabı gömülmez. Tanınmayan tanımda takvim varsayılmaz,
+`analysis.calendar` bunu belirtir ve tam politika metni korunur. Ufuk 90 gündür;
+bu özellik genel bir doğal dil politika derleyicisi değildir. Üretilen kod ve
+geçişler de platform geri okuma kontrolüne dahildir.
+Tanınan `days_late` / N'inci iş günü bant tablosu varsa, konuşmadan çıkarılan
+ödeme tarihi `date_offer` kod düğümünde ürün bazında karşılaştırılır. Ham banka
+sonucu değiştirilmez. Ayrı `date_reply` adımı hesaplanan seçenekleri açıklar;
+konuşmadan tarih çıkarımı hâlâ model davranışıdır ve canlı ölçüm gerektirir.
+
 ## Dağıtım ve doğrulama
 
 `--deploy` için süreç ortamında `FREYA_API_KEY` ve `FREYA_WORKSPACE_ID` gerekir.
@@ -65,11 +77,29 @@ geliştirme vakası/tek tekrar kabul eder. Kalan bütçenin tümü yerel olarak 
 ücretlerinden dolayı `actual_cost_usd` bunlarla otomatik doldurulmaz.
 Rezerv ikinci denemeyi engeller ve otomatik serbest bırakılmaz.
 
+10 Ekim'deki geniş test izni için `--monitored-credit` eklendi. Her simülasyon
+öncesinde kredi kontrol edilir; bakiye 20 USD veya altındaysa yeni test başlamaz.
+Bir simülasyonda en fazla yedi vaka, kampanyada `budget.json` kotaları uygulanır.
+Bu tampon hizmet sağlayıcının fiyat garantisi değildir. Yarım kalan koşunun
+`monitored_pending_run` rezervi uzaktaki durum incelenene kadar yeni testi engeller.
+Tamamlanan ve scorer çıktısı doğrulanan koşu rezervi kapatır; başarısız vakalar da
+geçerli ölçüm olabilir. `actual_cost_usd` fatura olmadığı sürece `null` kalır.
+Tekrarların her birinin simülasyon kimliği `simulation-history.json` içinde korunur.
+Belgelenmiş eşzamanlı simülasyon reddi, resmî istemcinin sınırlı süre içinde
+beklemesine aktarılır; belirsiz ağ hataları veya diğer HTTP hataları tekrarlanmaz.
+
 Her simülasyon isteği belgeli `maxRetries=0` ve `maxConcurrentCalls=1` kullanır;
 kitin modeli, persona metni, scorer'ı ve 420 saniye çağrı sınırı korunur. Başlatma
 yanıtı hemen `remote-simulation.json` dosyasına kaydedilir; tamamlanmamış uzak
 işin sonucu benchmark olarak yayımlanmaz. Yeni işten önce sunucu çalışan
 simülasyon kontrolü yapılır; yarış durumunda sunucunun tek simülasyon kuralı da geçerlidir.
+
+`builder/recover.py RUN_DIR`, tamamlanmış fakat puanlanamamış **tek tekrarlı**
+bir simülasyonu yeniden okumak içindir. Eski persona/çağrı/banka oturumlarını
+eşleştirir, aynı resmî `run_once` ve scorer ile bankanın mevcut ledger'ını okur.
+Freya ve banka yazma istekleri engellenir. Orijinal `evaluation.json` korunur;
+doğrulanan sonuç `evaluation.recovered.json` olur. Banka hâlâ bozuksa rezerv
+kapanmaz. Kurtarma süresi yeni bir simülasyon süresi olarak raporlanmaz.
 
 Üretim tarafındaki gelecekteki otomatik düzeltme yalnız **geliştirme** geri
 bildirimini okuyabilir; `holdout` veya gizli vaka değerleri kod/prompt kuralına

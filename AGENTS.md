@@ -29,6 +29,11 @@ veya fiyat garantisi olarak yorumlama.
   krediyle test başlatmaya izin verdi. `--credit-pilot` yalnız bir geliştirme
   vakası/tek tekrar için kalan yetkiyi ayırır; gerçek fiyat üst sınırı iddiası
   taşımaz. Rezerv otomatik bırakılmaz; sonuç ve faturalama uzlaştırılmalı.
+  Kullanıcının daha sonraki geniş test/düzeltme izni `--monitored-credit`
+  kampanyasını da kapsar: en az 20 USD bakiye tamponu, simülasyon öncesi kontrol,
+  tamamlanmamış işte durma ve ayrı geliştirme/holdout ölçümü. Kullanıcı çakışan
+  takım testini Freya'da duraklatmaya izin verdi; başka bilgisayardaki Antigravity
+  uygulamasının kapandığını varsayma. Bu yetki bağımsız projelere uygulanmaz.
 - Public geliştirme vakaları düzeltme için kullanılabilir. Ayrılmış public
   holdout vakalarını yalnız sürüm sabitlendikten sonra ölç; sonuçları gizli
   benchmark skoru olarak sunma. Ölçülmeyen maliyet ve başarı `null` kalır.

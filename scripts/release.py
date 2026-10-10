@@ -20,12 +20,14 @@ def files():
         "submission.template.json", "starter-v3/build-the-builder/VERSION", "starter-v3/build-the-builder/env.example"))
     result.extend(p for p in (ROOT / ".github").rglob("*") if p.is_file() and p.suffix in {".md", ".yml", ".yaml"})
     result.extend(ROOT / "evidence" / name for name in ("hackathon.txt", "build-the-builder-v3.zip"))
+    result.extend(ROOT / "reports" / name for name in ("first-live-evaluation.json", "extended-evaluation.json")
+                  if (ROOT / "reports" / name).exists())
     return sorted(set(result))
 
 
 def main():
     entries = {p.relative_to(ROOT).as_posix(): p.read_bytes() for p in files()}
-    manifest = {"builder_version": __version__, "python": "3.12.14", "status": "offline_baseline_not_final_submission",
+    manifest = {"builder_version": __version__, "python": "3.12.14", "status": "practice_builder_not_final_submission",
                 "files": {name: hashlib.sha256(data).hexdigest() for name, data in entries.items()}}
     manifest_bytes = (json.dumps(manifest, indent=2, sort_keys=True) + "\n").encode()
     fingerprint = hashlib.sha256(manifest_bytes).hexdigest()[:12]

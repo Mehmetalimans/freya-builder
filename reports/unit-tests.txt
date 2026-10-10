@@ -1,5 +1,6 @@
-{"status": "offline_validated", "run_directory": "C:\\Users\\asus\\.codex\\.chatgpt-projects\\g-p-6aca2978a33481919b0eeebee0f0aae4\\freya-builder\\dist\\clean-26adf018\\runs\\test-temp\\tmpcb7lekwh\\20261010T145319Z-dacda3ce", "error": null, "error_type": null}
+{"status": "offline_validated", "run_directory": "C:\\Users\\asus\\.codex\\.chatgpt-projects\\g-p-6aca2978a33481919b0eeebee0f0aae4\\freya-builder\\dist\\clean-56b36ec8\\runs\\test-temp\\tmp2k00ae0i\\20261010T155017Z-a3e66687", "error": null, "error_type": null}
 test_all_seven_tools_and_schema_enums (test_builder.CompilerTests.test_all_seven_tools_and_schema_enums) ... ok
+test_calendar_counts_after_today_and_crosses_holiday_year_boundary (test_builder.CompilerTests.test_calendar_counts_after_today_and_crosses_holiday_year_boundary) ... ok
 test_changed_enums_are_input_driven (test_builder.CompilerTests.test_changed_enums_are_input_driven) ... ok
 test_changed_required_field_is_preserved (test_builder.CompilerTests.test_changed_required_field_is_preserved) ... ok
 test_cli_offline_never_uses_network (test_builder.CompilerTests.test_cli_offline_never_uses_network) ... ok
@@ -10,6 +11,7 @@ test_full_policy_and_no_test_customer_in_artifact (test_builder.CompilerTests.te
 test_identity_tools_unavailable_before_bank_verification (test_builder.CompilerTests.test_identity_tools_unavailable_before_bank_verification) ... ok
 test_local_ref_resolution (test_builder.CompilerTests.test_local_ref_resolution) ... ok
 test_missing_verification_signal_is_explicit_fallback (test_builder.CompilerTests.test_missing_verification_signal_is_explicit_fallback) ... ok
+test_offer_calculation_uses_input_bands_and_each_account_product (test_builder.CompilerTests.test_offer_calculation_uses_input_bands_and_each_account_product) ... ok
 test_raw_memo_and_overrides_are_preserved_in_order (test_builder.CompilerTests.test_raw_memo_and_overrides_are_preserved_in_order) ... ok
 test_unknown_close_success_signal_fails (test_builder.CompilerTests.test_unknown_close_success_signal_fails) ... ok
 test_unsupported_shapes_and_hosts_rejected (test_builder.CompilerTests.test_unsupported_shapes_and_hosts_rejected) ... ok
@@ -18,10 +20,13 @@ test_credit_pilot_requires_authorization_and_reserves_remaining_budget (test_bui
 test_dev_and_holdout_are_disjoint_and_cover_13 (test_builder.EvaluationTests.test_dev_and_holdout_are_disjoint_and_cover_13) ... ok
 test_incomplete_and_optimistic_scores_rejected (test_builder.EvaluationTests.test_incomplete_and_optimistic_scores_rejected) ... ok
 test_invalid_rates_and_limits_rejected (test_builder.EvaluationTests.test_invalid_rates_and_limits_rejected) ... ok
+test_monitored_campaign_checks_credit_and_unresolved_jobs (test_builder.EvaluationTests.test_monitored_campaign_checks_credit_and_unresolved_jobs) ... ok
 test_no_overspend (test_builder.EvaluationTests.test_no_overspend) ... ok
 test_simulation_has_no_automatic_retries (test_builder.EvaluationTests.test_simulation_has_no_automatic_retries) ... ok
 test_simulation_quota (test_builder.EvaluationTests.test_simulation_quota) ... ok
 test_smoke_subset_cannot_leak_holdout_or_duplicate_cases (test_builder.EvaluationTests.test_smoke_subset_cannot_leak_holdout_or_duplicate_cases) ... ok
+test_tool_exceptions_are_counted_but_rejected_identity_is_not_transport_failure (test_builder.EvaluationTests.test_tool_exceptions_are_counted_but_rejected_identity_is_not_transport_failure) ... ok
+test_transient_ledger_read_retries_but_session_creation_does_not (test_builder.EvaluationTests.test_transient_ledger_read_retries_but_session_creation_does_not) ... ok
 test_unknown_cost_cannot_run (test_builder.EvaluationTests.test_unknown_cost_cannot_run) ... ok
 test_credentials_never_in_trace (test_builder.RuntimeTests.test_credentials_never_in_trace) ... ok
 test_exclusive_state (test_builder.RuntimeTests.test_exclusive_state) ... ok
@@ -30,10 +35,11 @@ test_key_scope_must_match_before_mutations (test_builder.RuntimeTests.test_key_s
 test_matching_workspace_is_accepted (test_builder.RuntimeTests.test_matching_workspace_is_accepted) ... ok
 test_mismatched_or_unrecorded_workspace_is_rejected (test_builder.RuntimeTests.test_mismatched_or_unrecorded_workspace_is_rejected) ... ok
 test_missing_credentials_and_forbidden_model (test_builder.RuntimeTests.test_missing_credentials_and_forbidden_model) ... ok
+test_only_explicit_simulation_conflict_is_waitable (test_builder.RuntimeTests.test_only_explicit_simulation_conflict_is_waitable) ... ok
 test_publish_on_initial_create_then_readback (test_builder.RuntimeTests.test_publish_on_initial_create_then_readback) ... ok
 test_readback_rejects_dropped_tools (test_builder.RuntimeTests.test_readback_rejects_dropped_tools) ... ok
 
 ----------------------------------------------------------------------
-Ran 33 tests in 0.061s
+Ran 39 tests in 0.078s
 
 OK

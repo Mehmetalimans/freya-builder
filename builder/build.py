@@ -36,6 +36,7 @@ def main(argv=None):
     parser.add_argument("--output", type=Path, default=ROOT / "runs")
     parser.add_argument("--max-seconds", type=int, default=1800)
     parser.add_argument("--test-brief", choices=["A", "B"], help="Run bounded official practice evaluation after deployment")
+    parser.add_argument("--monitored-credit", action="store_true", help="Use the explicitly authorized monitored practice campaign for --test-brief")
     parser.add_argument("--split", default="dev", choices=["dev", "holdout"])
     parser.add_argument("--reps", type=int, default=1, choices=[1, 3])
     args = parser.parse_args(argv)
@@ -43,6 +44,8 @@ def main(argv=None):
         parser.error("max-seconds must be 1..1800 and slot a simple label")
     if args.test_brief and not args.deploy:
         parser.error("--test-brief requires --deploy")
+    if args.monitored_credit and not args.test_brief:
+        parser.error("--monitored-credit requires --test-brief")
     run_id = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime()) + "-" + uuid.uuid4().hex[:8]
     out = args.output.resolve() / run_id
     out.mkdir(parents=True, exist_ok=False)
@@ -87,8 +90,10 @@ def main(argv=None):
                 remaining = int(args.max_seconds - (time.monotonic() - start))
                 if remaining <= 0: raise TimeoutError("Builder time limit reached before evaluation")
                 write_json(out / "result.json", result)
-                code = evaluate([str(out), "--brief", args.test_brief, "--split", args.split,
-                                 "--reps", str(args.reps), "--max-seconds", str(remaining)])
+                evaluation_args = [str(out), "--brief", args.test_brief, "--split", args.split,
+                                   "--reps", str(args.reps), "--max-seconds", str(remaining)]
+                if args.monitored_credit: evaluation_args.append("--monitored-credit")
+                code = evaluate(evaluation_args)
                 measured = json.loads((out / "evaluation.json").read_text(encoding="utf-8"))
                 result["tests"] = measured["status"]
                 result["benchmark_success"] = measured["benchmark_success"]
