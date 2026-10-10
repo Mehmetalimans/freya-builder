@@ -1,15 +1,18 @@
 # İki kişilik görev takibi
 
-**Ara verildi.** [Devam kaydı](resume-checkpoint.md) okunmadan yeni test başlatma.
-0.1.12 kodu hazır; canlıda 0.1.11 var, son üç tekrarlı ölçüm tamamlanmadı.
+**11 Ekim güncellemesi:** Kullanıcı son testleri sürdürdü. Güncel aday
+0.1.13, A workflow v13. Önceki kesilen tur salt okunur kurtarıldı: 6/7.
+104 yerel test geçti; son public A/B ölçümü sürüyor. Yeni işlerin kanıtı
+[final-checks.md](final-checks.md) içinde; aşağıdaki ara kaydı tarihseldir.
 
 Dil kontrolü tamamlandı: resmî yarışma İngilizce/metin; kod mevcut haliyle
 uyumlu. Yeni sesli ayar veya ücretli test açılmadı.
 Git kontrolünde `integration/v3-final` dalında üç yeni Miraç commit'i görüldü:
 `1aefb49`, `803203f`, `5494a2e`. Önceki inceleme `7dc5e56` üzerindeydi;
 yeni değişiklikler henüz bu daldaki 98-test/ölçüm kanıtına dahil değil.
-PR birleştirilmeden önce bu değişikliklerin ayrı incelemesi ve varsa birleştirme
-çatışmalarının çözülmesi gerekir; mevcut kodun üzerine körlemesine alınmadı.
+Bu değişiklikler 0.1.13 için incelendi ve PR dalına birleştirildi; Git
+çatışmaları çözüldü. Aynı regresyon paketi eski 5494a2e kaynağındaki hataları
+tekrar gösterdi; birleşik adayda geçti. Ana dala merge hâlâ ekip incelemesini bekler.
 
 Son güncelleme: 10 Ekim 2026. Durumlar yalnız bu repodaki kanıta dayanır.
 Son kod adayı **0.1.12**: Miraç'ın `7dc5e56` entegrasyonu incelendi ve

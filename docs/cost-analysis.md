@@ -145,3 +145,18 @@ gecikmeli faturalama belirsizliği sürer.
 kampanya kotası 26 simülasyon/120 vaka koşusu olarak sınırlandı (planlanan
 tarihsel toplam 108 vaka koşusu). Bu, ek para izni değildir: 100 USD ve
 20 USD tampon aynı kaldı; yeni kredi satın alınmadı, dış model kullanılmadı.
+
+## 11 Ekim son public ölçüm
+
+Kullanıcı son testleri yeniden yetkilendirdi. 0.1.11'in kesilen üç tekrarı
+salt okunur kurtarıldı; bekleyen rezerv kapatıldı. Yeni kontrolde
+493,9994 kredi × 0,5 = 246,9997 USD bakiye, toplam 9,1415 kredi kullanımı
+görüldü. İzin hâlâ 100 USD'dir; büyük bakiye ek harcama yetkisi değildir.
+Bu başlangıçtaki ihtiyatlı workspace tüketimi 4,57075 USD; kesin test faturası
+değildir. 0.1.13 için 39 public çağrı planlandı; her simülasyonda bakiye ve
+kümülatif kullanım kontrolü sürer. Sonraki gerçek değerler sonuç raporuna yazılır.
+
+0.1.13'te kayıt bildirimi/ödeme kaydı belirsizliği görülünce 0.1.14 için bir
+ek, sınırlı 39 çağrılık regresyon turu ayrıldı. Yerel kota 32 simülasyon/156
+vaka koşusu; öngörülen tarihsel sayaç 147. 100 USD izin ve 20 USD tampon
+genişlemedi. Yeni turlar tek simülasyon içinde en fazla üç çağrı kullanır.

@@ -412,7 +412,8 @@ class EvaluationTests(unittest.TestCase):
         bounded = bounded_simulation_body(body, 2)
         self.assertEqual((bounded["maxRetries"], bounded["maxConcurrentCalls"]), (0, 2))
         self.assertEqual(body["maxConcurrentCalls"], 5)
-        for bad in (True, 0, 3, "2"):
+        self.assertEqual(bounded_simulation_body(body, 3)['maxConcurrentCalls'],3)
+        for bad in (True, 0, 4, "2"):
             with self.assertRaises(ContractError): bounded_simulation_body(body, bad)
 
     def policy(self):

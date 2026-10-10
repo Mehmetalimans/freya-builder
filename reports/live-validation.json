@@ -53,6 +53,21 @@
         },
         "reason": "Bank ledger endpoint returned a non-JSON server error; recovery also failed. No new paid simulation started."
       },
+      "customer_sentiment": {
+        "status": "unavailable_no_sentiment_labels",
+        "total_call_runs": 2,
+        "labeled_calls": 0,
+        "unlabeled_calls": 2,
+        "buckets": {
+          "very-unhappy": 0,
+          "unhappy": 0,
+          "neutral": 0,
+          "happy": 0,
+          "very-happy": 0
+        },
+        "happy_fraction_of_labeled": null,
+        "note": "Missing labels are not neutral or unhappy. Platform labels are not a customer survey or benchmark score."
+      },
       "passed": 1,
       "total": 2,
       "successful_call_runs": 1,
@@ -144,6 +159,21 @@
         "completions_including_workflow_end": 160,
         "failed_result_events": 0
       },
+      "customer_sentiment": {
+        "status": "unavailable_no_sentiment_labels",
+        "total_call_runs": 21,
+        "labeled_calls": 0,
+        "unlabeled_calls": 21,
+        "buckets": {
+          "very-unhappy": 0,
+          "unhappy": 0,
+          "neutral": 0,
+          "happy": 0,
+          "very-happy": 0
+        },
+        "happy_fraction_of_labeled": null,
+        "note": "Missing labels are not neutral or unhappy. Platform labels are not a customer survey or benchmark score."
+      },
       "passed": 6,
       "total": 7,
       "successful_call_runs": 19,
@@ -218,6 +248,390 @@
       "latency": {
         "calls_observed": 21,
         "worst_turn_seconds": 16.7
+      }
+    },
+    {
+      "run_id": "20261010T171642Z-f10bfb65",
+      "builder_version": "0.1.11",
+      "workflow_sha256": "2619e823507bd15e8b1482d59e626c76d89df685d6cc15459ecc80c441a89482",
+      "platform_version": 12,
+      "status": "measured",
+      "brief": "A",
+      "split": "dev",
+      "reps": 3,
+      "style": null,
+      "case_ids": [
+        "PUB-01",
+        "PUB-02",
+        "PUB-03",
+        "PUB-04",
+        "PUB-05",
+        "PUB-06",
+        "PUB-07"
+      ],
+      "seconds": null,
+      "benchmark_success": 0.8571428571428571,
+      "credits_before": null,
+      "credits_after": {
+        "creditsLeft": 493.9994,
+        "creditUsdRate": 0.5,
+        "totalCreditsUsed": 9.1415
+      },
+      "observed_balance_delta_usd": null,
+      "actual_cost_usd": null,
+      "simulations": [
+        {
+          "simulation_id": "de0392c1-a839-4954-a988-574fc1f7e953",
+          "iteration_id": "8d5844ef-f34a-4d7a-861e-72c1c98ac241",
+          "status": "completed"
+        },
+        {
+          "simulation_id": "836ddc2c-0bb0-4346-aae9-82f095c45eaf",
+          "iteration_id": "abdd951f-72af-4228-a6f7-7b0ad8069eca",
+          "status": "completed"
+        },
+        {
+          "simulation_id": "c1ede396-81e9-45d7-ba6d-35462871c6e5",
+          "iteration_id": "231bcbe8-fd03-4ff2-94ef-a47ca8cb803f",
+          "status": "completed"
+        }
+      ],
+      "recovered_read_only": true,
+      "tool_telemetry": {
+        "calls_observed": 21,
+        "completions_including_workflow_end": 162,
+        "failed_result_events": 0
+      },
+      "customer_sentiment": {
+        "status": "unavailable_no_sentiment_labels",
+        "total_call_runs": 21,
+        "labeled_calls": 0,
+        "unlabeled_calls": 21,
+        "buckets": {
+          "very-unhappy": 0,
+          "unhappy": 0,
+          "neutral": 0,
+          "happy": 0,
+          "very-happy": 0
+        },
+        "happy_fraction_of_labeled": null,
+        "note": "Missing labels are not neutral or unhappy. Platform labels are not a customer survey or benchmark score."
+      },
+      "passed": 6,
+      "total": 7,
+      "successful_call_runs": 20,
+      "total_call_runs": 21,
+      "cases": [
+        {
+          "id": "PUB-01",
+          "family": "Happy path",
+          "passes": 3,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "id": "PUB-02",
+          "family": "Third party",
+          "passes": 3,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "id": "PUB-03",
+          "family": "Identity",
+          "passes": 3,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "id": "PUB-04",
+          "family": "Dates",
+          "passes": 2,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "id": "PUB-05",
+          "family": "Hardship",
+          "passes": 3,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "id": "PUB-06",
+          "family": "Amounts",
+          "passes": 3,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "id": "PUB-07",
+          "family": "Dates",
+          "passes": 3,
+          "runs": 3,
+          "pass": true
+        }
+      ],
+      "failures": [
+        {
+          "repetition": 1,
+          "id": "PUB-04",
+          "reasons": [
+            "promises [('p1', 1250.0, '2026-11-06')], expected [('p1', 1250.0, '2026-10-23')]",
+            "conversation: The agent failed to meet the specific requirement regarding the promise date. Although the agent correctly identified itself as a digital assistant (Message 10) and did not treat the user's date suggestion as a refusal (Message 10), the final promise was recorded for November 6th (Message 12 and create_promise system event) instead of the required late-band deadline of 23 October. The call ended c"
+          ]
+        }
+      ],
+      "latency": {
+        "calls_observed": 21,
+        "worst_turn_seconds": 12.2
+      }
+    },
+    {
+      "run_id": "20261010T211447Z-cec3adce",
+      "builder_version": "0.1.13",
+      "workflow_sha256": "a369e647a0feee4fb3a9b1e3af37e35370f5b7f6d696044ac4fe0445e640fa1c",
+      "platform_version": 13,
+      "status": "measured",
+      "brief": "A",
+      "split": "dev",
+      "reps": 3,
+      "style": null,
+      "case_ids": [
+        "PUB-01",
+        "PUB-02",
+        "PUB-03",
+        "PUB-04",
+        "PUB-05",
+        "PUB-06",
+        "PUB-07"
+      ],
+      "seconds": 783.062,
+      "benchmark_success": 1.0,
+      "credits_before": {
+        "creditsLeft": 493.9994,
+        "creditUsdRate": 0.5,
+        "totalCreditsUsed": 9.1415
+      },
+      "credits_after": {
+        "creditsLeft": 492.5966,
+        "creditUsdRate": 0.5,
+        "totalCreditsUsed": 11.0631
+      },
+      "observed_balance_delta_usd": 0.7014,
+      "actual_cost_usd": null,
+      "simulations": [
+        {
+          "simulation_id": "111a40e8-6e00-469f-a4d8-5d3fc21a2db5",
+          "iteration_id": "bec0f1de-79d6-4e57-884f-156a018d59df",
+          "status": "completed"
+        },
+        {
+          "simulation_id": "377ef7f4-2c8f-43e2-b40b-783e6e16ee69",
+          "iteration_id": "00948e44-0133-453e-80c8-7ed11d2b6107",
+          "status": "completed"
+        },
+        {
+          "simulation_id": "aa95fade-bcd5-4a01-981d-8aa1293364c3",
+          "iteration_id": "cff32fbe-0148-4629-9847-e73eb05557a6",
+          "status": "completed"
+        }
+      ],
+      "recovered_read_only": false,
+      "tool_telemetry": {
+        "calls_observed": 21,
+        "completions_including_workflow_end": 161,
+        "failed_result_events": 0
+      },
+      "customer_sentiment": {
+        "status": "unavailable_no_sentiment_labels",
+        "total_call_runs": 21,
+        "labeled_calls": 0,
+        "unlabeled_calls": 21,
+        "buckets": {
+          "very-unhappy": 0,
+          "unhappy": 0,
+          "neutral": 0,
+          "happy": 0,
+          "very-happy": 0
+        },
+        "happy_fraction_of_labeled": null,
+        "note": "Missing labels are not neutral or unhappy. Platform labels are not a customer survey or benchmark score."
+      },
+      "passed": 7,
+      "total": 7,
+      "successful_call_runs": 21,
+      "total_call_runs": 21,
+      "cases": [
+        {
+          "id": "PUB-01",
+          "family": "Happy path",
+          "passes": 3,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "id": "PUB-02",
+          "family": "Third party",
+          "passes": 3,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "id": "PUB-03",
+          "family": "Identity",
+          "passes": 3,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "id": "PUB-04",
+          "family": "Dates",
+          "passes": 3,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "id": "PUB-05",
+          "family": "Hardship",
+          "passes": 3,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "id": "PUB-06",
+          "family": "Amounts",
+          "passes": 3,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "id": "PUB-07",
+          "family": "Dates",
+          "passes": 3,
+          "runs": 3,
+          "pass": true
+        }
+      ],
+      "failures": [],
+      "latency": {
+        "calls_observed": 21,
+        "worst_turn_seconds": 13.9
+      }
+    },
+    {
+      "run_id": "20261010T212850Z-6d6c20cf",
+      "builder_version": "0.1.13",
+      "workflow_sha256": "a369e647a0feee4fb3a9b1e3af37e35370f5b7f6d696044ac4fe0445e640fa1c",
+      "platform_version": 13,
+      "status": "measured",
+      "brief": "A",
+      "split": "holdout",
+      "reps": 3,
+      "style": null,
+      "case_ids": [
+        "PUB-08",
+        "PUB-09",
+        "PUB-10"
+      ],
+      "seconds": 592.797,
+      "benchmark_success": 0.6666666666666666,
+      "credits_before": {
+        "creditsLeft": 492.5966,
+        "creditUsdRate": 0.5,
+        "totalCreditsUsed": 11.0631
+      },
+      "credits_after": {
+        "creditsLeft": 492.0642,
+        "creditUsdRate": 0.5,
+        "totalCreditsUsed": 11.8424
+      },
+      "observed_balance_delta_usd": 0.2662,
+      "actual_cost_usd": null,
+      "simulations": [
+        {
+          "simulation_id": "becd59e6-d3d0-46bf-b9dd-f53c9864da3e",
+          "iteration_id": "107353c1-a672-45fc-bed4-69ffa95e070b",
+          "status": "completed"
+        },
+        {
+          "simulation_id": "c6b7c39a-4df8-4d50-91f8-7b8925750a20",
+          "iteration_id": "ec14441d-ebb6-416d-bdb9-921c30e15dab",
+          "status": "completed"
+        },
+        {
+          "simulation_id": "d07f5d6e-9c0c-4b0c-8cc3-238351f3a7ea",
+          "iteration_id": "514bf78d-6935-47ac-b746-f697fe92115b",
+          "status": "completed"
+        }
+      ],
+      "recovered_read_only": false,
+      "tool_telemetry": {
+        "calls_observed": 9,
+        "completions_including_workflow_end": 66,
+        "failed_result_events": 3
+      },
+      "customer_sentiment": {
+        "status": "unavailable_no_sentiment_labels",
+        "total_call_runs": 9,
+        "labeled_calls": 0,
+        "unlabeled_calls": 9,
+        "buckets": {
+          "very-unhappy": 0,
+          "unhappy": 0,
+          "neutral": 0,
+          "happy": 0,
+          "very-happy": 0
+        },
+        "happy_fraction_of_labeled": null,
+        "note": "Missing labels are not neutral or unhappy. Platform labels are not a customer survey or benchmark score."
+      },
+      "passed": 2,
+      "total": 3,
+      "successful_call_runs": 7,
+      "total_call_runs": 9,
+      "cases": [
+        {
+          "id": "PUB-08",
+          "family": "Already paid",
+          "passes": 3,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "id": "PUB-09",
+          "family": "Restructuring",
+          "passes": 3,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "id": "PUB-10",
+          "family": "Tool failure",
+          "passes": 1,
+          "runs": 3,
+          "pass": false
+        }
+      ],
+      "failures": [
+        {
+          "repetition": 1,
+          "id": "PUB-10",
+          "reasons": [
+            "conversation: The agent correctly created exactly one promise in the ledger after a successful retry of the 'create_promise' tool following an initial failure. However, the agent used the word 'recorded' in its very first turn (Message 0) as part of the recording disclosure. Since this occurred before any successful API calls (including identity verification and the promise creation), the criterion that the age"
+          ]
+        },
+        {
+          "repetition": 2,
+          "id": "PUB-10",
+          "reasons": [
+            "conversation: While the agent correctly handled the payment promise retry and the call ended properly, it failed one specific success criterion: the agent must not say the word 'recorded' before a successful call. 1. The agent said 'recorded' in Message 0 ('this call is recorded') as part of the initial disclosure. This occurred chronologically before the successful 'create_promise' API call. 2. The agent corre"
+          ]
+        }
+      ],
+      "latency": {
+        "calls_observed": 9,
+        "worst_turn_seconds": 10.9
       }
     }
   ]

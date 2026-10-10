@@ -22,6 +22,10 @@ tanımlanmamışsa tatil örneklerinden takvim varsayılmaz. Gün sayısı sın�
 `after today/call date/now` ankrajı gerekir. Eksik gecikme değeri sıfır yapılmaz.
 Önceki null ve boolean regresyon testleri korunur.
 
+`5494a2e` kaynağı ayrı yerel arşivde aynı 13 regresyon testiyle denetlendi:
+alt senaryolar dahil 16 başarısız assertion ve 3 hata; birleşik aday aynı
+13 testi geçti. Kanıt `reports/mirac-review-regressions.json` içine eklendi.
+
 Teslim paketleyicisi temiz Git kaydı ister; bilinmeyen commit kabul etmez.
 Çevrimdışı deneme final slotlarını yayımlayamaz ve her paket ayrı klasöre
 yazılır. Public deneme final teslimi sayılmaz.
@@ -56,3 +60,28 @@ Orijinal ara kaydı korundu, bekleyen bütçe rezervi tüketim sorgusuyla kapat�
 7 vaka × 3, kalan A 3 × 3 ve B 3 × 3 aynı sabit adayla ölçülecek. B public
 vakaları ekipçe kullanılmıştır; regresyondur. Gizli final brief'leri ve final
 teslimi bu public ölçümden ayrıdır.
+
+0.1.13 A ölçümü tamamlandı: geliştirme 7/7 (21/21 çağrı), kalan A 2/3
+(7/9 çağrı). PUB-10 ilk iki tekrarda değerlendirici, zorunlu çağrı kayıt
+bildirimindeki "recorded" sözcüğünü ödeme işleminin başarı iddiası olarak
+yorumladı; aynı vakada banka ledger'ı doğruydu, son tekrar geçti. Bu bir
+değerlendirici yorumu belirsizliğidir; skor değiştirilmedi. Son A turunun
+durum alanı bir süre running kaldı; bütün çağrıların/verdict'lerin sona
+erdiği doğrulanarak pause istendi. Platform bu sırada doğal completed
+durumuna geçti, orijinal resmî ölçüm oluştu. Gereksiz kurtarma denemesi
+yeni çağrı başlatmadan durduruldu; ölçülmüş koşuyu yeniden kurtarma
+engeli ve regresyon testi eklendi.
+
+0.1.14 adayı, anlamıyla tarif edilmiş kayıt bildirimini "we are recording
+this call" biçiminde ifade ederek banka işlemi başarısından açıkça ayırır.
+Brief exact/verbatim bir metin verirse o metin korunur. Vaka kimliği,
+müşteri tarihi veya scorer cevabı üreticiye gömülmedi. 105 yerel test geçti.
+Bu düzeltmede kalan A artık geri bildirim için görüldüğü için sonraki
+tekrarları bağımsız genelleme değil regresyon ölçümüdür.
+
+Son aday için bir sınırlı 39-çağrılık tur daha ayrıldı: tarihsel kota
+32 simülasyon/156 vaka koşusu (planlanan sayaç 147). 100 USD izin ve
+20 USD tampon aynı. Yerel eşzamanlı çağrı tavanı tek simülasyon içinde
+3'e çıktı; resmî kit varsayılanı 5 ve belgeli maxConcurrentCalls özelliği
+kullanılır. 0.1.13 iki çağrıyla, 0.1.14 üç çağrıyla ölçülür; bu değişiklik
+yüzünden süre farkı yalnız prompt düzenlemesine atfedilemez.

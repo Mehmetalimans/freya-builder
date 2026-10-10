@@ -120,8 +120,11 @@ yanıtı hemen `remote-simulation.json` dosyasına kaydedilir; tamamlanmamış u
 işin sonucu benchmark olarak yayımlanmaz. Yeni işten önce sunucu çalışan
 simülasyon kontrolü yapılır; yarış durumunda sunucunun tek simülasyon kuralı da geçerlidir.
 
-`builder/recover.py RUN_DIR`, tamamlanmış fakat puanlanamamış **tek tekrarlı**
-bir simülasyonu yeniden okumak içindir. Eski persona/çağrı/banka oturumlarını
+`builder/recover.py RUN_DIR`, tamamlanmış fakat puanlanamamış tek tekrarlı
+bir simülasyonu veya `evaluation.user-paused.json` kaydı bulunan, tam üç
+uzak simülasyonu tamamlanmış A geliştirme koşusunu yeniden okumak içindir.
+Üç tekrar yolu başka brief/split için genel kurtarma desteği iddia etmez.
+Eski persona/çağrı/banka oturumlarını
 eşleştirir, aynı resmî `run_once` ve scorer ile bankanın mevcut ledger'ını okur.
 Freya ve banka yazma istekleri engellenir. Orijinal `evaluation.json` korunur;
 doğrulanan sonuç `evaluation.recovered.json` olur. Banka hâlâ bozuksa rezerv

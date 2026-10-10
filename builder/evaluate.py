@@ -155,8 +155,8 @@ def call_telemetry(call):
 def bounded_simulation_body(body, concurrent_calls=1):
     if body.get("mode") != "chat" or body.get("runsPerPersona") != 1:
         raise ContractError("Only a single text repetition per simulation is allowed")
-    if type(concurrent_calls) is not int or concurrent_calls not in (1, 2):
-        raise ContractError("Local campaign supports one or two calls within its single simulation")
+    if type(concurrent_calls) is not int or concurrent_calls not in (1, 2, 3):
+        raise ContractError("Local campaign supports up to three calls within its single simulation")
     return {**body, "maxRetries": 0, "maxConcurrentCalls": concurrent_calls}
 
 

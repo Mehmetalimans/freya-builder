@@ -226,6 +226,10 @@ Answer the customer's question before continuing. Respect refusals and requests 
 do not exceed the policy's persuasion limit or use guilt, threats, false reassurance or extra promises.
 Use short sentences and thank the customer for their time where the required closing permits it.
 Preserve the brief's exact mandatory opening, read-back, notices and farewell.
+When a call-recording notice is described by meaning rather than quoted verbatim,
+say 'we are recording this call'. Clearly separate this privacy notice from a
+bank action being successfully recorded. If the brief quotes exact notice wording,
+preserve that wording. Announce a payment promise as recorded only after its tool succeeds.
 Follow the supplied policy, including its exception precedence and amended sections.
 Use actual tool calls for every required bank record. Call one tool at a time. After
 each result continue with a short relevant utterance or the next required tool; do not stall.
@@ -283,7 +287,8 @@ def compile_workflow(briefs, document):
     nodes = {}
     if gated:
         nodes["identity"] = conversation("identity", {"verify_identity", "schedule_callback", "transfer_to_agent", "close_call"},
-            "Begin with the exact required opening, then establish who is on the line and perform the identity section. "
+            "Begin with the required opening and notices. Preserve verbatim wording when it is quoted in the brief; "
+            "otherwise use the clear recording disclosure from the global guidance. Then establish who is on the line and perform the identity section. "
             "Handle questions, third parties, refusal, callback and human requests as the policy requires. "
             "Account and promise tools become available only after the bank confirms all identity checks. "
             "Never disclose account information before that. On failure or other early exit, complete required permitted records and close_call.",

@@ -1,8 +1,9 @@
-# Freya builder 0.1.12 — canlı doğrulama adayı
+# Freya builder 0.1.13 — son public doğrulama
 
-**Kullanıcının isteğiyle ara verildi.** Yeni test başlatmadan önce
-[devam kaydını](docs/resume-checkpoint.md) oku. Canlıda 0.1.11 var;
-0.1.12 kodu hazır, henüz yayımlanmadı.
+11 Ekim'de kullanıcı son testleri sürdürdü. Miraç'ın son üç commit'i
+birleştirildi, politika varsayımları düzeltildi ve nazik/kısa müşteri iletişimi
+talimatı eklendi. A workflow'u v13 olarak yayımlandı; son public ölçüm sürüyor.
+[Son kontroller ve memnuniyet verisinin sınırı](docs/final-checks.md).
 
 **Yarışma dili İngilizce, değerlendirme biçimi metindir.** Üretilen agent'ın
 promptunda `Speak English` bulunur; resmî simülasyon `mode=chat` kullanır.
@@ -15,7 +16,8 @@ doğrulanmalıdır; mevcut metin testleri sesli başarı kanıtı değildir.
 7/7, 6/7, 6/7 oldu: tüm tekrarları geçme hesabıyla 6/7. 0.1.11 müşterinin ödeme
 günü ifadesini ayrıca denetliyor; 0.1.12 yazıyla söylenen günlerin reddedilmesi
 regresyonunu düzeltiyor. Son adayın canlı ölçümü henüz tamamlanmadı.
-98 yerel test ve temiz ortam doğrulaması geçti.
+0.1.13 için temiz ortamda 102 test, ek kanıt kontrolleriyle yerelde 104 test
+geçti. Önceki 0.1.11 ölçümü mevcut çağrılarla 6/7 olarak kurtarıldı.
 [Güncel canlı doğrulama ve başarısız denemeler](docs/live-validation.md).
 
 Miraç'ın `integration/v3-final` dalı incelendi; sabit politika/tarih talimatları,

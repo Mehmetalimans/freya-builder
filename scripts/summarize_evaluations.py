@@ -9,6 +9,22 @@ from builder.evaluate import validate_results
 from builder.runtime import write_json
 
 
+def sentiment_summary(directory, rows):
+    buckets = {k:0 for k in ('very-unhappy','unhappy','neutral','happy','very-happy')}
+    for row in rows:
+        path = Path(directory)/('call-' + str(row.get('call_id')) + '.json')
+        if not path.exists(): continue
+        call = json.loads(path.read_text(encoding='utf-8'))
+        analysis = call.get('analysis') or {}
+        label = analysis.get('sentiment') if isinstance(analysis,dict) else None
+        if isinstance(label,str) and label in buckets: buckets[label] += 1
+    labeled = sum(buckets.values())
+    return {'status':'measured_on_labeled_calls' if labeled else 'unavailable_no_sentiment_labels',
+            'total_call_runs':len(rows),'labeled_calls':labeled,'unlabeled_calls':len(rows)-labeled,
+            'buckets':buckets,'happy_fraction_of_labeled':(buckets['happy']+buckets['very-happy'])/labeled if labeled else None,
+            'note':'Missing labels are not neutral or unhappy. Platform labels are not a customer survey or benchmark score.'}
+
+
 def summarize(directory):
     directory = Path(directory)
     build = json.loads((directory / "result.json").read_text(encoding="utf-8"))
@@ -20,6 +36,12 @@ def summarize(directory):
                   "benchmark_success", "credits_before", "credits_after", "observed_balance_delta_usd", "actual_cost_usd")}}
     history = directory / "simulation-history.json"
     result["simulations"] = json.loads(history.read_text()) if history.exists() else []
+    pause = directory/'evaluation.user-paused.json'
+    if evaluation.get('recovered_read_only') and pause.exists():
+        paused = json.loads(pause.read_text())
+        if paused['simulation_id'] not in {r['simulation_id'] for r in result['simulations']}:
+            result['simulations'].append({'simulation_id':paused['simulation_id'],'iteration_id':paused['iteration_id'],
+                                         'status':paused['simulation_status']})
     result["recovered_read_only"] = evaluation.get("recovered_read_only", False)
     telemetry_path = directory / "evaluation.telemetry.json"
     telemetry = json.loads(telemetry_path.read_text(encoding="utf-8")) if telemetry_path.exists() else {}
@@ -36,6 +58,7 @@ def summarize(directory):
     report = evaluation["results"]
     validate_results(report, evaluation["case_ids"], evaluation["reps"])
     rows = [row for repeat in report["all_rows"] for row in repeat]
+    result['customer_sentiment'] = sentiment_summary(directory,rows)
     result.update(passed=report["passed"], total=report["total"],
                   successful_call_runs=sum(row["pass"] for row in rows), total_call_runs=len(rows),
                   cases=report["final"],

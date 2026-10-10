@@ -16,7 +16,11 @@ from builder.runtime import ROOT, Trace, check_environment, check_run_workspace,
 
 def recover(directory):
     directory = Path(directory).resolve()
-    if not (directory / 'evaluation.json').exists() and (directory / 'evaluation.user-paused.json').exists():
+    if (directory/'evaluation.json').exists():
+        existing = json.loads((directory/'evaluation.json').read_text(encoding='utf-8'))
+        if existing.get('status') == 'measured':
+            raise ContractError('This run already has an official measured result; preserve it')
+    if (directory / 'evaluation.user-paused.json').exists() or (directory / 'evaluation.infrastructure-paused.json').exists():
         return recover_paused(directory)
     return recover_single(directory)
 
@@ -99,7 +103,9 @@ def recover_single(directory):
 def recover_paused(directory):
     """A user-paused three-repeat run can finish remotely after its worker stops."""
     saved = json.loads((directory/'result.json').read_text(encoding='utf-8'))
-    pause = json.loads((directory/'evaluation.user-paused.json').read_text(encoding='utf-8'))
+    pause_path = directory/'evaluation.user-paused.json'
+    if not pause_path.exists(): pause_path = directory/'evaluation.infrastructure-paused.json'
+    pause = json.loads(pause_path.read_text(encoding='utf-8'))
     if (directory/'evaluation.recovered.json').exists():
         raise ContractError('This run already has recovered evidence')
     history = json.loads((directory/'simulation-history.json').read_text())
@@ -116,7 +122,8 @@ def recover_paused(directory):
     # IDs are from the recorded first repetition, never from a new case selection.
     first = json.loads((directory/'repetition-01.json').read_text())['rows']
     ids = [r['id'] for r in first]
-    cases = selected_cases('A','dev',','.join(ids))
+    brief, split = pause.get('brief','A'), pause.get('split','dev')
+    cases = selected_cases(brief,split,','.join(ids))
     started = time.monotonic()
     client = official_client(started+300, Trace(directory/'recovery.trace.jsonl'))
     api = client.api
@@ -133,8 +140,11 @@ def recover_paused(directory):
     repetitions, telemetry = [], {}
     for index, remote in enumerate(history):
         current = client.api('GET','/api/v2/simulations/'+remote['simulation_id'])['simulation']
-        if current['status'] != 'completed': raise ContractError('A recorded remote simulation is incomplete')
+        if current['status'] not in ('completed','paused'): raise ContractError('A recorded remote simulation is incomplete')
         iteration = client.get_iteration(remote['simulation_id'],remote['iteration_id'])
+        if (iteration.get('runsTotal') != len(ids) or len(iteration['runs']) != len(ids)
+                or any(r.get('outcome') not in ('pass','fail') or not r.get('endedAt') for r in iteration['runs'])):
+            raise ContractError('Every remote call must have a terminal verdict and end timestamp')
         sessions = {}
         matched = [r for r in iteration['runs'] if by_persona.get(r['personaId']) in ids]
         if len(matched) != len(ids): raise ContractError('Recorded case count is incomplete or duplicated')
@@ -142,6 +152,7 @@ def recover_paused(directory):
             case = by_persona[item['personaId']]
             if case in sessions: raise ContractError('Duplicate recorded persona')
             call = client.get_call(item['callId'])
+            if not call.get('endedAt'): raise ContractError('Recorded call is still active')
             if call.get('assistantWorkflowId') != saved['workflow_id'] or call.get('entityVersionNumber') != saved['platform_version']:
                 raise ContractError('Recorded call workflow/version differs from the tested build')
             telemetry[item['callId']] = call_telemetry(call)
@@ -172,12 +183,14 @@ def recover_paused(directory):
               'total':len(ids),'runs':3,'seconds':None}
     validate_results(report,ids,3)
     after = credit_snapshot(client)
-    summary = {'status':'measured','brief':'A','split':'dev','reps':3,'case_ids':ids,'seconds':None,
+    summary = {'status':'measured','brief':brief,'split':split,'reps':3,'case_ids':ids,'seconds':None,
                'workspace_id':saved['workspace_id'],'results':report,'passed':report['passed'],'total':len(ids),
                'benchmark_success':report['passed']/len(ids),'actual_cost_usd':None,'credits_after':after,
                'recovered_read_only':True,'recovery_seconds':round(time.monotonic()-started,3),
                'recorded_local_wait_seconds':saved.get('seconds'),'remote_job_may_still_be_running':False,
                'cost_note':'Read-only recovery; no new simulation, no measured complete-run duration or invoice.'}
+    if pause_path.name == 'evaluation.infrastructure-paused.json':
+        summary['platform_state_discrepancy'] = pause['reason']
     write_json(directory/'evaluation.telemetry.json',telemetry)
     write_json(directory/'evaluation.recovered.json',summary)
     with exclusive(ROOT/'state/budget.lock'):
