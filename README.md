@@ -11,6 +11,9 @@ gizli final skoru değildir. [Hata ve düzeltme notları](docs/extended-test-not
 **0.1.9 adaydır:** son iki çağrı tamamlandı, fakat banka test servisinin HTTP
 500/1101 hatası birleşik puanlamayı engelledi. Üç tekrar ve holdout henüz
 tamamlanmadı; yeni adayın skoru 6/7 olarak gösterilemez.
+[Belgeler ve raporlar özeti](docs/evaluation-summary.md), bütün denemeleri,
+süre/maliyet ölçümlerini, açık sınırlamaları ve kod incelemesinin kabul ölçütlerini
+tek yerde toplar.
 [Kickoff e-postası ve uygulama kaydı](docs/kickoff-mail.md),
 [fiyat analizi](docs/cost-analysis.md) güncel kaynakları ve belirsizlikleri ayırır.
 

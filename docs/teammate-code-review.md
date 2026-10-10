@@ -19,3 +19,24 @@ Belgeli `post_process_code` mekanizması yararlı bir yaklaşım olabilir; mevcu
 hook'ların yanlış iş kararlarıyla topluca alınması uygun değil. Hook fikriyle
 hook'un politika doğruluğu aynı şey değildir. Mevcut dal geçmişi değiştirilmedi;
 sonraki birleştirmede bu bulgular üzerinden ayrı kod incelemesi yapılmalı.
+
+## Kaynak ve birleştirme kabul ölçütleri
+
+İnceleme sabit commit `daef83ba84ae1d7761776138da1f5b814e31d5c5` üzerindedir;
+daha yeni değişikliklerin incelendiği iddia edilmez. Bulgular statik kod
+incelemesine dayanır; bu dalda ayrıca canlı doğrulama yapılmadı. Yukarıdaki
+"bu daldaki karşılık" mevcut builder dalını anlatır; arkadaşın dalında çözülmüş
+olduğu anlamına gelmez. Altı bulgu da birleştirme öncesinde yeniden kontrol edilmeli.
+
+| Bulgu | Sabit kaynak | Kabul ölçütü |
+| --- | --- | --- |
+| Doğrulanmamış fiyat | [budget.json](https://github.com/Mehmetalimans/freya-builder/blob/daef83ba84ae1d7761776138da1f5b814e31d5c5/budget.json#L11) | Tarife kanıtı yoksa azami fiyat `null`; bakiye kanıtı fiyat kanıtı olarak kullanılmamalı. |
+| Sabit/yanlış tatil çıkarımı | [extract_calendar_guidance](https://github.com/Mehmetalimans/freya-builder/blob/daef83ba84ae1d7761776138da1f5b814e31d5c5/builder/core.py#L216) | Brief'teki örnek tarih tatil olmamalı; farklı `now`, yıl ve tatil listesiyle beklenen iş günü hesaplanmalı. |
+| İlk sözden sonra erken kapanış | [make_post_process_code](https://github.com/Mehmetalimans/freya-builder/blob/daef83ba84ae1d7761776138da1f5b814e31d5c5/builder/core.py#L120) | İki ürünlü sentetik senaryoda tüm gerekli kayıtlar kapanıştan önce tamamlanmalı; tek kayıt başarıyla bitince kapanış zorlanmamalı. |
+| Callback/transfer başarısını varsayma | [Araç hook'ları](https://github.com/Mehmetalimans/freya-builder/blob/daef83ba84ae1d7761776138da1f5b814e31d5c5/builder/core.py#L120) | `ok=false` yanıtında başarı söylenmemeli; kapanış nedeni verilen şemanın gerçek enum değerinden gelmeli. |
+| Kimlik araç hatasını müşteri hatası sayma | [Hata protokolü](https://github.com/Mehmetalimans/freya-builder/blob/daef83ba84ae1d7761776138da1f5b814e31d5c5/builder/core.py#L249) | Normal `verified=false` ile HTTP 500/timeout ayrı işlenmeli; taşıma hatası yanlış cevap sayacını artırmamalı. |
+| Brief'e aykırı sabit politika | [Kimlik ve collection üretimi](https://github.com/Mehmetalimans/freya-builder/blob/daef83ba84ae1d7761776138da1f5b814e31d5c5/builder/core.py#L306) | Farklı kimlik sorusu, deneme sınırı, bant ve callback saatleri olan sentetik brief'te eski kurallar üretilmemeli; desteklenmeyen tanım açık raporlanmalı. |
+
+Bu kabul ölçütleri geliştirme için yeni sentetik girdilerle doğrulanmalı;
+ayrılmış holdout cevapları düzeltme girdisi yapılmamalı. Kod düzeyindeki kontroller,
+sonradan gereken canlı birleşik scorer ölçümünün yerine geçmez.

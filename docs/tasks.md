@@ -4,8 +4,9 @@ Son güncelleme: 10 Ekim 2026. Durumlar yalnız bu repodaki kanıta dayanır.
 Güncel geniş test: 19 gerçek çağrı (önceki pilot hariç); 17'si birleşik scorer
 ile puanlandı, son ikisinin ledger okuması servis 500/1101 hatasında engellendi.
 En iyi tamamlanmış geniş tur 0.1.6 ile 6/7; 0.1.9 adayının tam skoru bilinmiyor.
-Kanıt ve sürüm ayrımı: `reports/extended-evaluation.json`,
-`docs/extended-test-notes.md`. Aşağıdaki ilk pilot bilgileri tarihsel kayıttır.
+Kanıt ve sürüm ayrımı: [ölçüm ve açık işler özeti](evaluation-summary.md),
+`reports/extended-evaluation.json`, `docs/extended-test-notes.md`.
+Aşağıdaki ilk pilot bilgileri tarihsel kayıttır.
 Ortak özel depo `Mehmetalimans/freya-builder`; geliştirme dalı → pull request →
 diğer kişinin incelemesi → ana dal sırasıyla çalışılır. `mbirlik24` yazma
 erişimi doğrulandı. GitHub kişisel private depoda dal korumasını
@@ -20,14 +21,17 @@ görüldü. Ardından builder 0.1.3 ile aynı workflow API üzerinden **v4** ola
 yayımlandı, resmî export ve davranış geri okuması `deployed_verified` oldu.
 Kanıt `runs/20261010T143548Z-dcb3f232/` altında. İlk resmî geliştirme ölçümü
 tamamlandı: **PUB-01 1/1 geçti**, simülasyon 41 saniye, gözlenen bakiye farkı
-0,01995 USD. Son görülen bakiye 99,8602 USD. Kalan geliştirme ve holdout henüz
-ölçülmedi; ayrıntı `reports/first-live-evaluation.json` içinde.
+0,01995 USD. O pilotun sonunda görülen bakiye 99,8602 USD idi; ayrıntı
+`reports/first-live-evaluation.json` içinde. Sonraki geniş turlar yukarıdaki
+özette kayıtlıdır. En son kayıtlı bakiye 98,83555 USD; yeni bakiye sorgusu değildir.
+Son aday 0.1.9 aynı workflow'un API üzerinden doğrulanmış v10 sürümüdür;
+üç tekrar ve holdout hâlâ bekliyor.
 
 | Sahip | İş | Durum / kabul ölçütü |
 | --- | --- | --- |
 | Kullanıcı | Brief + OpenAPI okuma, workflow üretimi (`builder/core.py`, `builder/calendar.py`) | Kimlik yanıtı ve takvim/ürün son tarihi düzeltmeleri uygulandı; 0.1.9 adayının tam canlı ölçümü servis düzelmesini bekliyor. |
 | Kullanıcı | Geliştirme vakalarından genel hata analizi ve otomatik düzeltme | Hatalar incelendi, birkaç aday karşılaştırıldı. Genel otomatik onarım motoru henüz yok; düzeltmeler asistan tarafından geliştirildi. |
-| Arkadaş | Miraç Freya workspace'inde `builder/runtime.py` dağıtımını doğrulama | Tamamlandı: API doğrulama/yayınlama/export/geri okuma v4. Anahtar-workspace kontrolü otomatik. |
+| Arkadaş | Miraç Freya workspace'inde `builder/runtime.py` dağıtımını doğrulama | Tamamlandı: son aday 0.1.9 için API doğrulama/yayınlama/export/geri okuma v10. Anahtar-workspace kontrolü otomatik. |
 | Arkadaş | `builder/evaluate.py` ile resmî public geliştirme vakalarını ölçme | Geniş ölçümler raporda. Son iki çağrı tamamlandı fakat puanlanamadı; `builder/recover.py` salt okuma kurtarması ve bekleyen rezerv var. Tek test operatörü bu oturumdaki asistan. |
 | Arkadaş | Hata/timeout ve sonuç kaydı | Araç hatası, uzakta hâlâ çalışan iş olasılığı ve hesaplanan/gerçek maliyet ayrı. Belirsiz toplam `null`. |
 | Ortak | `builder/build.py`, sözleşme, bütçe, sürüm | Değişiklik için ilgili iki parça testi ve PR incelemesi. |
