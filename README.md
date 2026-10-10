@@ -1,9 +1,15 @@
-# Freya builder 0.1.10 — entegrasyon incelemesi sonrası aday
+# Freya builder 0.1.11 — tarih netleştirme adayı
+
+0.1.10 canlı yayımlandı ve geri okuması doğrulandı. İlk iki geliştirme tekrarı
+7/7 ve 6/7 oldu; ikinci turda belirsiz ödeme dönemi yanlışlıkla kesin tarihe
+çevrildi. 0.1.11, müşterinin ödeme günü ifadesini ayrıca çıkarıp hesaplamadan
+önce denetler; tarih alanı tek başına yeterli değildir. Bu yerel düzeltmenin
+canlı ölçümü henüz tamamlanmadı. 95 yerel test geçiyor.
 
 Miraç'ın `integration/v3-final` dalı incelendi; sabit politika/tarih talimatları,
 hatalı hook başarı yorumları ve null şema sorunları düzeltildi.
 [Bulgular ve kanıt](docs/mirac-integration-review.md). 90 yerel test geçti;
-0.1.10 henüz canlı dağıtılmadı veya benchmark ile ölçülmedi. Aşağıdaki canlı
+Bu inceleme aşamasında 0.1.10 henüz canlı ölçülmemişti. Aşağıdaki canlı
 sonuçlar önceki sürümlere aittir. Ekip B public vakalarını kullanmış olduğundan
 bu vakalar artık bağımsız holdout değil, regresyon kümesidir.
 

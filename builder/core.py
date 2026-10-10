@@ -300,6 +300,8 @@ def compile_workflow(briefs, document):
         nodes["date_reply"] = conversation("date_reply", TOOLS - {"verify_identity"},
             "The bank account is already known. Resolve the customer's date using these freshly computed facts:\n"
             "{{payment_date_facts}}\n"
+            "If these facts say calculation is unavailable, no exact customer date is established. "
+            "Ask which exact day they mean and wait for their answer; never propose or record a guessed date from a vague period. "
             "Use DATE TO OFFER for the relevant product. If a non-business offer is inside its window, briefly "
             "explain the business-day adjustment and offer that calculated date; do not replace it with the deadline. "
             "If it is outside the window, explain and offer the calculated deadline according to the policy. "

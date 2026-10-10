@@ -1,4 +1,4 @@
-{"status": "offline_validated", "run_directory": "C:\\Users\\asus\\.codex\\.chatgpt-projects\\g-p-6aca2978a33481919b0eeebee0f0aae4\\freya-builder\\dist\\clean-4d56bbc4\\runs\\test-temp\\tmp28fw3_ke\\20261010T164622Z-9364da9c", "error": null, "error_type": null}
+{"status": "offline_validated", "run_directory": "C:\\Users\\asus\\.codex\\.chatgpt-projects\\g-p-6aca2978a33481919b0eeebee0f0aae4\\freya-builder\\dist\\clean-8f482171\\runs\\test-temp\\tmp360l6r2w\\20261010T170923Z-acac27f9", "error": null, "error_type": null}
 test_all_seven_tools_and_schema_enums (test_builder.CompilerTests.test_all_seven_tools_and_schema_enums) ... ok
 test_arbitrary_holidays_extracted_from_brief (test_builder.CompilerTests.test_arbitrary_holidays_extracted_from_brief) ... ok
 test_calendar_counts_after_today_and_crosses_holiday_year_boundary (test_builder.CompilerTests.test_calendar_counts_after_today_and_crosses_holiday_year_boundary) ... ok
@@ -37,6 +37,7 @@ test_simulation_quota (test_builder.EvaluationTests.test_simulation_quota) ... o
 test_smoke_subset_cannot_leak_holdout_or_duplicate_cases (test_builder.EvaluationTests.test_smoke_subset_cannot_leak_holdout_or_duplicate_cases) ... ok
 test_tool_exceptions_are_counted_but_rejected_identity_is_not_transport_failure (test_builder.EvaluationTests.test_tool_exceptions_are_counted_but_rejected_identity_is_not_transport_failure) ... ok
 test_transient_ledger_read_retries_but_session_creation_does_not (test_builder.EvaluationTests.test_transient_ledger_read_retries_but_session_creation_does_not) ... ok
+test_two_call_mode_stays_bounded_inside_one_simulation (test_builder.EvaluationTests.test_two_call_mode_stays_bounded_inside_one_simulation) ... ok
 test_unknown_cost_cannot_run (test_builder.EvaluationTests.test_unknown_cost_cannot_run) ... ok
 test_credentials_never_in_trace (test_builder.RuntimeTests.test_credentials_never_in_trace) ... ok
 test_exclusive_state (test_builder.RuntimeTests.test_exclusive_state) ... ok
@@ -76,6 +77,10 @@ test_060_hardship_tools_available_in_collection (test_calendar_scenarios.Calenda
 test_070_dispute_outcome_enum_compliance (test_calendar_scenarios.CalendarAndSchemaTests.test_070_dispute_outcome_enum_compliance) ... ok
 test_074_transfer_queue_enum_validity (test_calendar_scenarios.CalendarAndSchemaTests.test_074_transfer_queue_enum_validity) ... ok
 test_088_multi_product_offer_code_multi_product_iteration (test_calendar_scenarios.CalendarAndSchemaTests.test_088_multi_product_offer_code_multi_product_iteration) ... ok
+test_all_extraction_fields_use_real_input_placeholders (test_date_evidence.DateEvidenceTests.test_all_extraction_fields_use_real_input_placeholders) ... ok
+test_date_evidence_cannot_be_reused_without_new_extraction (test_date_evidence.DateEvidenceTests.test_date_evidence_cannot_be_reused_without_new_extraction) ... ok
+test_explicit_days_can_reach_calendar_calculation (test_date_evidence.DateEvidenceTests.test_explicit_days_can_reach_calendar_calculation) ... ok
+test_vague_period_with_hallucinated_iso_date_cannot_produce_offer (test_date_evidence.DateEvidenceTests.test_vague_period_with_hallucinated_iso_date_cannot_produce_offer) ... ok
 test_bank_write_retries_remain_disabled_and_connect_retries_are_bounded (test_integration_regressions.IntegrationRegressions.test_bank_write_retries_remain_disabled_and_connect_retries_are_bounded) ... ok
 test_changed_close_and_transfer_enums_have_no_stale_hook_instructions (test_integration_regressions.IntegrationRegressions.test_changed_close_and_transfer_enums_have_no_stale_hook_instructions) ... ok
 test_failed_account_lookup_does_not_announce_loaded_account (test_integration_regressions.IntegrationRegressions.test_failed_account_lookup_does_not_announce_loaded_account) ... ok
@@ -91,6 +96,6 @@ test_unrecognized_calendar_does_not_invent_weekdays_or_holidays (test_integratio
 test_unseen_policy_has_no_stale_bank_dates_or_numeric_rules (test_integration_regressions.IntegrationRegressions.test_unseen_policy_has_no_stale_bank_dates_or_numeric_rules) ... ok
 
 ----------------------------------------------------------------------
-Ran 90 tests in 0.233s
+Ran 95 tests in 0.248s
 
 OK

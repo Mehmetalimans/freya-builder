@@ -78,12 +78,14 @@ class CompilerTests(unittest.TestCase):
                   "get_account_response.data.products.0.product_id": "x", "get_account_response.data.products.0.days_late": 3,
                   "get_account_response.data.products.1.product_id": "y", "get_account_response.data.products.1.days_late": 15}
         code = offer_code(calendar_spec(briefs), deadline_bands(briefs))
+        values["payment_offer_quote"] = str(values.get("payment_offer_date", ""))
         exec(code, {"vars": values})
         self.assertEqual(values["payment_offer_action"], "none")
         self.assertIn("DATE TO OFFER FOR THIS PRODUCT: 2030-01-02", values["payment_date_facts"])
         self.assertIn("PRODUCT x: days_late=3; DEADLINE=2030-01-04", values["payment_date_facts"])
         self.assertIn("PRODUCT y: days_late=15; DEADLINE=2030-01-02", values["payment_date_facts"])
         values["payment_offer_date"] = "2030-01-03"
+        values["payment_offer_quote"] = str(values.get("payment_offer_date", ""))
         exec(code, {"vars": values})
         self.assertIn("outside the allowed window", values["payment_date_facts"])
         self.assertNotIn("{{", code)
@@ -391,6 +393,14 @@ class EvaluationTests(unittest.TestCase):
         self.assertEqual(body["maxRetries"], 5)
         with self.assertRaises(ContractError): bounded_simulation_body({**body, "mode": "voice"})
 
+    def test_two_call_mode_stays_bounded_inside_one_simulation(self):
+        body = {"mode": "chat", "runsPerPersona": 1, "maxRetries": 5, "maxConcurrentCalls": 5}
+        bounded = bounded_simulation_body(body, 2)
+        self.assertEqual((bounded["maxRetries"], bounded["maxConcurrentCalls"]), (0, 2))
+        self.assertEqual(body["maxConcurrentCalls"], 5)
+        for bad in (True, 0, 3, "2"):
+            with self.assertRaises(ContractError): bounded_simulation_body(body, bad)
+
     def policy(self):
         return {"live_tests_enabled": True, "verified_max_cost_per_case_usd": 2,
                 "cost_bound_evidence": "TEST FIXTURE ONLY", "total_authorized_usd": 100,
@@ -483,6 +493,7 @@ class StressTests(unittest.TestCase):
             "get_account_response.data.products.1.product_id": "p2",
             "get_account_response.data.products.1.days_late": 20,
         }
+        values["payment_offer_quote"] = str(values.get("payment_offer_date", ""))
         exec(code, {"vars": values})
         self.assertEqual(values["payment_offer_action"], "none")
         self.assertIn("PRODUCT p1", values["payment_date_facts"])
@@ -498,6 +509,7 @@ class StressTests(unittest.TestCase):
             "get_account_response.data.products.0.product_id": "p_orphan",
             "get_account_response.data.products.0.days_late": 99,
         }
+        values["payment_offer_quote"] = str(values.get("payment_offer_date", ""))
         exec(code, {"vars": values})
         self.assertIn("deadline not computed; consult policy", values["payment_date_facts"])
 
@@ -507,6 +519,7 @@ class StressTests(unittest.TestCase):
         code = offer_code(spec, bands)
         for bad_date in ("gibberish", "", "2026-99-99", None):
             values = {"now": "2026-10-14T10:00", "payment_offer_date": bad_date}
+            values["payment_offer_quote"] = str(values.get("payment_offer_date", ""))
             exec(code, {"vars": values})
             self.assertEqual(values["payment_offer_action"], "none")
             self.assertIn("unavailable", values["payment_date_facts"])

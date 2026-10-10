@@ -28,6 +28,7 @@ class CalendarAndSchemaTests(unittest.TestCase):
     def test_012_early_arrears_tomorrow_option(self):
         code = calendar_code(self.cal_spec)
         scope = {"vars": {"now": "2026-10-14T10:00"}}
+        scope["vars"]["payment_offer_quote"] = str(scope["vars"].get("payment_offer_date", ""))
         exec(code, scope)
         self.assertIn("2026-10-15 Thursday | business day AFTER today #1", scope["vars"]["calendar_facts"])
 
@@ -38,6 +39,7 @@ class CalendarAndSchemaTests(unittest.TestCase):
             "get_account_response.data.products.0.product_id": "p_late",
             "get_account_response.data.products.0.days_late": 25,
         }}
+        scope["vars"]["payment_offer_quote"] = str(scope["vars"].get("payment_offer_date", ""))
         exec(code, scope)
         self.assertIn("DEADLINE=2026-10-23", scope["vars"]["payment_date_facts"])
 
@@ -48,6 +50,7 @@ class CalendarAndSchemaTests(unittest.TestCase):
             "get_account_response.data.products.0.product_id": "p1",
             "get_account_response.data.products.0.days_late": 3,
         }}
+        scope["vars"]["payment_offer_quote"] = str(scope["vars"].get("payment_offer_date", ""))
         exec(code, scope)
         self.assertIn("NEXT VALID BUSINESS DATE ON OR AFTER OFFER: 2026-10-19 Monday", scope["vars"]["payment_date_facts"])
 
@@ -58,6 +61,7 @@ class CalendarAndSchemaTests(unittest.TestCase):
             "get_account_response.data.products.0.product_id": "p1",
             "get_account_response.data.products.0.days_late": 3,
         }}
+        scope["vars"]["payment_offer_quote"] = str(scope["vars"].get("payment_offer_date", ""))
         exec(code, scope)
         self.assertIn("NEXT VALID BUSINESS DATE ON OR AFTER OFFER: 2026-10-19 Monday", scope["vars"]["payment_date_facts"])
 
@@ -68,18 +72,21 @@ class CalendarAndSchemaTests(unittest.TestCase):
             "get_account_response.data.products.0.product_id": "p1",
             "get_account_response.data.products.0.days_late": 3,
         }}
+        scope["vars"]["payment_offer_quote"] = str(scope["vars"].get("payment_offer_date", ""))
         exec(code, scope)
         self.assertIn("NEXT VALID BUSINESS DATE ON OR AFTER OFFER: 2026-10-27 Tuesday", scope["vars"]["payment_date_facts"])
 
     def test_034_calendar_next_friday_calculation(self):
         code = calendar_code(self.cal_spec)
         scope = {"vars": {"now": "2026-10-14T10:00"}}
+        scope["vars"]["payment_offer_quote"] = str(scope["vars"].get("payment_offer_date", ""))
         exec(code, scope)
         self.assertIn("2026-10-23 Friday", scope["vars"]["calendar_facts"])
 
     def test_035_calendar_skips_counting_today(self):
         code = calendar_code(self.cal_spec)
         scope = {"vars": {"now": "2026-10-14T10:00"}}
+        scope["vars"]["payment_offer_quote"] = str(scope["vars"].get("payment_offer_date", ""))
         exec(code, scope)
         self.assertIn("CALL TODAY: 2026-10-14 Wednesday", scope["vars"]["calendar_facts"])
         self.assertIn("2026-10-15 Thursday | business day AFTER today #1", scope["vars"]["calendar_facts"])
@@ -87,6 +94,7 @@ class CalendarAndSchemaTests(unittest.TestCase):
     def test_036_calendar_90_day_horizon(self):
         code = calendar_code(self.cal_spec)
         scope = {"vars": {"now": "2026-10-14T10:00"}}
+        scope["vars"]["payment_offer_quote"] = str(scope["vars"].get("payment_offer_date", ""))
         exec(code, scope)
         self.assertIn("business day AFTER today #40", scope["vars"]["calendar_facts"])
 
@@ -94,12 +102,14 @@ class CalendarAndSchemaTests(unittest.TestCase):
         spec = calendar_spec([("brief", "Business days are Monday to Friday, except bank holidays: 2028-12-25.")])
         code = calendar_code(spec)
         scope = {"vars": {"now": "2028-02-27T10:00"}}
+        scope["vars"]["payment_offer_quote"] = str(scope["vars"].get("payment_offer_date", ""))
         exec(code, scope)
         self.assertIn("2028-02-29 Tuesday | business day AFTER today #2", scope["vars"]["calendar_facts"])
 
     def test_038_calendar_arbitrary_now_anchor_independence(self):
         code = calendar_code(self.cal_spec)
         scope = {"vars": {"now": "2027-05-05T09:00"}}
+        scope["vars"]["payment_offer_quote"] = str(scope["vars"].get("payment_offer_date", ""))
         exec(code, scope)
         self.assertIn("CALL TODAY: 2027-05-05 Wednesday", scope["vars"]["calendar_facts"])
 
@@ -110,6 +120,7 @@ class CalendarAndSchemaTests(unittest.TestCase):
             "get_account_response.data.products.0.product_id": "p_late",
             "get_account_response.data.products.0.days_late": 25,
         }}
+        scope["vars"]["payment_offer_quote"] = str(scope["vars"].get("payment_offer_date", ""))
         exec(code, scope)
         self.assertIn("outside the allowed window", scope["vars"]["payment_date_facts"])
 
@@ -120,6 +131,7 @@ class CalendarAndSchemaTests(unittest.TestCase):
             "get_account_response.data.products.0.product_id": "p_late",
             "get_account_response.data.products.0.days_late": 25,
         }}
+        scope["vars"]["payment_offer_quote"] = str(scope["vars"].get("payment_offer_date", ""))
         exec(code, scope)
         self.assertIn("DATE TO OFFER FOR THIS PRODUCT: 2026-10-21 Wednesday", scope["vars"]["payment_date_facts"])
 
@@ -150,6 +162,7 @@ class CalendarAndSchemaTests(unittest.TestCase):
             "get_account_response.data.products.2.product_id": "overdraft_03",
             "get_account_response.data.products.2.days_late": 35,
         }}
+        scope["vars"]["payment_offer_quote"] = str(scope["vars"].get("payment_offer_date", ""))
         exec(code, scope)
         facts = scope["vars"]["payment_date_facts"]
         self.assertIn("PRODUCT card_01", facts)

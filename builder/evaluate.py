@@ -104,10 +104,12 @@ def call_telemetry(call):
     return {"observed_tool_completions": completions, "observed_failed_tool_results": errors}
 
 
-def bounded_simulation_body(body):
+def bounded_simulation_body(body, concurrent_calls=1):
     if body.get("mode") != "chat" or body.get("runsPerPersona") != 1:
         raise ContractError("Only a single text repetition per simulation is allowed")
-    return {**body, "maxRetries": 0, "maxConcurrentCalls": 1}
+    if type(concurrent_calls) is not int or concurrent_calls not in (1, 2):
+        raise ContractError("Local campaign supports one or two calls within its single simulation")
+    return {**body, "maxRetries": 0, "maxConcurrentCalls": concurrent_calls}
 
 
 def validate_results(report, ids, reps):
@@ -141,7 +143,7 @@ def worker(run_dir, runtime, brief, split, reps, style, seconds, only=None, moni
         if method == "POST" and path == "/api/v2/simulations":
             if monitored:
                 check_campaign(policy, credit_snapshot(freya), len(body["selectedPersonaIds"]))
-            body = bounded_simulation_body(body)
+            body = bounded_simulation_body(body, policy.get("simulation_max_concurrent_calls", 1))
         result = original_api(method, path, body, **params)
         if method == "POST" and path == "/api/v2/simulations":
             sim = result.get("simulation", result)

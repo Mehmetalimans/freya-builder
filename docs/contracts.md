@@ -11,6 +11,12 @@ sessizce silinmez, açık hata verir. Bağlantı kurulmadan önceki hatalar içi
 `connect_retries=2`, tool-level HTTP tekrarı için `maxRetries=0` kullanılır.
 Yeni sürüm yerelde doğrulandı; canlı yayın/geri okuma ve benchmark henüz yapılmadı.
 
+Sonraki 0.1.11 adayı, tarih çıkarımına `payment_offer_quote` ekler. Hesaplama
+node'u bu ifadenin açık bir gün içermesini arar ve kullanımdan sonra temizler;
+eksik/belirsiz ifadede tarih uydurmak yerine netleştirme ister. Bu, İngilizce
+gün ifadeleri için sınırlı bir kontroldür; alıntının ve ISO tarihin çıkarımı
+hâlâ modele bağlıdır. Desteklenmeyen ifadeler ek netleştirme gerektirebilir.
+
 ## Girdi ve saf üretim
 
 `builder.core.compile_workflow(briefs, document)` alır:
@@ -96,7 +102,9 @@ Tekrarların her birinin simülasyon kimliği `simulation-history.json` içinde 
 Belgelenmiş eşzamanlı simülasyon reddi, resmî istemcinin sınırlı süre içinde
 beklemesine aktarılır; belirsiz ağ hataları veya diğer HTTP hataları tekrarlanmaz.
 
-Her simülasyon isteği belgeli `maxRetries=0` ve `maxConcurrentCalls=1` kullanır;
+Her simülasyon isteği belgeli `maxRetries=0` kullanır. Eski koşular tek çağrıyla
+yürütüldü; 0.1.11 kampanyası `simulation_max_concurrent_calls=2` ile aynı
+simülasyonda iki çağrıya izin verir. Workspace'te tek simülasyon kontrolü sürer;
 kitin modeli, persona metni, scorer'ı ve 420 saniye çağrı sınırı korunur. Başlatma
 yanıtı hemen `remote-simulation.json` dosyasına kaydedilir; tamamlanmamış uzak
 işin sonucu benchmark olarak yayımlanmaz. Yeni işten önce sunucu çalışan
