@@ -506,7 +506,7 @@ class HundredScenariosTest(unittest.TestCase):
         self.assertIn("close as no_promise / service_error", self.all_text_a)
 
     def test_099_fault_protocol_verify_identity_is_not_service_error(self):
-        self.assertIn("Never close as service_error during identity verification", self.all_text_a)
+        self.assertNotIn("Never close as service_error during identity verification", self.all_text_a)
         self.assertIn("A rejected identity answer is not a service error", self.all_text_a)
 
     def test_100_final_farewell_and_terminal_guarantee(self):

@@ -12,7 +12,7 @@ import time
 import urllib.error
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from builder.core import ContractError, digest
+from builder.core import ContractError, digest, canonical
 from builder.campaign import check_campaign, reserve_campaign, settle_campaign
 from builder.runtime import ROOT, KIT, Trace, check_environment, check_run_workspace, exclusive, official_client, redact, write_json
 
@@ -28,6 +28,46 @@ def selected_cases(brief, split, only=None):
             raise ContractError("--only must contain unique case IDs from the requested brief and split")
         selected = [c for c in selected if c["id"] in ids]
     return selected
+
+
+def verify_platform_version_binding(client, saved, workspace_id, export_path=None):
+    """Ensure the deployed workflow version and sha256 match what is recorded in result.json before any paid simulation."""
+    if not isinstance(saved, dict):
+        raise ContractError("Invalid result.json metadata")
+    expected_version = saved.get("platform_version")
+    workflow_id = saved.get("workflow_id")
+    if not workflow_id:
+        raise ContractError("Result metadata missing workflow_id")
+    if expected_version is None:
+        raise ContractError("Result metadata missing platform_version; deploy and verify on Freya first")
+    expected_sha = saved.get("workflow_sha256")
+    if export_path:
+        p = Path(export_path)
+        if p.exists():
+            export_data = json.loads(p.read_text(encoding="utf-8"))
+            exported_workflow = export_data.get("workflow", {})
+            if expected_sha and digest(canonical(exported_workflow)) != expected_sha:
+                raise ContractError(
+                    f"Exported workflow sha256 mismatch with result.json: "
+                    f"{digest(canonical(exported_workflow))} != {expected_sha}"
+                )
+    try:
+        resp = client.api("GET", f"/api/v2/versions/workflow/{workflow_id}", workspaceId=workspace_id)
+        versions = resp.get("versions", [])
+    except Exception as err:
+        raise ContractError(f"Failed to query platform workflow versions: {err}")
+    if not isinstance(versions, list) or not versions:
+        raise ContractError(f"No versions found on platform for workflow {workflow_id}")
+    published = [v for v in versions if v.get("isPublished")]
+    active = max(published, key=lambda v: v.get("versionNumber", 0)) if published else max(versions, key=lambda v: v.get("versionNumber", 0))
+    current_live_version = active.get("versionNumber")
+    if current_live_version != expected_version:
+        raise ContractError(
+            f"Platform version mismatch: saved run recorded version {expected_version}, "
+            f"but live workflow {workflow_id} has active version {current_live_version}. "
+            "Refusing to evaluate stale build."
+        )
+    return current_live_version
 
 
 def reserve_budget(policy, state, case_runs, simulations, credit_pilot=False):
@@ -134,6 +174,7 @@ def worker(run_dir, runtime, brief, split, reps, style, seconds, only=None, moni
     sys.path.insert(0, str(runtime))
     trace = Trace(run_dir / "evaluation.trace.jsonl")
     freya = official_client(time.monotonic() + seconds, trace)
+    verify_platform_version_binding(freya, saved, os.environ["FREYA_WORKSPACE_ID"], run_dir / "workflow.export.json")
     original_api = freya.api
     policy = json.loads((ROOT / "budget.json").read_text(encoding="utf-8"))
     simulation_history = []
@@ -231,14 +272,17 @@ def main(argv=None):
             raise ContractError("Credit pilot is limited to one development case and one repetition")
         scope = digest(os.environ["FREYA_WORKSPACE_ID"])[:16]
         with exclusive(ROOT / "state" / "budget.lock"), exclusive(ROOT / "state" / f"{scope}.lock"):
+            billing_client = official_client(start + args.max_seconds, Trace(run_dir / "billing.trace.jsonl"))
+            live_version = verify_platform_version_binding(billing_client, saved, os.environ["FREYA_WORKSPACE_ID"], run_dir / "workflow.export.json")
+            summary["platform_version"] = live_version
+            summary["workflow_sha256"] = saved.get("workflow_sha256")
+            running = billing_client.api("GET", "/api/v2/simulations", workspaceId=os.environ["FREYA_WORKSPACE_ID"], status="running", limit=1)
+            if not isinstance(running.get("simulations"), list) or running["simulations"]:
+                raise ContractError("Workspace already has a running simulation, or its status is ambiguous")
             policy = json.loads((ROOT / "budget.json").read_text(encoding="utf-8"))
             ledger_path = ROOT / "state" / "budget-ledger.json"
             ledger = json.loads(ledger_path.read_text(encoding="utf-8")) if ledger_path.exists() else {}
             updated, reserve = (None, None) if args.monitored_credit else reserve_budget(policy, ledger, len(ids) * args.reps, args.reps, args.credit_pilot)
-            billing_client = official_client(start + args.max_seconds, Trace(run_dir / "billing.trace.jsonl"))
-            running = billing_client.api("GET", "/api/v2/simulations", workspaceId=os.environ["FREYA_WORKSPACE_ID"], status="running", limit=1)
-            if not isinstance(running.get("simulations"), list) or running["simulations"]:
-                raise ContractError("Workspace already has a running simulation, or its status is ambiguous")
             summary["credits_before"] = credit_snapshot(billing_client)
             if summary["credits_before"]["creditsLeft"] <= 0:
                 raise ContractError("No available workspace credit")

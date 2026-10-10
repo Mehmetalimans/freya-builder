@@ -150,9 +150,8 @@ class CompilerTests(unittest.TestCase):
 
     def test_missing_verification_signal_is_explicit_fallback(self):
         self.doc["paths"]["/verify_identity"]["post"]["responses"]["200"]["content"]["application/json"]["schema"]["properties"].pop("all_verified")
-        wf, analysis = self.compile()
-        self.assertEqual(analysis["identity_gate"], "dialogue_only")
-        self.assertEqual(wf["nodes"]["calendar_setup"]["passthrough_default_transition"], "conversation")
+        with self.assertRaises(ContractError):
+            self.compile()
 
     def test_unknown_close_success_signal_fails(self):
         self.doc["paths"]["/close_call"]["post"]["responses"]["200"]["content"]["application/json"]["schema"]["properties"].pop("ok")
