@@ -1,5 +1,10 @@
 # Ara verme kaydı — 10 Ekim 2026
 
+**11 Ekim güncellemesi:** Kullanıcı son testlerin sürdürülmesini istedi.
+Bu belgenin ara verme durumu tarihsel kayıttır. Bekleyen 0.1.11 turu salt
+okunur kurtarıldı; güncel birleşim/iletişim adayı 0.1.13 ve son kontroller
+[final-checks.md](final-checks.md) içinde izlenir.
+
 Kullanıcı açıkça ara vermeyi ve son kayıtları istedi. **Yeni test veya yayın
 başlatma; kullanıcı devam dediğinde önce aşağıdaki uzlaştırmayı yap.**
 

@@ -552,12 +552,12 @@ class StressTests(unittest.TestCase):
 
     def test_compile_with_international_characters_and_emojis(self):
         doc = deepcopy(API)
-        brief = ("# Bank Brief — Çağrı Merkezi Politikası 💳\n"
+        brief = ("# Bank Brief â€” Ã‡aÄŸrÄ± Merkezi PolitikasÄ± ğŸ’³\n"
                  "Business days are Monday to Friday, except bank holidays: 2026-10-26.\n"
                  "| 1 to 7 | early | the 7th business day after today | 1 |\n"
-                 "Müşteri Türkçe ve İngilizce konuşabilir; yanıtlar strictly in English.\n")
+                 "MÃ¼ÅŸteri TÃ¼rkÃ§e ve Ä°ngilizce konuÅŸabilir; yanÄ±tlar strictly in English.\n")
         wf, analysis = compile_workflow([("intl.md", brief)], doc)
-        self.assertIn("Çağrı Merkezi", wf["system_prompt"])
+        self.assertIn("Ã‡aÄŸrÄ± Merkezi", wf["system_prompt"])
         self.assertEqual(analysis["documents"][0]["characters"], len(brief))
 
     def test_openapi_with_various_scalar_types(self):

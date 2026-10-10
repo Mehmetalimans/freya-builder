@@ -161,8 +161,28 @@ def verify_readback(expected, exported):
     llm = actual.get("agent_config", {}).get("llmConfig", {})
     if (llm.get("provider"), llm.get("model")) != ("experimental-5", "experimental-5"):
         raise ContractError("Exported phone model is not the required event model")
+
+    # Verify exact node set
+    expected_nodes = set(expected["nodes"].keys())
+    actual_nodes = set(actual.get("nodes", {}).keys())
+    if actual_nodes != expected_nodes:
+        raise ContractError(f"Platform readback node set mismatch: expected {expected_nodes}, got {actual_nodes}")
+
+    # Verify global_nodes
+    expected_global = expected.get("global_nodes", {})
+    actual_global = actual.get("global_nodes", {})
+    if actual_global != expected_global:
+        raise ContractError("Platform readback modified global_nodes")
+
+    # Complete behavioral fields comparison per node
+    behavior_fields = (
+        "node_type", "task_message", "tools", "transitions", "terminal",
+        "pre_actions", "passthrough", "passthrough_default_transition",
+        "extraction_schema", "on_enter", "on_enter_first_entry_only",
+        "suppress_tool_results", "truncation_strategy"
+    )
     for key, node in expected["nodes"].items():
         stored = actual.get("nodes", {}).get(key, {})
-        for field in ("node_type", "task_message", "tools", "transitions", "terminal", "pre_actions", "passthrough", "passthrough_default_transition", "extraction_schema"):
+        for field in behavior_fields:
             if field in node and stored.get(field) != node[field]:
-                raise ContractError("Platform readback changed a behavior field; inspect before testing")
+                raise ContractError(f"Platform readback changed behavioral field '{field}' on node '{key}'")
