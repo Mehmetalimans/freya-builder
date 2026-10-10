@@ -85,3 +85,13 @@ Son aday için bir sınırlı 39-çağrılık tur daha ayrıldı: tarihsel kota
 3'e çıktı; resmî kit varsayılanı 5 ve belgeli maxConcurrentCalls özelliği
 kullanılır. 0.1.13 iki çağrıyla, 0.1.14 üç çağrıyla ölçülür; bu değişiklik
 yüzünden süre farkı yalnız prompt düzenlemesine atfedilemez.
+
+0.1.13 B'nin ilk tekrarında PUB-12, kredi kartı vaadi ve diğer ürünlerin
+refused notları doğruyken ikna sınırının aşılmasından başarısız oldu.
+Müşterinin ilk toplu yanıtındaki ürün retleri yeni ürüne geçerken unutuldu;
+ilk ödeme sorusu yeniden soruldu ve early-band ürüne ek floor teklifi yapıldı.
+Son 0.1.14 adayı bu durumun korunmasını açıklar. İkna sınırı yalnız açık
+`days_late` / `Persuasion attempts` tablosundan çıkarılır; son ödeme gününden
+deneme sayısı tahmin edilmez. Tanınmayan/çakışan tablo tam politika metnine
+bırakılır. Bağımsız sentetik tabloda kısa deadline + dört deneme, uzun
+deadline + sıfır deneme testleri bu ayrımı doğruladı. Toplam 107 test geçti.
