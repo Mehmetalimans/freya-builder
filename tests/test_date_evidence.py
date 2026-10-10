@@ -37,6 +37,23 @@ class DateEvidenceTests(unittest.TestCase):
         self.run_code(values)
         self.assertIn('unavailable', values['payment_date_facts'])
 
+    def test_spoken_cardinal_dates_reach_deadline_check(self):
+        for quote in ('six November', 'November six', 'twenty six October',
+                      'the twenty-six', 'on the four', 'thirty one May'):
+            with self.subTest(quote=quote):
+                values = self.values(quote)
+                values['payment_offer_date'] = '2031-11-06'
+                self.run_code(values)
+                self.assertIn('OFFER_WITHIN_WINDOW=False', values['payment_date_facts'])
+                self.assertNotIn('unavailable', values['payment_date_facts'])
+
+    def test_spoken_amounts_and_vague_periods_are_not_days(self):
+        for quote in ('one day next month', 'in six weeks', 'twenty dollars', 'some time in November'):
+            with self.subTest(quote=quote):
+                values = self.values(quote)
+                self.run_code(values)
+                self.assertIn('unavailable', values['payment_date_facts'])
+
     def test_all_extraction_fields_use_real_input_placeholders(self):
         fields = offer_extraction()
         self.assertEqual({f['name'] for f in fields}, {'payment_offer_date', 'payment_offer_quote', 'payment_offer_action'})

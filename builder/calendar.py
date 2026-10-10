@@ -88,7 +88,10 @@ try:
     month_day = r'\\b' + months + r'\\s+(?:[1-9]|[12][0-9]|3[01])\\b|\\b(?:[1-9]|[12][0-9]|3[01])\\s+(?:of\\s+)?' + months + r'\\b'
     spoken_day = r'\\b(?:first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|eleventh|twelfth|thirteenth|fourteenth|fifteenth|sixteenth|seventeenth|eighteenth|nineteenth|twentieth|twenty[- ](?:first|second|third|fourth|fifth|sixth|seventh|eighth|ninth)|thirtieth|thirty[- ]first)\\b'
     bare_day = re.fullmatch(r'(?:on )?(?:the )?(?:[1-9]|[12][0-9]|3[01])[.!?]?', evidence)
-    if not (bare_day or re.search('|'.join([day_words, numeric_day, month_day, spoken_day]), evidence)):
+    cardinal = r'(?:one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty(?:[- ](?:one|two|three|four|five|six|seven|eight|nine))?|thirty(?:[- ]one)?)'
+    spoken_month_day = r'\\b' + cardinal + r'\\s+(?:of\\s+)?' + months + r'\\b|\\b' + months + r'\\s+' + cardinal + r'\\b'
+    bare_spoken_day = re.fullmatch(r'(?:on )?(?:the )?' + cardinal + r'[.!?]?', evidence)
+    if not (bare_day or bare_spoken_day or re.search('|'.join([day_words, numeric_day, month_day, spoken_day, spoken_month_day]), evidence)):
         raise ValueError('No explicit customer day')
     today = datetime.date.fromisoformat(str(vars.get('now', ''))[:10])
     offered = datetime.date.fromisoformat(str(vars.get('payment_offer_date', ''))[:10])

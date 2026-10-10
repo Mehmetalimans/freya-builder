@@ -139,3 +139,9 @@ kur değerinin en büyüğüdür; diğer operatörlerin kullanımı da ihtiyatl�
 dahildir. Kullanım verisi yoksa/geçersizse veya sayaç gerilerse yeni test
 engellenir. Bu kontrol sağlayıcı tarafında kesin ücret tavanı değildir;
 gecikmeli faturalama belirsizliği sürer.
+
+0.1.11 geliştirme turunda ayrıca yazıyla söylenen gün biçimi hatası yakalandı.
+0.1.12 düzeltmesinin 13 public vaka × 3 ölçümüne yer bırakmak için yerel
+kampanya kotası 26 simülasyon/120 vaka koşusu olarak sınırlandı (planlanan
+tarihsel toplam 108 vaka koşusu). Bu, ek para izni değildir: 100 USD ve
+20 USD tampon aynı kaldı; yeni kredi satın alınmadı, dış model kullanılmadı.
