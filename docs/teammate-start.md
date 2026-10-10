@@ -1,5 +1,23 @@
 # Ekip arkadaşının AI aracına başlangıç metni
 
+**Güncel yönlendirme:** Aşağıdaki eski başlangıç metninin dal ve test durumu
+yerine `docs/resume-checkpoint.md` esas alınmalı. Güncel düzeltme adayı
+`fix/mirac-integration-review` / PR #6, kod 0.1.12, canlı A sürümü 0.1.11/v12.
+98 yerel test geçti. Kullanıcı testlere ara verdi; yeni simülasyon başlatma.
+Son turun birleşik puanlaması ve bütçe uzlaştırması bekliyor.
+
+Yarışma dili **İngilizce**, değerlendirme **metin** (`mode=chat`).
+Türkçe UI veya ses varsayılanları nedeniyle promptu Türkçeye çevirme.
+Sesli demo ayrı kapsamdır; mevcut metin skoru sesli başarı sayılmaz.
+
+Güncel ilk görev: `integration/v3-final` dalının yeni `1aefb49`, `803203f`,
+`5494a2e` commit'lerini PR #6 ile karşılaştır. Önceki Miraç incelemesi yalnız
+`7dc5e56` tabanını kapsıyordu. Yeni ortak adayı birleştirmeden önce kimlik
+hook'ları, şema kısıtları, tarih ifadeleri, bütçe ve sonuç kaydı regresyonlarını
+kontrol et; iki tarafın değişikliklerini koru ve kendi dalında testli PR aç.
+
+## Tarihsel başlangıç metni
+
 Freya Build the Builder v3 için private `Mehmetalimans/freya-builder` deposunda
 çalışıyoruz. Ben Freya entegrasyonu, simülasyonlar ve sonuç kaydından sorumluyum;
 diğer kişi görev analizi, agent üretimi ve otomatik düzeltmeyi geliştiriyor.

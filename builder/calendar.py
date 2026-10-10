@@ -50,8 +50,8 @@ def parse_iso_and_natural_dates(text):
 
 
 def calendar_spec(briefs):
-    # Detect workdays (default Monday through Friday)
-    workdays = [0, 1, 2, 3, 4]
+    # Require an explicit workweek; a holiday mention alone is not a calendar.
+    workdays = None
     workday_match = None
     for _, text in briefs:
         m = re.search(r"Business days are\s+([A-Za-z]+)\s*(?:to|through|-)\s*([A-Za-z]+)", text, re.I)
@@ -66,6 +66,8 @@ def calendar_spec(briefs):
             else:
                 workdays = list(range(s_idx, 7)) + list(range(0, e_idx + 1))
 
+    if workdays is None:
+        return None
     # Conservative grammar: do not guess a calendar from examples or customer cases.
     pattern = r"Business days are [A-Za-z]+\s*(?:to|through|-)\s*[A-Za-z]+,?\s*(?:except|excluding)\s*[^\n:]*holidays?:\s*([^\n]+)"
     matches = [m for _, text in briefs for m in re.finditer(pattern, text, re.I)]
@@ -73,10 +75,6 @@ def calendar_spec(briefs):
         pattern_fallback = r"(?:bank|public)\s+holidays?(?:\s+to\s+skip)?(?:\s+are)?:\s*([^\n]+)"
         matches = [m for _, text in briefs for m in re.finditer(pattern_fallback, text, re.I)]
     if not matches:
-        holiday_lines = [line for _, text in briefs for line in text.splitlines() if re.search(r"\bholiday", line, re.I)]
-        holidays = parse_iso_and_natural_dates("\n".join(holiday_lines))
-        if holidays:
-            return {"holidays": holidays, "workdays": workdays, "source": "extracted_holidays", "horizon_days": 90}
         return None
     holidays = parse_iso_and_natural_dates(matches[-1].group(1))
     if not holidays:
@@ -139,7 +137,7 @@ def calendar_node(spec, target):
 def deadline_bands(briefs):
     rows = {}
     for _, text in briefs:
-        for low, high, count in re.findall(r"\|\s*(\d+)\s*(?:to|-)\s*(\d+)\s*\|[^|\n]+\|\s*(?:the\s+|within\s+)?(\d+)(?:st|nd|rd|th)?\s+(?:business|working)\s+days?(?:\s+after\s+(?:today|call\s+date|now))?\s*\|", text, re.I):
+        for low, high, count in re.findall(r"\|\s*(\d+)\s*(?:to|-)\s*(\d+)\s*\|[^|\n]+\|\s*(?:the\s+)?(\d+)(?:st|nd|rd|th)?\s+(?:business|working)\s+days?\s+after\s+(?:today|call\s+date|now)\s*\|", text, re.I):
             low, high, count = int(low), int(high), int(count)
             if not 0 <= low <= high or not 1 <= count <= 60:
                 return None
@@ -153,8 +151,23 @@ def deadline_bands(briefs):
 def offer_code(spec, bands):
     workdays = spec.get("workdays", [0, 1, 2, 3, 4])
     return '''import datetime
+import re
 try:
     vars['payment_offer_action'] = 'none'
+    evidence = str(vars.get('payment_offer_quote', '')).strip().lower()
+    vars['payment_offer_quote'] = ''
+    # A guessed ISO date is insufficient when the caller only gave a period.
+    day_words = r'\\b(today|tomorrow|monday|tuesday|wednesday|thursday|friday|saturday|sunday)\\b'
+    numeric_day = r'\\b(?:[1-9]|[12][0-9]|3[01])(?:st|nd|rd|th)\\b|\\b[0-9]{4}-[0-9]{2}-[0-9]{2}\\b'
+    months = r'(?:january|february|march|april|may|june|july|august|september|october|november|december)'
+    month_day = r'\\b' + months + r'\\s+(?:[1-9]|[12][0-9]|3[01])\\b|\\b(?:[1-9]|[12][0-9]|3[01])\\s+(?:of\\s+)?' + months + r'\\b'
+    spoken_day = r'\\b(?:first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|eleventh|twelfth|thirteenth|fourteenth|fifteenth|sixteenth|seventeenth|eighteenth|nineteenth|twentieth|twenty[- ](?:first|second|third|fourth|fifth|sixth|seventh|eighth|ninth)|thirtieth|thirty[- ]first)\\b'
+    bare_day = re.fullmatch(r'(?:on )?(?:the )?(?:[1-9]|[12][0-9]|3[01])[.!?]?', evidence)
+    cardinal = r'(?:one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty(?:[- ](?:one|two|three|four|five|six|seven|eight|nine))?|thirty(?:[- ]one)?)'
+    spoken_month_day = r'\\b' + cardinal + r'\\s+(?:of\\s+)?' + months + r'\\b|\\b' + months + r'\\s+' + cardinal + r'\\b'
+    bare_spoken_day = re.fullmatch(r'(?:on )?(?:the )?' + cardinal + r'[.!?]?', evidence)
+    if not (bare_day or bare_spoken_day or re.search('|'.join([day_words, numeric_day, month_day, spoken_day, spoken_month_day]), evidence)):
+        raise ValueError('No explicit customer day')
     today = datetime.date.fromisoformat(str(vars.get('now', ''))[:10])
     offered = datetime.date.fromisoformat(str(vars.get('payment_offer_date', ''))[:10])
     holidays = set(HOLIDAY_LIST)
@@ -173,13 +186,13 @@ try:
     if isinstance(raw_prods, list):
         for p in raw_prods:
             if isinstance(p, dict) and 'product_id' in p:
-                products.append((p.get('product_id'), p.get('days_late', 0)))
+                products.append((p.get('product_id'), p.get('days_late')))
     if not products:
         for i in range(200):
             p_id = vars.get('get_account_response.data.products.' + str(i) + '.product_id')
             if p_id is None:
                 break
-            d_late = vars.get('get_account_response.data.products.' + str(i) + '.days_late', 0)
+            d_late = vars.get('get_account_response.data.products.' + str(i) + '.days_late')
             products.append((p_id, d_late))
     for product, late_val in products:
         late = int(late_val)
@@ -216,14 +229,21 @@ def offer_extraction():
     prompt = ("{{extractor.type_preamble}}\nCALL NOW is {{now}}. Use only that date as the anchor, never the real date. "
               "Extract a specific PAYMENT date from the latest customer utterance and recent dialogue. "
               "If it is a day of month without a month, use the month indicated by call now and the dialogue. "
-              "Next weekday means the following calendar week. Vague periods like next week are NOT exact dates. "
+              "Next weekday means the following calendar week. IMPORTANT: These instructions override all built-in date rules. "
+              "Vague periods like next week, the week after next, later this month, or the weekend are NOT exact dates. "
+              "NEVER turn a vague period into a specific date; the dialogue must ask which exact day. "
+              "Copy only the actual payment-date phrase into payment_offer_quote, verbatim from the latest CUSTOMER speech; never use an assistant quotation or add a day. "
               "Set payment_offer_action to resolve only for an explicit payment date or corrected date. "
               "For yes/no, unrelated dates, identity details or vague periods set payment_offer_action to none. "
               "Do not extract dates merely quoted by the assistant unless the customer explicitly changes them. "
               "Latest speech: {{extractor.speech}}\nRecent dialogue: {{extractor.conversation.last-10}}\n"
               "Variables: {{extractor.variables_list}}")
-    return [{"name": "payment_offer_date", "type": "date", "min_confidence": 0.5,
+    return [{"name": "payment_offer_date", "type": "date", "min_confidence": 0.8,
              "description": "Exact date explicitly proposed by the customer for payment, anchored to call now.",
              "extraction_prompt": prompt},
-            {"name": "payment_offer_action", "type": "string", "min_confidence": 0.5,
+            {"name": "payment_offer_quote", "type": "string", "min_confidence": 0.5,
+             "description": "Verbatim payment-date phrase or vague period from latest customer speech; exclude incidental dates and never invent a day or quote the assistant.",
+             "extraction_prompt": prompt},
+            {"name": "payment_offer_action", "type": "string", "min_confidence": 0.8,
+             "extraction_prompt": prompt,
              "enum_values": ["resolve", "none"], "description": "resolve only if latest customer utterance explicitly proposes or corrects an exact payment date; otherwise none."}]

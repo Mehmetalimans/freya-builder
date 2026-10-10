@@ -103,7 +103,7 @@ Kanıt: `reports/first-live-evaluation.json`; özel ham kanıt `runs/` altında.
 Kullanıcının geniş test/düzeltme talimatı önceki tek-pilot sınırını genişletti.
 İlk rezerv, tamamlanan uzak iş doğrulandıktan sonra kaydı korunarak kapatıldı.
 `--monitored-credit`: toplam 100 USD Freya izni, en az 20 USD kalan kredi
-tamponu, 20 simülasyon/84 vaka koşusu kotası ve her başlangıçta bakiye kontrolü.
+tamponu, başlangıçta 20 simülasyon/84 vaka koşusu kotası ve her başlangıçta bakiye kontrolü.
 Bu kullanıcı iznidir; vaka fiyatının doğrulandığı anlamına gelmez.
 
 Son gözlenen bakiye 197,6711 kredi × 0,5 = **98,83555 USD**. İlk 100 USD'den
@@ -116,3 +116,32 @@ Son iki çağrıdan sonra banka test servisi HTTP 500 / Cloudflare 1101 verdi.
 Yeni ücretli testler durduruldu; bu turun rezervi sonuç kurtarılana kadar tutulur.
 Arkadaşın dalındaki 0,10 USD "verified" vaka fiyatı yalnız bakiyeye dayanıyor;
 geçerli tarife kanıtı olmadığı için bu daldaki bütçeye alınmadı.
+
+## 0.1.10 ve 0.1.11 canlı doğrulama kampanyası
+
+Kullanıcının "canlı olarak uygula her şeyi test et" talimatıyla, bekleyen iki
+çağrı salt okunur kurtarmayla 1/2 olarak puanlandı; eski rezerv kapatıldı.
+Yeni başlangıç bakiyesi 197,4888 kredi × 0,5 = 98,7444 USD.
+0.1.10'un 21 çağrılık üç tekrarı ve düzeltme adayının tüm 13 public vaka × 3
+tekrarı için tarihsel koşular dahil 87 vaka koşusu gerekir. Bu nedenle yerel
+vaka kotası 84'ten 96'ya çıkarıldı; 20 simülasyon, 100 USD toplam izin ve
+20 USD tampon değişmedi. Aynı simülasyonda iki çağrı resmî istemcinin belgeli
+özelliğidir; aynı anda birden çok simülasyon başlatma izni değildir.
+
+0.1.10 ölçümü sırasında bakiye 100 USD'nin üstüne çıktı; bu oturum kredi satın
+almadı ve artışın kaynağı doğrulanmadı. Bu aralıktaki negatif bakiye farkı
+negatif test maliyeti değildir. Yeni sürüm, belgeli kullanım API'sindeki
+`totalCreditsUsed` değerini de okur; eklenen kredi harcama yetkisini artırmaz.
+100 USD izin içindeki 20 USD tampon korunarak, toplam gözlenen tüketim
+80 USD'ye ulaştığında yeni test durur. Gözlenen tüketim geçmiş en yüksek
+tüketimin, 100 USD eksi bakiyenin ve workspace toplam kullanılan kredi ×
+kur değerinin en büyüğüdür; diğer operatörlerin kullanımı da ihtiyatlı biçimde
+dahildir. Kullanım verisi yoksa/geçersizse veya sayaç gerilerse yeni test
+engellenir. Bu kontrol sağlayıcı tarafında kesin ücret tavanı değildir;
+gecikmeli faturalama belirsizliği sürer.
+
+0.1.11 geliştirme turunda ayrıca yazıyla söylenen gün biçimi hatası yakalandı.
+0.1.12 düzeltmesinin 13 public vaka × 3 ölçümüne yer bırakmak için yerel
+kampanya kotası 26 simülasyon/120 vaka koşusu olarak sınırlandı (planlanan
+tarihsel toplam 108 vaka koşusu). Bu, ek para izni değildir: 100 USD ve
+20 USD tampon aynı kaldı; yeni kredi satın alınmadı, dış model kullanılmadı.

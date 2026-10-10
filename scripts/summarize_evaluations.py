@@ -27,7 +27,9 @@ def summarize(directory):
         "completions_including_workflow_end": sum(t["observed_tool_completions"] for t in telemetry.values()),
         "failed_result_events": sum(t["observed_failed_tool_results"] for t in telemetry.values())}
     infrastructure = directory / "evaluation.infrastructure.json"
-    if infrastructure.exists(): result["infrastructure"] = json.loads(infrastructure.read_text(encoding="utf-8"))
+    if infrastructure.exists():
+        key = "previous_infrastructure" if result["recovered_read_only"] else "infrastructure"
+        result[key] = json.loads(infrastructure.read_text(encoding="utf-8"))
     if evaluation["status"] != "measured":
         result["error"] = evaluation.get("error")
         return result

@@ -14,7 +14,7 @@ import urllib.error
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from builder.core import ContractError, digest, canonical
 from builder.campaign import check_campaign, reserve_campaign, settle_campaign
-from builder.runtime import ROOT, KIT, Trace, check_environment, check_run_workspace, exclusive, official_client, redact, write_json
+from builder.runtime import ROOT, KIT, Trace, check_environment, check_run_workspace, exclusive, official_client, redact, write_json, verify_readback
 
 
 def selected_cases(brief, split, only=None):
@@ -40,26 +40,26 @@ def verify_platform_version_binding(client, saved, workspace_id, export_path=Non
         raise ContractError("Result metadata missing workflow_id")
     if expected_version is None:
         raise ContractError("Result metadata missing platform_version; deploy and verify on Freya first")
-    expected_sha = saved.get("workflow_sha256")
-    if export_path:
-        p = Path(export_path)
-        if p.exists():
-            export_data = json.loads(p.read_text(encoding="utf-8"))
-            exported_workflow = export_data.get("workflow", {})
-            if expected_sha and digest(canonical(exported_workflow)) != expected_sha:
-                raise ContractError(
-                    f"Exported workflow sha256 mismatch with result.json: "
-                    f"{digest(canonical(exported_workflow))} != {expected_sha}"
-                )
+    if not export_path:
+        raise ContractError("Version binding requires the verified export and local workflow")
+    p = Path(export_path)
+    expected = json.loads((p.parent / 'workflow.local.json').read_text(encoding='utf-8'))
+    if digest(canonical(expected)) != saved.get('workflow_sha256'):
+        raise ContractError("Local workflow hash differs from the recorded build")
+    verify_readback(expected, json.loads(p.read_text(encoding='utf-8')))
     try:
         resp = client.api("GET", f"/api/v2/versions/workflow/{workflow_id}", workspaceId=workspace_id)
         versions = resp.get("versions", [])
-    except Exception as err:
-        raise ContractError(f"Failed to query platform workflow versions: {err}")
+    except Exception:
+        raise ContractError("Cannot verify the live platform version; no test is permitted") from None
     if not isinstance(versions, list) or not versions:
         raise ContractError(f"No versions found on platform for workflow {workflow_id}")
-    published = [v for v in versions if v.get("isPublished")]
-    active = max(published, key=lambda v: v.get("versionNumber", 0)) if published else max(versions, key=lambda v: v.get("versionNumber", 0))
+    if any(type(v.get('versionNumber')) is not int for v in versions):
+        raise ContractError("Invalid platform version metadata")
+    published = [v for v in versions if v.get("isPublished") is True]
+    if not published:
+        raise ContractError("No published platform version")
+    active = max(published, key=lambda v: v['versionNumber'])
     current_live_version = active.get("versionNumber")
     if current_live_version != expected_version:
         raise ContractError(
@@ -67,6 +67,10 @@ def verify_platform_version_binding(client, saved, workspace_id, export_path=Non
             f"but live workflow {workflow_id} has active version {current_live_version}. "
             "Refusing to evaluate stale build."
         )
+    live = client.api('GET', '/api/v2/workflow/' + workflow_id, workspaceId=workspace_id)['workflow']
+    if live.get('agentId') != saved.get('agent_id'):
+        raise ContractError("Live workflow agent differs from the recorded build")
+    verify_readback(expected, {'workflow': live.get('workflow', {})})
     return current_live_version
 
 
@@ -108,7 +112,11 @@ def credit_snapshot(client):
         value = snapshot.get(key)
         if not isinstance(value, (int, float)) or isinstance(value, bool) or not math.isfinite(value) or value < 0:
             raise ContractError("Invalid workspace credit snapshot")
-    return {k: snapshot[k] for k in ("creditsLeft", "creditUsdRate")}
+    usage = client.api("GET", "/api/v2/analytics/credits", workspaceId=os.environ["FREYA_WORKSPACE_ID"])
+    used = usage.get("creditsData", {}).get("totalCreditsUsed")
+    if not isinstance(used, (int, float)) or isinstance(used, bool) or not math.isfinite(used) or used < 0:
+        raise ContractError("Invalid workspace cumulative credit usage")
+    return {**{k: snapshot[k] for k in ("creditsLeft", "creditUsdRate")}, "totalCreditsUsed": used}
 
 
 def retry_ledger_read(http, path, body=None):
@@ -144,10 +152,12 @@ def call_telemetry(call):
     return {"observed_tool_completions": completions, "observed_failed_tool_results": errors}
 
 
-def bounded_simulation_body(body):
+def bounded_simulation_body(body, concurrent_calls=1):
     if body.get("mode") != "chat" or body.get("runsPerPersona") != 1:
         raise ContractError("Only a single text repetition per simulation is allowed")
-    return {**body, "maxRetries": 0, "maxConcurrentCalls": 1}
+    if type(concurrent_calls) is not int or concurrent_calls not in (1, 2):
+        raise ContractError("Local campaign supports one or two calls within its single simulation")
+    return {**body, "maxRetries": 0, "maxConcurrentCalls": concurrent_calls}
 
 
 def validate_results(report, ids, reps):
@@ -182,7 +192,7 @@ def worker(run_dir, runtime, brief, split, reps, style, seconds, only=None, moni
         if method == "POST" and path == "/api/v2/simulations":
             if monitored:
                 check_campaign(policy, credit_snapshot(freya), len(body["selectedPersonaIds"]))
-            body = bounded_simulation_body(body)
+            body = bounded_simulation_body(body, policy.get("simulation_max_concurrent_calls", 1))
         result = original_api(method, path, body, **params)
         if method == "POST" and path == "/api/v2/simulations":
             sim = result.get("simulation", result)

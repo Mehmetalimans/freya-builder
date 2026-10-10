@@ -1,0 +1,224 @@
+{
+  "scope": "Public practice only; not hidden final benchmark",
+  "cost_note": "Balance snapshots can include other workspace activity; actual invoices are unknown.",
+  "evaluations": [
+    {
+      "run_id": "20261010T153230Z-22e5b9a3",
+      "builder_version": "0.1.9",
+      "workflow_sha256": "ff0d50fd5f13ba2779af0509dada6ba7bd3796cc902f0b057a97d3dcae0790dc",
+      "platform_version": 10,
+      "status": "measured",
+      "brief": "A",
+      "split": "dev",
+      "reps": 1,
+      "style": null,
+      "case_ids": [
+        "PUB-04",
+        "PUB-07"
+      ],
+      "seconds": 155.828,
+      "benchmark_success": 0.5,
+      "credits_before": {
+        "creditsLeft": 197.9146,
+        "creditUsdRate": 0.5
+      },
+      "credits_after": {
+        "creditsLeft": 197.6711,
+        "creditUsdRate": 0.5
+      },
+      "observed_balance_delta_usd": 0.12175,
+      "actual_cost_usd": null,
+      "simulations": [
+        {
+          "simulation_id": "779d7d64-593e-47a2-9464-4e7c93bba4d1",
+          "iteration_id": "a224a92e-b2e3-442c-990a-90ecd98b53f0",
+          "status": "completed"
+        }
+      ],
+      "recovered_read_only": true,
+      "tool_telemetry": {
+        "calls_observed": 2,
+        "completions_including_workflow_end": 13,
+        "failed_result_events": 5
+      },
+      "previous_infrastructure": {
+        "bank_ledger_http_status": 500,
+        "cloudflare_error": 1101,
+        "official_score_available": false,
+        "remote_simulation_status": "completed",
+        "judge_only_observation": {
+          "passed": 1,
+          "total": 2,
+          "not_official_score": true
+        },
+        "reason": "Bank ledger endpoint returned a non-JSON server error; recovery also failed. No new paid simulation started."
+      },
+      "passed": 1,
+      "total": 2,
+      "successful_call_runs": 1,
+      "total_call_runs": 2,
+      "cases": [
+        {
+          "id": "PUB-04",
+          "family": "Dates",
+          "passes": 0,
+          "runs": 1,
+          "pass": false
+        },
+        {
+          "id": "PUB-07",
+          "family": "Dates",
+          "passes": 1,
+          "runs": 1,
+          "pass": true
+        }
+      ],
+      "failures": [
+        {
+          "repetition": 1,
+          "id": "PUB-04",
+          "reasons": [
+            "outcome (None, None), expected ('promise', None)",
+            "promises [], expected [('p1', 1250.0, '2026-10-23')]",
+            "the call was not closed with close_call",
+            "conversation: The call failed to meet the success criteria because the agent encountered technical errors (API exceptions) during the identity verification process. Consequently, the conversation was terminated before the agent could discuss or establish a payment promise, meaning the criterion regarding the promise date of 23 October was not met. Although the agent correctly identified as a digital assistant i"
+          ]
+        }
+      ],
+      "latency": {
+        "calls_observed": 2,
+        "worst_turn_seconds": 3.4
+      }
+    },
+    {
+      "run_id": "20261010T165121Z-a6ff9daf",
+      "builder_version": "0.1.10",
+      "workflow_sha256": "cfbdfbaed62f4cc726fbf60ccd90db89e9a09f7242d575ba8a10327bf4e1a4af",
+      "platform_version": 11,
+      "status": "measured",
+      "brief": "A",
+      "split": "dev",
+      "reps": 3,
+      "style": null,
+      "case_ids": [
+        "PUB-01",
+        "PUB-02",
+        "PUB-03",
+        "PUB-04",
+        "PUB-05",
+        "PUB-06",
+        "PUB-07"
+      ],
+      "seconds": 1447.297,
+      "benchmark_success": 0.8571428571428571,
+      "credits_before": {
+        "creditsLeft": 197.4888,
+        "creditUsdRate": 0.5
+      },
+      "credits_after": {
+        "creditsLeft": 495.5333,
+        "creditUsdRate": 0.5
+      },
+      "observed_balance_delta_usd": -149.02225,
+      "actual_cost_usd": null,
+      "simulations": [
+        {
+          "simulation_id": "1ae01556-af03-4253-846f-bb02eaf4f17d",
+          "iteration_id": "5d9311c0-5fdd-4cbe-9124-b0583cbc38bb",
+          "status": "completed"
+        },
+        {
+          "simulation_id": "b312d370-8434-4c21-8eab-c513b22d1145",
+          "iteration_id": "5203cdcf-cb3d-4c6f-b920-0cd654492c45",
+          "status": "completed"
+        },
+        {
+          "simulation_id": "fc0cd521-9192-4c8b-8354-f958fbf3e486",
+          "iteration_id": "5d7d4d3a-7977-4c90-bcea-0ebafa144074",
+          "status": "completed"
+        }
+      ],
+      "recovered_read_only": false,
+      "tool_telemetry": {
+        "calls_observed": 21,
+        "completions_including_workflow_end": 160,
+        "failed_result_events": 0
+      },
+      "passed": 6,
+      "total": 7,
+      "successful_call_runs": 19,
+      "total_call_runs": 21,
+      "cases": [
+        {
+          "id": "PUB-01",
+          "family": "Happy path",
+          "passes": 3,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "id": "PUB-02",
+          "family": "Third party",
+          "passes": 3,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "id": "PUB-03",
+          "family": "Identity",
+          "passes": 3,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "id": "PUB-04",
+          "family": "Dates",
+          "passes": 3,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "id": "PUB-05",
+          "family": "Hardship",
+          "passes": 3,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "id": "PUB-06",
+          "family": "Amounts",
+          "passes": 3,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "id": "PUB-07",
+          "family": "Dates",
+          "passes": 1,
+          "runs": 3,
+          "pass": false
+        }
+      ],
+      "failures": [
+        {
+          "repetition": 2,
+          "id": "PUB-07",
+          "reasons": [
+            "conversation: The agent failed to meet the success criteria for the following reasons: 1. The agent did not ask the user for an exact payment day after the user provided a vague timeframe (\"week after next\") in Message 7; while the agent asked for payment \"today\" in Message 6, it failed to elicit a specific date from the customer for the actual promise. 2. The agent did not explicitly \"not accept 26 October\" as"
+          ]
+        },
+        {
+          "repetition": 3,
+          "id": "PUB-07",
+          "reasons": [
+            "conversation: The conversation failed on two success criteria. First, the agent did not ask the user for an exact day; while it asked if the user could pay 'today' [Message 6], it did not ask for a specific date after the user provided a vague timeframe ('week after next' [Message 7]), instead jumping directly to suggesting a date [Message 8]. Second, the agent failed to specifically reject 26 October; instead,"
+          ]
+        }
+      ],
+      "latency": {
+        "calls_observed": 21,
+        "worst_turn_seconds": 16.7
+      }
+    }
+  ]
+}

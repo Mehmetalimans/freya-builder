@@ -1,4 +1,29 @@
-# Freya builder 0.1.9 — public testler ve ölçülen düzeltmeler
+# Freya builder 0.1.12 — canlı doğrulama adayı
+
+**Kullanıcının isteğiyle ara verildi.** Yeni test başlatmadan önce
+[devam kaydını](docs/resume-checkpoint.md) oku. Canlıda 0.1.11 var;
+0.1.12 kodu hazır, henüz yayımlanmadı.
+
+**Yarışma dili İngilizce, değerlendirme biçimi metindir.** Üretilen agent'ın
+promptunda `Speak English` bulunur; resmî simülasyon `mode=chat` kullanır.
+Freya arayüzünün veya varsayılan ses ayarlarının Türkçe görünmesi bu sözleşmeyi
+değiştirmez. Sesli demo ayrıca istenirse İngilizce TTS/STT ayarları ayrı
+doğrulanmalıdır; mevcut metin testleri sesli başarı kanıtı değildir.
+[Kaynak ve uygulama ayrımı](docs/hackathon-rules.md#dil-ve-değerlendirme-biçimi).
+
+0.1.10 canlı yayımlandı ve geri okuması doğrulandı. Üç geliştirme tekrarı
+7/7, 6/7, 6/7 oldu: tüm tekrarları geçme hesabıyla 6/7. 0.1.11 müşterinin ödeme
+günü ifadesini ayrıca denetliyor; 0.1.12 yazıyla söylenen günlerin reddedilmesi
+regresyonunu düzeltiyor. Son adayın canlı ölçümü henüz tamamlanmadı.
+98 yerel test ve temiz ortam doğrulaması geçti.
+[Güncel canlı doğrulama ve başarısız denemeler](docs/live-validation.md).
+
+Miraç'ın `integration/v3-final` dalı incelendi; sabit politika/tarih talimatları,
+hatalı hook başarı yorumları ve null şema sorunları düzeltildi.
+[Bulgular ve kanıt](docs/mirac-integration-review.md). 90 yerel test geçti;
+Bu inceleme aşamasında 0.1.10 henüz canlı ölçülmemişti. Aşağıdaki canlı
+sonuçlar önceki sürümlere aittir. Ekip B public vakalarını kullanmış olduğundan
+bu vakalar artık bağımsız holdout değil, regresyon kümesidir.
 
 Resmî Build the Builder **v3** paketi üzerine kurulu, bağımlılıksız Python builder.
 Brief A için resmî istemciyle doğrulama, yayınlama, platform export'u ve geri okuma
@@ -8,9 +33,12 @@ dahil [ölçüm raporunda](reports/extended-evaluation.json) tutulur; bir sürü
 sonucu başka sürümün skoru olarak kullanılamaz. Bunlar public denemelerdir,
 gizli final skoru değildir. [Hata ve düzeltme notları](docs/extended-test-notes.md)
 ölçülen eksikleri ve üreticinin sınırlarını açıklar.
-**0.1.9 adaydır:** son iki çağrı tamamlandı, fakat banka test servisinin HTTP
-500/1101 hatası birleşik puanlamayı engelledi. Üç tekrar ve holdout henüz
-tamamlanmadı; yeni adayın skoru 6/7 olarak gösterilemez.
+**Tarihsel 0.1.9 ölçümü:** banka test servisinin HTTP 500/1101 hatası ilk
+puanlamayı engelledi. Servis düzeldikten sonra salt okunur kurtarma ile 1/2
+ölçüldü; orijinal engellenmiş kayıt korundu. Sürümler arası skor aktarılmaz.
+[Belgeler ve raporlar özeti](docs/evaluation-summary.md), bütün denemeleri,
+süre/maliyet ölçümlerini, açık sınırlamaları ve kod incelemesinin kabul ölçütlerini
+tek yerde toplar.
 [Kickoff e-postası ve uygulama kaydı](docs/kickoff-mail.md),
 [fiyat analizi](docs/cost-analysis.md) güncel kaynakları ve belirsizlikleri ayırır.
 
@@ -191,7 +219,7 @@ python -m venv --without-pip .venv
 ```
 
 Linux/macOS'ta sanal ortam Python yolu `.venv/bin/python` olur. Windows temiz
-sanal ortam kontrolü raporda belirtilir. Linux'ta birim testleri, Git güvenlik
+sanal ortam kontrolü raporda belirtilir. Önceki kod commit'inde Linux'ta birim testleri, Git güvenlik
 kontrolü ve A/A+B üretimleri [GitHub Actions'ta geçti](https://github.com/Mehmetalimans/freya-builder/actions/runs/38065145260).
 macOS üzerinde doğrulama yapılmadı.
 

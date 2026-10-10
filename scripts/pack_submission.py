@@ -12,6 +12,7 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
+import uuid
 import zipfile
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -22,7 +23,7 @@ def get_git_commit():
         out = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True)
         return out.strip()
     except Exception:
-        return "UNKNOWN_COMMIT"
+        raise RuntimeError("Submission requires an exact Git commit") from None
 
 
 def run_build(brief, api, slot, deploy=False, extra_brief=None):
@@ -40,6 +41,9 @@ def run_build(brief, api, slot, deploy=False, extra_brief=None):
         run_dir = Path(artifact["run_directory"])
     except Exception as exc:
         raise RuntimeError(f"Could not parse build artifact output for slot {slot}: {proc.stdout}") from exc
+    result = json.loads((run_dir/'result.json').read_text(encoding='utf-8'))
+    if result.get('status') != ('deployed_verified' if deploy else 'offline_validated'):
+        raise RuntimeError('Build status is not valid for the requested packaging mode')
     return run_dir
 
 
@@ -54,6 +58,10 @@ def main():
     parser.add_argument("--deploy", action="store_true", help="Deploy to Freya and export platform workflows")
     parser.add_argument("--dry-run", action="store_true", help="Run practice verification using kit Brief A & B")
     args = parser.parse_args()
+    if args.dry_run and args.deploy:
+        parser.error('--dry-run is offline practice only; it cannot deploy final slots')
+    if subprocess.check_output(['git','status','--porcelain','--untracked-files=all'],cwd=ROOT,text=True).strip():
+        parser.error('Commit source changes before packaging so the recorded commit is reproducible')
 
     if args.dry_run:
         kit = ROOT / "starter-v3" / "build-the-builder"
@@ -68,8 +76,8 @@ def main():
         extra_brief_2 = None
 
     commit = get_git_commit()
-    submission_dir = ROOT / "dist" / "submission"
-    submission_dir.mkdir(parents=True, exist_ok=True)
+    submission_dir = ROOT / "dist" / ('submission-' + uuid.uuid4().hex[:8])
+    submission_dir.mkdir(parents=True, exist_ok=False)
 
     print(f"=== Hackathon Final Packager (Commit: {commit[:8]}) ===")
 
@@ -111,7 +119,7 @@ def main():
     submission_json_path.write_text(json.dumps(submission_data, indent=2) + "\n", encoding="utf-8")
 
     # 4. Create ZIP archive
-    zip_path = ROOT / "dist" / f"submission-bundle-{commit[:8]}.zip"
+    zip_path = ROOT / "dist" / f"{submission_dir.name}-{commit[:8]}.zip"
     with zipfile.ZipFile(zip_path, "w", compression=zipfile.ZIP_DEFLATED) as arc:
         arc.write(submission_json_path, arcname="submission.json")
         arc.write(submission_dir / "hidden-1.workflow.json", arcname="hidden-1.workflow.json")

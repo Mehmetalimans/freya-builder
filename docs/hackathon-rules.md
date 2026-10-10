@@ -17,6 +17,21 @@ sayılmaz; bu repoda v3 kitinin istemcisi kullanılır.
 | Değerlendirme | 10 A + 3 B public vaka; finalde iki görülmemiş brief, her biri 30 vaka ve üç tekrar. Bir vaka tüm tekrarlarda politika, doğruluk ve banka kaydını geçmeli. |
 | Teslim | Repo URL'si, kesin commit, çalıştırma komutu, iki platform export'u ve ilgili iki iz. Gizli brief'ler 11 Ekim 17:00 UTC / 20:00 İstanbul; teslim 20:00 UTC / 23:00 İstanbul öncesi. |
 
+## Dil ve değerlendirme biçimi
+
+10 Ekim 2026'da resmî sayfa tarayıcıda yeniden okundu:
+[Overview / What counts](https://www.freyavoice.ai/hackathon#overview)
+açıkça "Calls are in English." diyor. Aynı sayfa konuşma biçimini "Text"
+olarak gösteriyor. Resmî v3 `freya.py` simülasyon isteğinde `mode=chat` kullanır.
+Bu nedenle builder'ın ürettiği agent İngilizce konuşur; mevcut
+`builder/core.py` talimatı zaten `Speak English` içerir.
+
+Freya'nın Türkçe yönetim arayüzü, agent'ın konuşma dili değildir. Workflow
+ekranında görülen Türkçe TTS/STT varsayılanları metin değerlendirmesinin dilini
+belirlemez. İngilizce sesli demo istenirse desteklenen ses ve tanıma ayarları
+ayrıca doğrulanır; metin benchmark'ını sesli moda çevirmek gerekmez.
+Bu kontrol yeni simülasyon, model değişikliği veya workflow yayını başlatmadı.
+
 ## Henüz doğrulanmayan veya çelişen noktalar
 
 - Katılımcı e-postası incelendi: [kaynak ve uygulama kaydı](kickoff-mail.md).

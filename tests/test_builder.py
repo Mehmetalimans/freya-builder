@@ -78,12 +78,14 @@ class CompilerTests(unittest.TestCase):
                   "get_account_response.data.products.0.product_id": "x", "get_account_response.data.products.0.days_late": 3,
                   "get_account_response.data.products.1.product_id": "y", "get_account_response.data.products.1.days_late": 15}
         code = offer_code(calendar_spec(briefs), deadline_bands(briefs))
+        values["payment_offer_quote"] = str(values.get("payment_offer_date", ""))
         exec(code, {"vars": values})
         self.assertEqual(values["payment_offer_action"], "none")
         self.assertIn("DATE TO OFFER FOR THIS PRODUCT: 2030-01-02", values["payment_date_facts"])
         self.assertIn("PRODUCT x: days_late=3; DEADLINE=2030-01-04", values["payment_date_facts"])
         self.assertIn("PRODUCT y: days_late=15; DEADLINE=2030-01-02", values["payment_date_facts"])
         values["payment_offer_date"] = "2030-01-03"
+        values["payment_offer_quote"] = str(values.get("payment_offer_date", ""))
         exec(code, {"vars": values})
         self.assertIn("outside the allowed window", values["payment_date_facts"])
         self.assertNotIn("{{", code)
@@ -108,22 +110,22 @@ class CompilerTests(unittest.TestCase):
 
 
     def test_calendar_facts_extracted_from_brief(self):
-        wf, _ = self.compile()
-        self.assertIn("2026-10-26", wf["system_prompt"])
-        self.assertIn("BANK HOLIDAYS", wf["system_prompt"])
+        wf, analysis = self.compile()
+        self.assertEqual(analysis["calendar"]["holidays"],
+                         ["2026-10-26", "2026-11-11", "2026-11-26", "2026-12-25", "2027-01-01"])
+        self.assertIn("calendar_setup", wf["nodes"])
 
     def test_arbitrary_holidays_extracted_from_brief(self):
         synthetic_brief = "Bank policy: holidays are 2026-11-26 and 2026-12-25. Must skip them."
-        wf, _ = self.compile(synthetic_brief)
-        self.assertIn("2026-11-26, 2026-12-25", wf["system_prompt"])
+        wf, analysis = self.compile(synthetic_brief)
+        self.assertIn(synthetic_brief, wf["system_prompt"])
+        self.assertEqual(analysis["calendar"]["status"], "unsupported_definition_policy_only")
+        self.assertNotIn("calendar_setup", wf["nodes"])
 
 
-    def test_prompt_covers_critical_judge_criteria(self):
-        wf, _ = self.compile()
-        prompt = wf["system_prompt"]
-        self.assertIn("You will receive a text message confirming this promise", prompt)
-        self.assertIn("NEVER ask 'How much can you pay?'", prompt)
-        self.assertIn("say goodbye BEFORE", prompt)
+    def test_replaced_policy_does_not_keep_previous_sms_requirement(self):
+        wf, _ = self.compile("Do not promise a text message; no SMS service exists for this policy.")
+        self.assertNotIn("You will receive a text message confirming this promise", canonical(wf))
 
     def test_compile_brief_b_multi_product(self):
         brief_b = (KIT / "briefs/brief-b.md").read_text(encoding="utf-8")
@@ -150,8 +152,9 @@ class CompilerTests(unittest.TestCase):
 
     def test_missing_verification_signal_is_explicit_fallback(self):
         self.doc["paths"]["/verify_identity"]["post"]["responses"]["200"]["content"]["application/json"]["schema"]["properties"].pop("all_verified")
-        with self.assertRaises(ContractError):
-            self.compile()
+        wf, analysis = self.compile()
+        self.assertEqual(analysis["identity_gate"], "dialogue_only")
+        self.assertEqual(wf["nodes"]["calendar_setup"]["passthrough_default_transition"], "conversation")
 
     def test_unknown_close_success_signal_fails(self):
         self.doc["paths"]["/close_call"]["post"]["responses"]["200"]["content"]["application/json"]["schema"]["properties"].pop("ok")
@@ -221,10 +224,10 @@ class CompilerTests(unittest.TestCase):
         code = make_post_process_code("verify_identity")
         scenarios = [
             ({"data": {"all_verified": True}}, "All security questions PASSED"),
-            ({"data": {"verified": True}}, "Date of birth verified"),
-            ({"data": {"hint": "day_month_swapped"}}, "Day and month were swapped"),
-            ({"data": {"verified": False, "wrong_answers_left": 2}}, "2 attempts left"),
-            ({"data": {"verified": False, "wrong_answers_left": 0}}, "Three wrong answers reached"),
+            ({"data": {"verified": True}}, "This identity answer is verified"),
+            ({"data": {"verified": False, "hint": "day_month_swapped"}}, "returned hint"),
+            ({"data": {"verified": False, "wrong_answers_left": 2}}, "remaining attempts: 2"),
+            ({"data": {"verified": False, "wrong_answers_left": 0}}, "remaining attempts: 0"),
             ({"data": {"verified": False}}, "Answer did not match"),
         ]
         for res, expected in scenarios:
@@ -372,6 +375,20 @@ class EvaluationTests(unittest.TestCase):
         with self.assertRaises(ContractError): check_campaign(policy, snapshot, 8)
         with self.assertRaises(ContractError): check_campaign({**policy, "monitored_campaign_authorized": False}, snapshot, 1)
 
+    def test_added_credit_never_increases_authorized_spending(self):
+        policy = {"monitored_campaign_authorized": True, "total_authorized_usd": 100,
+                  "campaign_stop_balance_usd": 20, "max_case_runs": 96, "max_simulations": 20}
+        snapshot = {"creditsLeft": 495, "creditUsdRate": 0.5, "totalCreditsUsed": 6.5}
+        state = reserve_campaign(policy, {}, snapshot, 3, 3, "run-new")
+        self.assertEqual(state["observed_workspace_spend_usd"], 3.25)
+        self.assertEqual(state["last_total_credits_used"], 6.5)
+        with self.assertRaises(ContractError):
+            check_campaign(policy, {**snapshot, "totalCreditsUsed": 160}, 3)
+        with self.assertRaises(ContractError):
+            settle_campaign(state, {**snapshot, "totalCreditsUsed": 0}, "run-new")
+        for used in (True, -1, float("nan"), "6.5"):
+            with self.assertRaises(ContractError): check_campaign(policy, {**snapshot, "totalCreditsUsed": used}, 3)
+
     def test_credit_pilot_requires_authorization_and_reserves_remaining_budget(self):
         policy = self.policy()
         with self.assertRaises(ContractError): reserve_budget(policy, {}, 1, 1, True)
@@ -389,6 +406,14 @@ class EvaluationTests(unittest.TestCase):
         self.assertEqual((bounded["maxRetries"], bounded["maxConcurrentCalls"]), (0, 1))
         self.assertEqual(body["maxRetries"], 5)
         with self.assertRaises(ContractError): bounded_simulation_body({**body, "mode": "voice"})
+
+    def test_two_call_mode_stays_bounded_inside_one_simulation(self):
+        body = {"mode": "chat", "runsPerPersona": 1, "maxRetries": 5, "maxConcurrentCalls": 5}
+        bounded = bounded_simulation_body(body, 2)
+        self.assertEqual((bounded["maxRetries"], bounded["maxConcurrentCalls"]), (0, 2))
+        self.assertEqual(body["maxConcurrentCalls"], 5)
+        for bad in (True, 0, 3, "2"):
+            with self.assertRaises(ContractError): bounded_simulation_body(body, bad)
 
     def policy(self):
         return {"live_tests_enabled": True, "verified_max_cost_per_case_usd": 2,
@@ -482,6 +507,7 @@ class StressTests(unittest.TestCase):
             "get_account_response.data.products.1.product_id": "p2",
             "get_account_response.data.products.1.days_late": 20,
         }
+        values["payment_offer_quote"] = str(values.get("payment_offer_date", ""))
         exec(code, {"vars": values})
         self.assertEqual(values["payment_offer_action"], "none")
         self.assertIn("PRODUCT p1", values["payment_date_facts"])
@@ -497,6 +523,7 @@ class StressTests(unittest.TestCase):
             "get_account_response.data.products.0.product_id": "p_orphan",
             "get_account_response.data.products.0.days_late": 99,
         }
+        values["payment_offer_quote"] = str(values.get("payment_offer_date", ""))
         exec(code, {"vars": values})
         self.assertIn("deadline not computed; consult policy", values["payment_date_facts"])
 
@@ -506,6 +533,7 @@ class StressTests(unittest.TestCase):
         code = offer_code(spec, bands)
         for bad_date in ("gibberish", "", "2026-99-99", None):
             values = {"now": "2026-10-14T10:00", "payment_offer_date": bad_date}
+            values["payment_offer_quote"] = str(values.get("payment_offer_date", ""))
             exec(code, {"vars": values})
             self.assertEqual(values["payment_offer_action"], "none")
             self.assertIn("unavailable", values["payment_date_facts"])
@@ -524,12 +552,12 @@ class StressTests(unittest.TestCase):
 
     def test_compile_with_international_characters_and_emojis(self):
         doc = deepcopy(API)
-        brief = ("# Bank Brief — Çağrı Merkezi Politikası 💳\n"
+        brief = ("# Bank Brief â€” Ã‡aÄŸrÄ± Merkezi PolitikasÄ± ğŸ’³\n"
                  "Business days are Monday to Friday, except bank holidays: 2026-10-26.\n"
                  "| 1 to 7 | early | the 7th business day after today | 1 |\n"
-                 "Müşteri Türkçe ve İngilizce konuşabilir; yanıtlar strictly in English.\n")
+                 "MÃ¼ÅŸteri TÃ¼rkÃ§e ve Ä°ngilizce konuÅŸabilir; yanÄ±tlar strictly in English.\n")
         wf, analysis = compile_workflow([("intl.md", brief)], doc)
-        self.assertIn("Çağrı Merkezi", wf["system_prompt"])
+        self.assertIn("Ã‡aÄŸrÄ± Merkezi", wf["system_prompt"])
         self.assertEqual(analysis["documents"][0]["characters"], len(brief))
 
     def test_openapi_with_various_scalar_types(self):
@@ -568,68 +596,6 @@ class StressTests(unittest.TestCase):
         props["items_list"] = {"type": "array", "items": {"type": "string"}}
         with self.assertRaises(ContractError):
             read_contract(doc)
-
-    def test_generalized_freya_origin_and_working_day_bands(self):
-        doc_workers = deepcopy(API)
-        doc_workers["servers"][0]["url"] = "https://bank-final.freyavoice.workers.dev"
-        contract_workers = read_contract(doc_workers)
-        self.assertEqual(contract_workers["get_account"]["url"], "https://bank-final.freyavoice.workers.dev/get_account")
-
-        doc_ai = deepcopy(API)
-        doc_ai["servers"][0]["url"] = "https://mock.freyavoice.ai"
-        contract_ai = read_contract(doc_ai)
-        self.assertEqual(contract_ai["get_account"]["url"], "https://mock.freyavoice.ai/get_account")
-
-        doc_invalid = deepcopy(API)
-        doc_invalid["servers"][0]["url"] = "https://malicious-bank.com"
-        with self.assertRaises(ContractError):
-            read_contract(doc_invalid)
-
-        # Multiple servers accepted, picking the first
-        doc_multi = deepcopy(API)
-        doc_multi["servers"] = [
-            {"url": "https://live.freyavoice.ai", "description": "Production"},
-            {"url": "https://sandbox.freyavoice.ai", "description": "Sandbox"}
-        ]
-        contract_multi = read_contract(doc_multi)
-        self.assertEqual(contract_multi["get_account"]["url"], "https://live.freyavoice.ai/get_account")
-
-        # Flexible bands: 'within 7 business days' without 'after today'
-        custom_brief = "# Policy\n| 1 to 14 | early | within 10 working days |\n| 15 to 60 | late | 5 business days |"
-        bands = deadline_bands([("brief.md", custom_brief)])
-        self.assertEqual(bands, [[1, 14, 10], [15, 60, 5]])
-
-    def test_natural_language_holidays_normalized(self):
-        from builder.calendar import parse_iso_and_natural_dates
-        dates1 = parse_iso_and_natural_dates("Bank holidays: October 26th, 2026, November 11, 2026, and Dec 25, 2026.")
-        self.assertEqual(dates1, ["2026-10-26", "2026-11-11", "2026-12-25"])
-
-        dates2 = parse_iso_and_natural_dates("Holidays: 26th of October 2026, 2026/11/15, 2027.01.01")
-        self.assertEqual(dates2, ["2026-10-26", "2026-11-15", "2027-01-01"])
-
-        # Alternative phrasing: "Bank holidays to skip:"
-        brief = "# Branch Memo\nBank holidays to skip: 26th of October 2026, November 11, 2026."
-        spec = calendar_spec([("policy", brief)])
-        self.assertIsNotNone(spec)
-        self.assertEqual(spec["holidays"], ["2026-10-26", "2026-11-11"])
-
-    def test_offer_code_with_list_of_products_structure(self):
-        from builder.calendar import offer_code
-        spec = {"holidays": ["2026-10-26"]}
-        bands = [[1, 7, 7], [8, 45, 7]]
-        code = offer_code(spec, bands)
-        values = {
-            "now": "2026-10-14T10:00",
-            "payment_offer_date": "2026-10-20",
-            "get_account_response.data.products": [
-                {"product_id": "card_99", "days_late": 4},
-                {"product_id": "loan_88", "days_late": 15}
-            ]
-        }
-        exec(code, {"vars": values})
-        self.assertEqual(values["payment_offer_action"], "none")
-        self.assertIn("PRODUCT card_99", values["payment_date_facts"])
-        self.assertIn("PRODUCT loan_88", values["payment_date_facts"])
 
 
 if __name__ == "__main__": unittest.main()

@@ -3,7 +3,28 @@
 Bu belge **mevcut kodun** ürettiği arayüzü tanımlar; planlanan düzeltme döngüsü
 henüz uygulanmış sayılmaz. Ortak dosya değişiklikleri PR incelemesi gerektirir.
 
+0.1.10 entegrasyon düzeltmesi: post-process hook'ları yalnız gerçek boolean
+başarı/doğrulama alanlarını yorumlar, banka verisini değiştirmeden açıklama ekler.
+Hook soru sırası, deneme sayısı, SMS vaadi, kapanış enum'u veya yeni retry bütçesi
+belirlemez; bu kararlar verilen politikadadır. Desteklenmeyen null şema kısıtları
+sessizce silinmez, açık hata verir. Bağlantı kurulmadan önceki hatalar için belgeli
+`connect_retries=2`, tool-level HTTP tekrarı için `maxRetries=0` kullanılır.
+0.1.10 canlı yayın/geri okuması doğrulandı. Yedi geliştirme vakasının üç
+tekrarında 19/21 çağrı geçti; tüm tekrarları geçme hesabıyla 6/7 vaka başarılı.
+
+Sonraki 0.1.11 adayı, tarih çıkarımına `payment_offer_quote` ekler. Hesaplama
+node'u bu ifadenin açık bir gün içermesini arar ve kullanımdan sonra temizler;
+eksik/belirsiz ifadede tarih uydurmak yerine netleştirme ister. Bu, İngilizce
+gün ifadeleri için sınırlı bir kontroldür; alıntının ve ISO tarihin çıkarımı
+hâlâ modele bağlıdır. Desteklenmeyen ifadeler ek netleştirme gerektirebilir.
+0.1.12 bu denetime yazıyla söylenen 1–31 gün biçimlerini de ekler.
+
 ## Girdi ve saf üretim
+
+Konuşma dili İngilizce, resmî test taşıması metindir (`mode=chat`).
+`compile_workflow` genel talimatında İngilizce konuşmayı belirtir; bu,
+Freya yönetim arayüzünün dilinden bağımsızdır. TTS/STT yapılandırması mevcut
+metin benchmark sözleşmesinin parçası değildir; sesli başarı ayrıca ölçülür.
 
 `builder.core.compile_workflow(briefs, document)` alır:
 
@@ -79,6 +100,9 @@ Rezerv ikinci denemeyi engeller ve otomatik serbest bırakılmaz.
 
 10 Ekim'deki geniş test izni için `--monitored-credit` eklendi. Her simülasyon
 öncesinde kredi kontrol edilir; bakiye 20 USD veya altındaysa yeni test başlamaz.
+Kümülatif workspace tüketimi de okunur; eklenen kredi izin sınırını büyütmez.
+Gözlenen toplam tüketim 80 USD'ye ulaştığında yeni test engellenir.
+Geçersiz/eksik kullanım verisi ve gerileyen sayaç yeniden uzlaştırma gerektirir.
 Bir simülasyonda en fazla yedi vaka, kampanyada `budget.json` kotaları uygulanır.
 Bu tampon hizmet sağlayıcının fiyat garantisi değildir. Yarım kalan koşunun
 `monitored_pending_run` rezervi uzaktaki durum incelenene kadar yeni testi engeller.
@@ -88,7 +112,9 @@ Tekrarların her birinin simülasyon kimliği `simulation-history.json` içinde 
 Belgelenmiş eşzamanlı simülasyon reddi, resmî istemcinin sınırlı süre içinde
 beklemesine aktarılır; belirsiz ağ hataları veya diğer HTTP hataları tekrarlanmaz.
 
-Her simülasyon isteği belgeli `maxRetries=0` ve `maxConcurrentCalls=1` kullanır;
+Her simülasyon isteği belgeli `maxRetries=0` kullanır. Eski koşular tek çağrıyla
+yürütüldü; 0.1.11 kampanyası `simulation_max_concurrent_calls=2` ile aynı
+simülasyonda iki çağrıya izin verir. Workspace'te tek simülasyon kontrolü sürer;
 kitin modeli, persona metni, scorer'ı ve 420 saniye çağrı sınırı korunur. Başlatma
 yanıtı hemen `remote-simulation.json` dosyasına kaydedilir; tamamlanmamış uzak
 işin sonucu benchmark olarak yayımlanmaz. Yeni işten önce sunucu çalışan
@@ -105,3 +131,8 @@ kapanmaz. Kurtarma süresi yeni bir simülasyon süresi olarak raporlanmaz.
 bildirimini okuyabilir; `holdout` veya gizli vaka değerleri kod/prompt kuralına
 elle eklenemez. Düzeltme arayüzü için yeni alan gerekecekse önce bu sözleşme
 güncellenip iki parçanın testleri aynı PR'de geçirilir.
+
+Ekip raporuna göre B public vakaları kullanılmıştır. `--split holdout` dosya
+seçimi tarihsel ayrımı korur; ekip genelinde veri bağımsızlığını garanti etmez.
+B tekrarları regresyon olarak raporlanmalı; genelleme için kullanılmamış veri
+geçmişi ayrıca doğrulanmalıdır.
