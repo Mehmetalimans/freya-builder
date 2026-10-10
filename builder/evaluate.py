@@ -15,11 +15,17 @@ from builder.core import ContractError, digest
 from builder.runtime import ROOT, KIT, Trace, check_environment, check_run_workspace, exclusive, official_client, redact, write_json
 
 
-def selected_cases(brief, split):
+def selected_cases(brief, split, only=None):
     cases = json.loads((KIT / "public-test-set.json").read_text(encoding="utf-8"))
     # Frozen without reading scripts/checks: first seven A cases are development.
     dev = {c["id"] for c in [x for x in cases if x["brief"] == "A"][:7]}
-    return [c for c in cases if c["brief"] == brief and ((c["id"] in dev) == (split == "dev"))]
+    selected = [c for c in cases if c["brief"] == brief and ((c["id"] in dev) == (split == "dev"))]
+    if only is not None:
+        ids = only.split(",")
+        if not all(ids) or len(set(ids)) != len(ids) or not set(ids) <= {c["id"] for c in selected}:
+            raise ContractError("--only must contain unique case IDs from the requested brief and split")
+        selected = [c for c in selected if c["id"] in ids]
+    return selected
 
 
 def reserve_budget(policy, state, case_runs, simulations):
@@ -60,7 +66,7 @@ def validate_results(report, ids, reps):
         raise ContractError("Scorer summary does not match all-repetitions-must-pass results")
 
 
-def worker(run_dir, runtime, brief, split, reps, style, seconds):
+def worker(run_dir, runtime, brief, split, reps, style, seconds, only=None):
     # Run the untouched organizer runner in an isolated scratch copy, with a bounded transport.
     check_environment(require_bank=True)
     saved = json.loads((run_dir / "result.json").read_text(encoding="utf-8"))
@@ -95,7 +101,7 @@ def worker(run_dir, runtime, brief, split, reps, style, seconds):
     spec = importlib.util.spec_from_file_location("official_run_cases", runtime / "tools" / "run_cases.py")
     runner = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(runner)
-    ids = [c["id"] for c in selected_cases(brief, split)]
+    ids = [c["id"] for c in selected_cases(brief, split, only)]
     sys.argv = ["run_cases.py", saved["agent_id"], "--brief", brief, "--only", ",".join(ids),
                 "--reps", str(reps), "--out", str(run_dir / "evaluation.raw.json")]
     if style: sys.argv.extend(["--style", style])
@@ -109,6 +115,7 @@ def main(argv=None):
     parser.add_argument("--brief", required=True, choices=["A", "B"])
     parser.add_argument("--split", default="dev", choices=["dev", "holdout"])
     parser.add_argument("--reps", type=int, default=1, choices=[1, 3])
+    parser.add_argument("--only", help="Comma-separated case IDs within the chosen split; use one for an initial smoke test")
     parser.add_argument("--style", choices=["pieces", "corrects", "talkative", "asks_back", "in_words"])
     parser.add_argument("--max-seconds", type=int, default=1200)
     parser.add_argument("--worker", action="store_true", help=argparse.SUPPRESS)
@@ -116,7 +123,7 @@ def main(argv=None):
     run_dir = args.run_directory.resolve()
     if not 1 <= args.max_seconds <= 1800: parser.error("max-seconds must be 1..1800")
     if args.worker:
-        worker(run_dir, run_dir / "evaluation-runtime", args.brief, args.split, args.reps, args.style, args.max_seconds)
+        worker(run_dir, run_dir / "evaluation-runtime", args.brief, args.split, args.reps, args.style, args.max_seconds, args.only)
         return 0
     summary = {"status": "blocked", "benchmark_success": None, "actual_cost_usd": None,
                "brief": args.brief, "split": args.split, "reps": args.reps, "style": args.style,
@@ -129,7 +136,7 @@ def main(argv=None):
         check_environment(require_bank=True)
         check_run_workspace(saved, os.environ["FREYA_WORKSPACE_ID"])
         summary["workspace_id"] = saved["workspace_id"]
-        ids = [c["id"] for c in selected_cases(args.brief, args.split)]
+        ids = [c["id"] for c in selected_cases(args.brief, args.split, args.only)]
         scope = digest(os.environ["FREYA_WORKSPACE_ID"])[:16]
         with exclusive(ROOT / "state" / "budget.lock"), exclusive(ROOT / "state" / f"{scope}.lock"):
             policy = json.loads((ROOT / "budget.json").read_text(encoding="utf-8"))
@@ -144,6 +151,7 @@ def main(argv=None):
             command = [sys.executable, "-I", str(Path(__file__).resolve()), str(run_dir), "--brief", args.brief,
                        "--split", args.split, "--reps", str(args.reps), "--max-seconds", str(args.max_seconds), "--worker"]
             if args.style: command += ["--style", args.style]
+            if args.only: command += ["--only", args.only]
             child = subprocess.run(command, capture_output=True, text=True, encoding="utf-8", errors="replace",
                                    timeout=args.max_seconds, env={**os.environ, "PYTHONUTF8": "1"})
             (run_dir / "evaluation.log").write_text(redact(child.stdout + child.stderr), encoding="utf-8")

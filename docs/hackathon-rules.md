@@ -19,13 +19,15 @@ sayılmaz; bu repoda v3 kitinin istemcisi kullanılır.
 
 ## Henüz doğrulanmayan veya çelişen noktalar
 
-- Katılımcı e-postasındaki son kurallar, teslim formu adresi ve yeni takım
-  workspace'inin erişimi henüz görülmedi.
+- Katılımcı e-postası incelendi: [kaynak ve uygulama kaydı](kickoff-mail.md).
+  Miraç workspace'inin API erişimi ve dağıtımı doğrulandı; teslim formu/adımları
+  e-postada henüz yok, organizatör ayrıca gönderecek.
 - Bir vakanın azami Freya maliyeti, kredi kapsamı, ek CPU/RAM/token kotaları
   ve GitHub private depo erişimi organizatör kaynağıyla henüz doğrulanmadı.
-- Yarışma sayfası birden çok üretimden birini seçmeye izin veriyor; v3 README
-  final özetindeki “bir kez” ifadesiyle fark var. Finalde çoklu koşu gerekirse
-  katılımcı e-postası/organizatör açıklaması aranmalı.
+- 10 Ekim'de güncel sayfanın ayrıntılı Submit bölümü birden çok üretimden birini
+  seçmeye açıkça izin veriyor. Overview/v3 README'deki “bir kez” ifadesiyle fark
+  sürüyor; kickoff e-postası bu ayrıntıyı ele almıyor. Her seçilen üretimin kendi
+  izi ve 30 dakika sınırı korunmalı; belirsizlik organizatöre sorulabilir.
 - Başka takımın test workspace'inde tarayıcıyla yayınlanan A workflow'u resmî
   otomatik dağıtım veya benchmark başarısı sayılmaz.
 
@@ -33,5 +35,7 @@ sayılmaz; bu repoda v3 kitinin istemcisi kullanılır.
 
 - Toplam harcama en çok 100 USD ve yalnız Freya platformunda; ek dış model API
   harcaması yok. Bu sınır iki geliştirici için tek ortak toplamdır.
+- Bakiye 100 USD olarak API ve arayüzle doğrulandı; bu simülasyon fiyatı değildir.
+  Fiyat kanıtı ve belirsizlikler [maliyet kaydında](cost-analysis.md).
 - İlk 7 A vakası geliştirme, kalan 3 A + 3 B public vaka yerel holdout'tur.
   Bu ayrım resmî gizli final seti değildir.

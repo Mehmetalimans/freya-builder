@@ -1,9 +1,11 @@
-# Freya builder 0.1.2 — ekip çalışma sürümü
+# Freya builder 0.1.3 — API dağıtımı doğrulanmış başlangıç sürümü
 
 Resmî Build the Builder **v3** paketi üzerine kurulu, bağımlılıksız Python builder.
-Bu bir **yerel olarak doğrulanmış başlangıç sürümüdür**. Üretilen A workflow'u
-tarayıcıda bir test workspace'ine aktarıldı ve yayınlandı; resmî istemciyle
-dağıtım, ücretli simülasyon, ölçülmüş yarışma skoru ve final teslimi henüz yoktur.
+Brief A için resmî istemciyle doğrulama, yayınlama, platform export'u ve geri okuma
+Miraç workspace'inde tamamlandı: mevcut baseline **v4**, `deployed_verified`.
+Ücretli simülasyon, ölçülmüş yarışma skoru ve final teslimi henüz yoktur.
+[Kickoff e-postası ve uygulama kaydı](docs/kickoff-mail.md),
+[fiyat analizi](docs/cost-analysis.md) güncel kaynakları ve belirsizlikleri ayırır.
 
 ## Ekip ve depo
 
@@ -52,7 +54,7 @@ Varsayılan çalışma çevrimdışıdır ve sıfır API isteği yapar. `runs/<r
 - `trace.jsonl`: başlangıç/bitiş, kararlar, doğrulama ve model/test kaydı.
 - `result.json`: durum, süre, maliyet ve ölçülmüşse başarı. Ölçülmeyen alanlar `null` olur.
 
-## Hesap erişimi geldikten sonra
+## Canlı API erişimi
 
 `FREYA_API_KEY`, `FREYA_WORKSPACE_ID` ve en az 16 karakterlik sabit
 `FREYA_BANK_TEAM_KEY` değerlerini yalnızca çalıştırılacak sürecin yerel ortamına
@@ -61,7 +63,9 @@ Builder `.env` dosyasını otomatik okumaz. Hesap seçimi açık workspace ID ge
 Anahtarları ekrana yazdıran komutlar kullanılmamalıdır.
 Üretim kaydı workspace ID'sini saklar; farklı workspace kimliğiyle değerlendirme
 bütçe ayırmadan durur. Workspace bilgisi olmayan eski üretim kayıtları da reddedilir.
-Bu yerel eşleşme kontrolü, API anahtarının sunucudaki yetkisini doğrulamanın yerine geçmez.
+Her resmî istemci açılışında API'den erişilebilir workspace okunur; anahtar tek
+workspace'e ait değilse veya hedefle uyuşmuyorsa herhangi bir yazma işleminden
+önce durur. Oluşturma rotası workspace'i anahtardan seçtiği için bu kontrol gereklidir.
 
 ```console
 python builder/build.py starter-v3/build-the-builder/briefs/brief-a.md starter-v3/build-the-builder/tools/openapi.json --slot practice-a --deploy
@@ -71,8 +75,8 @@ Bu işlem resmî istemciyle sunucu doğrulaması, aynı slotta oluşturma/günce
 yayınlama, geri okuma ve `workflow.export.json` oluşturma yapar. İlk oluşturma
 sonrasında da yarışma modelini ayarlayıp yayınlar. API hatalarında ham yanıt veya
 anahtar kaydedilmez; başarılı olup olmadığı belirsiz yazma işlemi otomatik tekrarlanmaz.
-Beklenmeyen platform normalizasyonu geri okuma kontrolünü durdurabilir; bu
-kontrolün gerçek Freya yanıtıyla sınanması henüz bekliyor.
+Beklenmeyen platform normalizasyonu geri okuma kontrolünü durdurabilir. Mevcut
+Brief A tanımı gerçek Freya yanıtıyla 10 Ekim'de eşleşti.
 
 ## İzinli değerlendirme ve bütçe
 
@@ -102,6 +106,11 @@ Mevcut doğrulanmış üretimin ayrı değerlendirmesi:
 python builder/evaluate.py runs/RUN_ID --brief A --split dev --reps 1
 ```
 
+İlk bağlantı ölçümünde `--only CASE_ID` ile sadece geliştirme kümesinden bir
+vaka seçilebilir. Bilinmeyen, yinelenen veya başka split'e ait kimlikler reddedilir.
+Bu seçenek bütçe kontrolünü devre dışı bırakmaz. Banka takım anahtarı en az 16
+karakterlik sabit bir takım sırrıdır; Freya erişim anahtarından ayrıdır.
+
 Geliştirme skoru: ilk 7 A vakası. Kod sabitlendikten sonra `--split holdout` ile
 kalan 3 A, A+B'den üretilen workflow için kalan 3 B ayrı ölçülür. `--reps 3`, her
 vakanın üç çalıştırmanın tamamında geçmesini gerektirir. `--style` public
@@ -123,7 +132,7 @@ kapanış adımları vardır. İş günü/istisna hesabı hâlâ telefon modelin
 Gizli brief'e ait sayı, tatil, banka adı, sonuç kodu veya kimlik sorusu kodda sabit değildir.
 Sadece skaler POST JSON gövdeleri desteklenir; desteklenmeyen şema açık hata verir.
 
-Hesap geldiğinde: doğrulama/yayınlama kontrolü → 7 geliştirme vakası ilk ölçüm →
+Sırada: simülasyon fiyat doğrulaması → tek vaka ilk ölçüm → 7 geliştirme vakası →
 gerekirse genel politika derleyici/tarih kodu iyileştirmesi → sabit sürümün ayrılan
 6 public vakada tekrarlı ölçümü → final commit ve iki export/iz dosyası.
 Gerçek skoru görmeden bu baseline'ın güçlü olduğu varsayılmamalıdır.

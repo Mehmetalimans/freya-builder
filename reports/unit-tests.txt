@@ -1,4 +1,4 @@
-{"status": "offline_validated", "run_directory": "C:\\Users\\asus\\.codex\\.chatgpt-projects\\g-p-6aca2978a33481919b0eeebee0f0aae4\\freya-builder\\dist\\clean-7349a86b\\runs\\test-temp\\tmp1kih_xps\\20261010T134947Z-a98b3242", "error": null, "error_type": null}
+{"status": "offline_validated", "run_directory": "C:\\Users\\asus\\.codex\\.chatgpt-projects\\g-p-6aca2978a33481919b0eeebee0f0aae4\\freya-builder\\dist\\clean-d41709d0\\runs\\test-temp\\tmpjsnt_xba\\20261010T144020Z-e7082344", "error": null, "error_type": null}
 test_all_seven_tools_and_schema_enums (test_builder.CompilerTests.test_all_seven_tools_and_schema_enums) ... ok
 test_changed_enums_are_input_driven (test_builder.CompilerTests.test_changed_enums_are_input_driven) ... ok
 test_changed_required_field_is_preserved (test_builder.CompilerTests.test_changed_required_field_is_preserved) ... ok
@@ -19,10 +19,12 @@ test_incomplete_and_optimistic_scores_rejected (test_builder.EvaluationTests.tes
 test_invalid_rates_and_limits_rejected (test_builder.EvaluationTests.test_invalid_rates_and_limits_rejected) ... ok
 test_no_overspend (test_builder.EvaluationTests.test_no_overspend) ... ok
 test_simulation_quota (test_builder.EvaluationTests.test_simulation_quota) ... ok
+test_smoke_subset_cannot_leak_holdout_or_duplicate_cases (test_builder.EvaluationTests.test_smoke_subset_cannot_leak_holdout_or_duplicate_cases) ... ok
 test_unknown_cost_cannot_run (test_builder.EvaluationTests.test_unknown_cost_cannot_run) ... ok
 test_credentials_never_in_trace (test_builder.RuntimeTests.test_credentials_never_in_trace) ... ok
 test_exclusive_state (test_builder.RuntimeTests.test_exclusive_state) ... ok
 test_expired_deadline_has_no_network_call (test_builder.RuntimeTests.test_expired_deadline_has_no_network_call) ... ok
+test_key_scope_must_match_before_mutations (test_builder.RuntimeTests.test_key_scope_must_match_before_mutations) ... ok
 test_matching_workspace_is_accepted (test_builder.RuntimeTests.test_matching_workspace_is_accepted) ... ok
 test_mismatched_or_unrecorded_workspace_is_rejected (test_builder.RuntimeTests.test_mismatched_or_unrecorded_workspace_is_rejected) ... ok
 test_missing_credentials_and_forbidden_model (test_builder.RuntimeTests.test_missing_credentials_and_forbidden_model) ... ok
@@ -30,6 +32,6 @@ test_publish_on_initial_create_then_readback (test_builder.RuntimeTests.test_pub
 test_readback_rejects_dropped_tools (test_builder.RuntimeTests.test_readback_rejects_dropped_tools) ... ok
 
 ----------------------------------------------------------------------
-Ran 29 tests in 0.066s
+Ran 31 tests in 0.072s
 
 OK

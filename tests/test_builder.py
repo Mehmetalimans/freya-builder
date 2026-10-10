@@ -10,7 +10,7 @@ from unittest.mock import patch
 from builder.build import deploy_workflow, main
 from builder.core import ContractError, TOOLS, canonical, compile_workflow, read_contract, validate_workflow
 from builder.evaluate import reserve_budget, selected_cases, validate_results
-from builder.runtime import KIT, Trace, FreyaTransport, check_environment, check_run_workspace, exclusive, redact, verify_readback
+from builder.runtime import KIT, Trace, FreyaTransport, check_environment, check_run_workspace, exclusive, redact, verify_readback, verify_key_workspace
 
 API = json.loads((KIT / "tools/openapi.json").read_text(encoding="utf-8"))
 BRIEF = (KIT / "briefs/brief-a.md").read_text(encoding="utf-8")
@@ -128,6 +128,14 @@ class CompilerTests(unittest.TestCase):
 
 
 class RuntimeTests(unittest.TestCase):
+    def test_key_scope_must_match_before_mutations(self):
+        for response in ({"workspaces": [{"id": "team-a"}]}, {"items": [{"id": "team-a"}]}, [{"id": "team-a"}]):
+            verify_key_workspace(response, "team-a")
+        for response in ({}, [], {"workspaces": [{"id": "team-b"}]},
+                         {"workspaces": [{"id": "team-a"}, {"id": "team-b"}]}, {"workspaces": [None]}):
+            with self.subTest(response=response), self.assertRaises(ContractError):
+                verify_key_workspace(response, "team-a")
+
     def test_matching_workspace_is_accepted(self):
         check_run_workspace({"workspace_id": "team-a"}, "team-a")
 
@@ -216,6 +224,14 @@ class EvaluationTests(unittest.TestCase):
         hold = {c["id"] for b in ("A", "B") for c in selected_cases(b, "holdout")}
         self.assertFalse(dev & hold)
         self.assertEqual((len(dev), len(hold)), (7, 6))
+
+    def test_smoke_subset_cannot_leak_holdout_or_duplicate_cases(self):
+        first = selected_cases("A", "dev")[0]["id"]
+        held = selected_cases("A", "holdout")[0]["id"]
+        self.assertEqual([c["id"] for c in selected_cases("A", "dev", first)], [first])
+        for only in (held, first + "," + first, "unknown", "", first + ","):
+            with self.subTest(only=only), self.assertRaises(ContractError):
+                selected_cases("A", "dev", only)
 
     def test_incomplete_and_optimistic_scores_rejected(self):
         report = {"final": [{"id": "case", "pass": True}], "all_rows": [[{"id": "case", "pass": False}]], "passed": 1}
