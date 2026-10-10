@@ -15,6 +15,7 @@ runs/
 dist/
 .freya-agents.json
 .personas.json
+results/
 starter-v3/build-the-builder/results/
 starter-v3/build-the-builder/traces/
 evidence/yc-event.html
