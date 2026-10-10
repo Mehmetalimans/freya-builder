@@ -570,5 +570,25 @@ class StressTests(unittest.TestCase):
         with self.assertRaises(ContractError):
             read_contract(doc)
 
+    def test_generalized_freya_origin_and_working_day_bands(self):
+        doc_workers = deepcopy(API)
+        doc_workers["servers"][0]["url"] = "https://bank-final.freyavoice.workers.dev"
+        contract_workers = read_contract(doc_workers)
+        self.assertEqual(contract_workers["get_account"]["url"], "https://bank-final.freyavoice.workers.dev/get_account")
+
+        doc_ai = deepcopy(API)
+        doc_ai["servers"][0]["url"] = "https://mock.freyavoice.ai"
+        contract_ai = read_contract(doc_ai)
+        self.assertEqual(contract_ai["get_account"]["url"], "https://mock.freyavoice.ai/get_account")
+
+        doc_invalid = deepcopy(API)
+        doc_invalid["servers"][0]["url"] = "https://malicious-bank.com"
+        with self.assertRaises(ContractError):
+            read_contract(doc_invalid)
+
+        custom_brief = "# Policy\n| 1 to 14 | early | 10th working day after call date |\n| 15 to 60 | late | the 5th business day after now |"
+        bands = deadline_bands([("brief.md", custom_brief)])
+        self.assertEqual(bands, [[1, 14, 10], [15, 60, 5]])
+
 
 if __name__ == "__main__": unittest.main()

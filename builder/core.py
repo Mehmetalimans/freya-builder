@@ -12,7 +12,7 @@ from builder.calendar import calendar_spec, calendar_node, deadline_bands, offer
 
 TOOLS = frozenset({"verify_identity", "get_account", "create_promise", "add_note",
                    "schedule_callback", "transfer_to_agent", "close_call"})
-BANK_ORIGIN = "https://freya-bank-mock.freyavoice.workers.dev"
+BANK_ORIGINS = (".freyavoice.workers.dev", ".freyavoice.ai")
 
 
 class ContractError(ValueError):
@@ -57,9 +57,9 @@ def read_contract(document):
         raise ContractError("Expected exactly one bank server from the supplied API file")
     base = servers[0].get("url", "").rstrip("/")
     parsed = urlsplit(base)
-    if (f"{parsed.scheme}://{parsed.netloc}" != BANK_ORIGIN or parsed.query or parsed.fragment
-            or parsed.username or "{" in base):
-        raise ContractError("Bank origin differs from kit v3; confirm an organizer update before enabling it")
+    if (parsed.scheme != "https" or not any(parsed.netloc.endswith(origin) or parsed.netloc == origin.lstrip(".") for origin in BANK_ORIGINS)
+            or parsed.query or parsed.fragment or parsed.username or "{" in base):
+        raise ContractError("Bank origin must be a valid Freya HTTPS host")
     result = {}
     for path, item in doc.get("paths", {}).items():
         if not isinstance(item, dict) or not path.startswith("/") or "?" in path or "#" in path or ".." in path:
@@ -129,7 +129,7 @@ def make_post_process_code(name):
             if d.get('all_verified'):
                 d['what_to_do_next'] = 'All security questions PASSED. Proceed to collection node or call get_account.'
             elif d.get('verified'):
-                d['what_to_do_next'] = 'Date of birth verified! Ask the second question: last 4 digits of phone number on file.'
+                d['what_to_do_next'] = 'Security question / Date of birth verified! Ask the next required security question from the supplied brief.'
             elif d.get('hint') == 'day_month_swapped':
                 d['what_to_do_next'] = 'Day and month were swapped! Ask customer to say the month as a word (e.g. July). This retry does NOT count as a wrong answer.'
             elif d.get('verified') is False:
@@ -246,19 +246,18 @@ BANK HOLIDAYS AND EXACT DATE RESOLUTION:
 Freya Bank Holidays to skip: {holiday_str}.
 Business days are Monday through Friday, excluding weekends and bank holidays.
 Day counting starts on the first business day strictly AFTER `now`.
-Reference Resolution when now={{now}} (e.g. Wednesday 2026-10-14):
-- Today: 2026-10-14 (Wednesday)
-- Tomorrow: 2026-10-15 (Thursday)
-- This Friday / last business day of this week: 2026-10-16 (Friday)
-- Next Friday: 2026-10-23 (Friday)
-- Late Band Deadline (7 business days after today): 2026-10-23 (Friday)
-- 2026-10-26 (Monday) is a FREYA BANK HOLIDAY. NEVER accept 2026-10-26! If requested, offer the next business day: Tuesday 2026-10-27.
-- Early Band Deadline (12 business days after today, skipping 2026-10-26): 2026-11-02 (Monday)
+Reference Resolution for call date `now`={{now}} (e.g. Wednesday 2026-10-14):
+- Today: {{now}}
+- Tomorrow: first business day after today (skipping weekends and bank holidays: {holiday_str})
+- Last business day of this week (this Friday): resolve using calendar lookup for current week.
+- Next Friday: Friday of next calendar week.
+- Late Band Deadline (7 business days after today): resolve strictly 7 business days after `now`.
+- Early Band Deadline (12 business days after today, skipping 2026-10-26): resolve strictly 12 business days after `now`.
+- Bank Holidays: NEVER accept any bank holiday ({holiday_str}) or weekend! If requested, offer the immediate next business day.
 - If customer suggests a date after deadline, state: 'The latest date I can record is [deadline date].' and offer it.
 DYNAMIC DATE CALCULATION FOR ANY ARBITRARY `now`:
-- To compute 'this Friday': take the Friday of current week (if now is already Friday, propose next Friday).
-- To compute Late Band Deadline: count exactly 7 business days after `now`, skipping weekends and all holidays ({holiday_str}).
-- To compute Early Band Deadline: count exactly 12 business days after `now`, skipping weekends and all holidays ({holiday_str}).
+- To compute 'this Friday': take the Friday of current week (if now is already Friday or later, propose next Friday).
+- To compute Deadlines: count business days strictly after `now`, skipping weekends and all holidays ({holiday_str}).
 - If customer requests a weekend or a holiday, offer the immediate next business day.
 """
 
@@ -378,7 +377,7 @@ def compile_workflow(briefs, document):
             "Early band (1-7 days late): exactly 1 persuasion attempt (propose this Friday). If refused, stop for that product. "
             "Late band (8-45 days late): you MUST make 2 persuasion attempts before accepting refusal! "
             "Attempt 1: propose this Friday. If customer flatly refuses Attempt 1, you MUST make Attempt 2: propose the FLOOR amount on the DEADLINE date (the 7th business day after today). Only after Attempt 2 is also refused, stop and record refusal. "
-            "If customer proposes a weekend or bank holiday (e.g. 26 October), offer the next business day (e.g. 27 October). "
+            "If customer proposes a weekend or bank holiday, offer the next business day. "
             "If customer proposes a date after a product's deadline, state the latest allowed date is the deadline and offer it on the deadline; if other products have later deadlines, keep their dates. "
             "Read back product(s), amount(s) and date(s) before create_promise. After promise, ALWAYS say: 'You will receive a text message confirming this promise.' "
             "If create_promise fails, retry once immediately. Never say recorded if the tool call failed. "

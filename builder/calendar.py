@@ -63,7 +63,7 @@ def calendar_node(spec, target):
 def deadline_bands(briefs):
     rows = {}
     for _, text in briefs:
-        for low, high, count in re.findall(r"\|\s*(\d+)\s*(?:to|-)\s*(\d+)\s*\|[^|\n]+\|\s*the\s+(\d+)(?:st|nd|rd|th)\s+business day after today\s*\|", text, re.I):
+        for low, high, count in re.findall(r"\|\s*(\d+)\s*(?:to|-)\s*(\d+)\s*\|[^|\n]+\|\s*(?:the\s+)?(\d+)(?:st|nd|rd|th)?\s+(?:business|working)\s+days?\s+after\s+(?:today|call\s+date|now)\s*\|", text, re.I):
             low, high, count = int(low), int(high), int(count)
             if not 0 <= low <= high or not 1 <= count <= 60:
                 return None
