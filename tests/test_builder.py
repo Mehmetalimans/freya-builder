@@ -375,6 +375,20 @@ class EvaluationTests(unittest.TestCase):
         with self.assertRaises(ContractError): check_campaign(policy, snapshot, 8)
         with self.assertRaises(ContractError): check_campaign({**policy, "monitored_campaign_authorized": False}, snapshot, 1)
 
+    def test_added_credit_never_increases_authorized_spending(self):
+        policy = {"monitored_campaign_authorized": True, "total_authorized_usd": 100,
+                  "campaign_stop_balance_usd": 20, "max_case_runs": 96, "max_simulations": 20}
+        snapshot = {"creditsLeft": 495, "creditUsdRate": 0.5, "totalCreditsUsed": 6.5}
+        state = reserve_campaign(policy, {}, snapshot, 3, 3, "run-new")
+        self.assertEqual(state["observed_workspace_spend_usd"], 3.25)
+        self.assertEqual(state["last_total_credits_used"], 6.5)
+        with self.assertRaises(ContractError):
+            check_campaign(policy, {**snapshot, "totalCreditsUsed": 160}, 3)
+        with self.assertRaises(ContractError):
+            settle_campaign(state, {**snapshot, "totalCreditsUsed": 0}, "run-new")
+        for used in (True, -1, float("nan"), "6.5"):
+            with self.assertRaises(ContractError): check_campaign(policy, {**snapshot, "totalCreditsUsed": used}, 3)
+
     def test_credit_pilot_requires_authorization_and_reserves_remaining_budget(self):
         policy = self.policy()
         with self.assertRaises(ContractError): reserve_budget(policy, {}, 1, 1, True)

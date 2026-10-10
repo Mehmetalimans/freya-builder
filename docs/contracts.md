@@ -9,7 +9,8 @@ Hook soru sırası, deneme sayısı, SMS vaadi, kapanış enum'u veya yeni retry
 belirlemez; bu kararlar verilen politikadadır. Desteklenmeyen null şema kısıtları
 sessizce silinmez, açık hata verir. Bağlantı kurulmadan önceki hatalar için belgeli
 `connect_retries=2`, tool-level HTTP tekrarı için `maxRetries=0` kullanılır.
-Yeni sürüm yerelde doğrulandı; canlı yayın/geri okuma ve benchmark henüz yapılmadı.
+0.1.10 canlı yayın/geri okuması doğrulandı. Yedi geliştirme vakasının üç
+tekrarında 19/21 çağrı geçti; tüm tekrarları geçme hesabıyla 6/7 vaka başarılı.
 
 Sonraki 0.1.11 adayı, tarih çıkarımına `payment_offer_quote` ekler. Hesaplama
 node'u bu ifadenin açık bir gün içermesini arar ve kullanımdan sonra temizler;

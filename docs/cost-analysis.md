@@ -127,3 +127,15 @@ tekrarı için tarihsel koşular dahil 87 vaka koşusu gerekir. Bu nedenle yerel
 vaka kotası 84'ten 96'ya çıkarıldı; 20 simülasyon, 100 USD toplam izin ve
 20 USD tampon değişmedi. Aynı simülasyonda iki çağrı resmî istemcinin belgeli
 özelliğidir; aynı anda birden çok simülasyon başlatma izni değildir.
+
+0.1.10 ölçümü sırasında bakiye 100 USD'nin üstüne çıktı; bu oturum kredi satın
+almadı ve artışın kaynağı doğrulanmadı. Bu aralıktaki negatif bakiye farkı
+negatif test maliyeti değildir. Yeni sürüm, belgeli kullanım API'sindeki
+`totalCreditsUsed` değerini de okur; eklenen kredi harcama yetkisini artırmaz.
+100 USD izin içindeki 20 USD tampon korunarak, toplam gözlenen tüketim
+80 USD'ye ulaştığında yeni test durur. Gözlenen tüketim geçmiş en yüksek
+tüketimin, 100 USD eksi bakiyenin ve workspace toplam kullanılan kredi ×
+kur değerinin en büyüğüdür; diğer operatörlerin kullanımı da ihtiyatlı biçimde
+dahildir. Kullanım verisi yoksa/geçersizse veya sayaç gerilerse yeni test
+engellenir. Bu kontrol sağlayıcı tarafında kesin ücret tavanı değildir;
+gecikmeli faturalama belirsizliği sürer.

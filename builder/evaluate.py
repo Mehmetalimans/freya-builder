@@ -68,7 +68,11 @@ def credit_snapshot(client):
         value = snapshot.get(key)
         if not isinstance(value, (int, float)) or isinstance(value, bool) or not math.isfinite(value) or value < 0:
             raise ContractError("Invalid workspace credit snapshot")
-    return {k: snapshot[k] for k in ("creditsLeft", "creditUsdRate")}
+    usage = client.api("GET", "/api/v2/analytics/credits", workspaceId=os.environ["FREYA_WORKSPACE_ID"])
+    used = usage.get("creditsData", {}).get("totalCreditsUsed")
+    if not isinstance(used, (int, float)) or isinstance(used, bool) or not math.isfinite(used) or used < 0:
+        raise ContractError("Invalid workspace cumulative credit usage")
+    return {**{k: snapshot[k] for k in ("creditsLeft", "creditUsdRate")}, "totalCreditsUsed": used}
 
 
 def retry_ledger_read(http, path, body=None):
