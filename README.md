@@ -1,9 +1,18 @@
-# Freya builder 0.1.2 — ekip çalışma sürümü
+# Freya builder 0.1.9 — public testler ve ölçülen düzeltmeler
 
 Resmî Build the Builder **v3** paketi üzerine kurulu, bağımlılıksız Python builder.
-Bu bir **yerel olarak doğrulanmış başlangıç sürümüdür**. Üretilen A workflow'u
-tarayıcıda bir test workspace'ine aktarıldı ve yayınlandı; resmî istemciyle
-dağıtım, ücretli simülasyon, ölçülmüş yarışma skoru ve final teslimi henüz yoktur.
+Brief A için resmî istemciyle doğrulama, yayınlama, platform export'u ve geri okuma
+Miraç workspace'inde tamamlandı. İlk geniş geliştirme turu **4/7**, ilk takvim
+ve kimlik düzeltmesi **6/7** geçti. Her sürümün ayrı sonucu, başarısız denemeler
+dahil [ölçüm raporunda](reports/extended-evaluation.json) tutulur; bir sürümün
+sonucu başka sürümün skoru olarak kullanılamaz. Bunlar public denemelerdir,
+gizli final skoru değildir. [Hata ve düzeltme notları](docs/extended-test-notes.md)
+ölçülen eksikleri ve üreticinin sınırlarını açıklar.
+**0.1.9 adaydır:** son iki çağrı tamamlandı, fakat banka test servisinin HTTP
+500/1101 hatası birleşik puanlamayı engelledi. Üç tekrar ve holdout henüz
+tamamlanmadı; yeni adayın skoru 6/7 olarak gösterilemez.
+[Kickoff e-postası ve uygulama kaydı](docs/kickoff-mail.md),
+[fiyat analizi](docs/cost-analysis.md) güncel kaynakları ve belirsizlikleri ayırır.
 
 ## Ekip ve depo
 
@@ -29,8 +38,7 @@ git switch -c integration/first-live-run
 python -m unittest discover -s tests -v
 ```
 
-`mbirlik24` için private repo daveti gönderildi; kabulü bekleniyor. Kabulden
-sonra PR inceleyicisi atanabilir. GitHub bu kişisel private depoda dal koruma
+`mbirlik24` için GitHub yazma erişimi API ile doğrulandı; PR inceleyicisi atanabilir. GitHub bu kişisel private depoda dal koruma
 kurallarının Team/Enterprise organizasyonuna taşınmadan uygulanmayacağını
 gösteriyor; PR ve diğer kişinin incelemesi şimdilik ekip kuralıdır.
 
@@ -52,7 +60,7 @@ Varsayılan çalışma çevrimdışıdır ve sıfır API isteği yapar. `runs/<r
 - `trace.jsonl`: başlangıç/bitiş, kararlar, doğrulama ve model/test kaydı.
 - `result.json`: durum, süre, maliyet ve ölçülmüşse başarı. Ölçülmeyen alanlar `null` olur.
 
-## Hesap erişimi geldikten sonra
+## Canlı API erişimi
 
 `FREYA_API_KEY`, `FREYA_WORKSPACE_ID` ve en az 16 karakterlik sabit
 `FREYA_BANK_TEAM_KEY` değerlerini yalnızca çalıştırılacak sürecin yerel ortamına
@@ -61,7 +69,9 @@ Builder `.env` dosyasını otomatik okumaz. Hesap seçimi açık workspace ID ge
 Anahtarları ekrana yazdıran komutlar kullanılmamalıdır.
 Üretim kaydı workspace ID'sini saklar; farklı workspace kimliğiyle değerlendirme
 bütçe ayırmadan durur. Workspace bilgisi olmayan eski üretim kayıtları da reddedilir.
-Bu yerel eşleşme kontrolü, API anahtarının sunucudaki yetkisini doğrulamanın yerine geçmez.
+Her resmî istemci açılışında API'den erişilebilir workspace okunur; anahtar tek
+workspace'e ait değilse veya hedefle uyuşmuyorsa herhangi bir yazma işleminden
+önce durur. Oluşturma rotası workspace'i anahtardan seçtiği için bu kontrol gereklidir.
 
 ```console
 python builder/build.py starter-v3/build-the-builder/briefs/brief-a.md starter-v3/build-the-builder/tools/openapi.json --slot practice-a --deploy
@@ -71,8 +81,8 @@ Bu işlem resmî istemciyle sunucu doğrulaması, aynı slotta oluşturma/günce
 yayınlama, geri okuma ve `workflow.export.json` oluşturma yapar. İlk oluşturma
 sonrasında da yarışma modelini ayarlayıp yayınlar. API hatalarında ham yanıt veya
 anahtar kaydedilmez; başarılı olup olmadığı belirsiz yazma işlemi otomatik tekrarlanmaz.
-Beklenmeyen platform normalizasyonu geri okuma kontrolünü durdurabilir; bu
-kontrolün gerçek Freya yanıtıyla sınanması henüz bekliyor.
+Beklenmeyen platform normalizasyonu geri okuma kontrolünü durdurabilir. Mevcut
+Brief A tanımı gerçek Freya yanıtıyla 10 Ekim'de eşleşti.
 
 ## İzinli değerlendirme ve bütçe
 
@@ -84,6 +94,13 @@ Mevcut builder dış modele çağrı yapmaz. Kullanıcı ek dış model API harc
 yetkilendirmedi; bu bütçe yalnız Freya içindir ve iki bilgisayar arasında ortaktır.
 Yerel rezerv defteri servis tarafında bir harcama kilidi değildir; güvenilir fiyat
 üst sınırı olmadan 100 USD'yi garanti edemez, bu yüzden çalışmayı reddeder.
+
+Kullanıcının sonraki açık izniyle tarifesi bilinmeyen ilk ölçüm için ayrı
+`--credit-pilot` yolu eklendi. Yalnız tek geliştirme vakası/tek tekrar kabul eder,
+otomatik tekrarları kapatır ve kalan harcama yetkisinin tamamını ayırır. Bu bir
+servis harcama tavanı değildir. İlk ölçüm tamamlandı; rezerv otomatik bırakılmadı.
+Başka bilgisayarın harcaması da aynı toplamın içindedir. Faturalama ve sonuç
+uzlaştırılmadan ikinci pilot veya toplu test başlatılamaz.
 
 Hesap ve fiyat doğrulandıktan sonra tek komutla üretim ve geliştirme testi:
 
@@ -102,6 +119,22 @@ Mevcut doğrulanmış üretimin ayrı değerlendirmesi:
 python builder/evaluate.py runs/RUN_ID --brief A --split dev --reps 1
 ```
 
+Kullanıcının yetkilendirdiği geniş public kampanyası için `--monitored-credit`
+ekleyin. Tek komutla üretim ve üç tekrar:
+
+```console
+python builder/build.py starter-v3/build-the-builder/briefs/brief-a.md starter-v3/build-the-builder/tools/openapi.json --slot practice-a --deploy --test-brief A --split dev --reps 3 --monitored-credit
+```
+
+Bu mod mevcut 100 USD Freya izni, 20 USD bakiye tamponu ve yerel kota ile sınırlıdır;
+kesin vaka fiyatı veya fatura iddiası taşımaz. Her simülasyonun ve her tamamlanan
+tekrarın kaydı korunur. Başarılı ölçüm rezervi kapatır; belirsiz uzak iş kapatmaz.
+
+İlk bağlantı ölçümünde `--only CASE_ID` ile sadece geliştirme kümesinden bir
+vaka seçilebilir. Bilinmeyen, yinelenen veya başka split'e ait kimlikler reddedilir.
+Bu seçenek bütçe kontrolünü devre dışı bırakmaz. Banka takım anahtarı en az 16
+karakterlik sabit bir takım sırrıdır; Freya erişim anahtarından ayrıdır.
+
 Geliştirme skoru: ilk 7 A vakası. Kod sabitlendikten sonra `--split holdout` ile
 kalan 3 A, A+B'den üretilen workflow için kalan 3 B ayrı ölçülür. `--reps 3`, her
 vakanın üç çalıştırmanın tamamında geçmesini gerektirir. `--style` public
@@ -111,22 +144,35 @@ konuşma varyasyonlarını destekler. Bu public ayrım gerçek gizli benchmark d
 gözlemlenebilen araç sonuçlarını saklar. Harcanan gerçek tutar servis kanıtı yoksa
 `null`, ayrılan üst sınır ayrı alandadır. Zaman aşımı başarısız/incomplete sayılır;
 uzaktaki simülasyonun iptal edildiği iddia edilmez. Rezerv otomatik iade edilmez.
-Tekrar denemeden önce uzaktaki işi ve defteri kontrol edin. Otomatik davranışsal
-düzeltme döngüsü ilk gerçek başarısızlıklar ve kalan bütçe görülene kadar eklenmedi.
+Tekrar denemeden önce uzaktaki işi ve defteri kontrol edin. Genel otomatik
+davranışsal onarım motoru henüz yoktur; geliştirme kanıtına dayalı bu düzeltmeler
+asistan tarafından yapılmıştır. Holdout sonuçları düzeltme girdisi değildir.
 
 ## Sınırlar ve sıradaki işler
 
 Baseline tüm brief'i telefon modeline verir ve API alan/enum'larını girdiden üretir.
 Kimlik yanıtında belgeli `all_verified` varsa deterministik araç kapısı kurar;
 yoksa bu kısıtın diyalog modeline bırakıldığını açıkça kaydeder. Kimlik, hesap ve
-kapanış adımları vardır. İş günü/istisna hesabı hâlâ telefon modeline bağlıdır.
+kapanış adımları vardır. Tanınan iş günü/tatil ve bant tablosunda tarih hesabı
+kodla yapılır; diğer politika yorumları ve konuşmadan tarih çıkarımı telefon
+modeline bağlıdır. Tanınmayan takvim tanımı için tam politika korunur ve sınır
+`analysis.json` içinde belirtilir; genel politika anlama garantisi yoktur.
 Gizli brief'e ait sayı, tatil, banka adı, sonuç kodu veya kimlik sorusu kodda sabit değildir.
 Sadece skaler POST JSON gövdeleri desteklenir; desteklenmeyen şema açık hata verir.
 
-Hesap geldiğinde: doğrulama/yayınlama kontrolü → 7 geliştirme vakası ilk ölçüm →
-gerekirse genel politika derleyici/tarih kodu iyileştirmesi → sabit sürümün ayrılan
+Sırada: banka servisi düzeldikten sonra bekleyen sonucu kurtarma →
+adayın tam geliştirme ve üç tekrar ölçümü → sabit sürümün ayrılan
 6 public vakada tekrarlı ölçümü → final commit ve iki export/iz dosyası.
 Gerçek skoru görmeden bu baseline'ın güçlü olduğu varsayılmamalıdır.
+
+Tamamlanan bir tek-tekrar simülasyonu ledger okuma hatasında kaldıysa:
+
+```console
+python builder/recover.py runs/RUN_ID
+```
+
+Bu komut yeni çağrı başlatmaz; ilk hata kaydını koruyup salt okuma sonucu ayrı
+dosyaya yazar. Eksik bankacılık kanıtında puan uydurmaz veya bütçeyi serbest bırakmaz.
 
 ## Tekrar üretim ve teslim
 
@@ -144,8 +190,10 @@ python -m venv --without-pip .venv
 .venv/Scripts/python.exe builder/build.py starter-v3/build-the-builder/briefs/brief-a.md starter-v3/build-the-builder/tools/openapi.json
 ```
 
-Linux/macOS'ta sanal ortam Python yolu `.venv/bin/python` olur. Bu platformlar
-henüz denenmedi; Windows temiz sanal ortam kontrolü raporda belirtilir.
+Linux/macOS'ta sanal ortam Python yolu `.venv/bin/python` olur. Windows temiz
+sanal ortam kontrolü raporda belirtilir. Linux'ta birim testleri, Git güvenlik
+kontrolü ve A/A+B üretimleri [GitHub Actions'ta geçti](https://github.com/Mehmetalimans/freya-builder/actions/runs/38065145260).
+macOS üzerinde doğrulama yapılmadı.
 
 Finalde dosya hash'i tek başına yeterli değildir: organizatör GitHub repo URL'si
 ve kesin commit ister. Gizli brief'lerden otomatik üretilmiş **iki platform export'u**

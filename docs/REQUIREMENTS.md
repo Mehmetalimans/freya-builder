@@ -31,6 +31,13 @@ Paketin README, freya.py ve docs dosyaları `starter-v3/build-the-builder/` alt�
 | Yeniden üretim | İlk on ekibin belirtilen commit'i yeniden çalıştırılır; izler de incelenir. | site Submit |
 | Katılım | Tek kişi veya iki kişilik ekip; gerçek müşteri verisi, platform probing/load test yasak. | site Rules |
 
+10 Ekim kickoff e-postası ayrıca incelendi: [mail uygulama kaydı](kickoff-mail.md).
+Maildeki Drive bağlantısı açılamadı; resmî web sayfasındaki v3 paketi yeniden
+indirildi ve yukarıdaki hash ile eşleşti. Mail gizli brief/teslim saatlerini,
+takım boyutunu, tek simülasyon kuralını ve üretim izi şartını doğruluyor; teslim
+adımlarının ayrıca gönderileceğini söylüyor. Kayıt transkriptinde son platform
+test limitlerinin daha sonra açıklanacağı belirtiliyor.
+
 ## API seçimi
 
 Genel [Create agent](https://docs.freyavoice.ai/api-reference/agents/create-agent)
@@ -39,34 +46,39 @@ workflow için `https://staging-app.freyavoice.ai/api/v2/workflow` kullanıyor.
 Workflow oluşturma şeması genel sitede belgelenmiyor; v3 `docs/api.md` esas alındı.
 Doğrulama `POST .../workflow?dryRun=true`; güncelleme sonrası yayınlama zorunlu.
 Kit bazı eski açıklamaları “not confirmed” işaretliyor; uygulama yalnızca güncel
-`freya.py` içindeki çağrıları kullanıyor. Gerçek hesapta henüz doğrulanmadı.
+`freya.py` içindeki workflow çağrıları kullanılıyor. Miraç workspace'inde 10 Ekim
+API dağıtımı, yayınlama ve resmî export geri okuması doğrulandı: baseline v4,
+`deployed_verified`. Ek kredi sorguları genel API belgelerinden doğrulanan salt
+okunur uç noktaları kullanır; bunlar workflow oluşturma şeması yerine geçmez.
 
 ## Kullanıcının doğruladıkları
 
 - Toplam üst sınır **100 USD**; son kullanıcı talimatıyla yalnızca Freya platformu
   üzerinden harcanabilir. Ek OpenAI/ChatGPT veya başka dış model API harcaması yok.
-- Kullanıcı staging workspace'e tarayıcıda giriş yaptı; buranın izin verdiği test
-  alanı olduğunu açıkça belirtti. Kendi teslim hesabı farklı olacak. Bu yetki kullanıcı
-  talimatıdır; organizatörün hesap kuralları hakkında yeni bir doğrulama değildir.
-- Tarayıcıda kullanılabilir Freya bakiyesi **96,20 USD** görüldü. Aynı hesapta başka
-  çalışma da test başlattığından bakiye farkı tek başına bizim maliyetimiz sayılamaz.
+- Güncel hedef **Mirac Birlik's Workspace**, ID `8783bb12-56fc-489a-8608-590676971f6c`.
+  Kullanıcı Buildo hedefini bıraktı. Anahtarın yalnız bu workspace'e eriştiği API
+  ile doğrulandı; kullanıcı bu oturumdaki asistanı tek test operatörü seçti.
+- Güncel bakiye **100 USD**; API 200 kredi × 0,50 USD dönüşüm ve sorgu anında
+  0 toplam kullanılan kredi gösteriyor. Önceki başka workspace'in 96,20 USD
+  gözlemi artık hedef hesabın durumu değildir. [Fiyat analizi](cost-analysis.md).
 - Anahtarlar sohbetten istenmez veya çıktılara yazılmaz.
 - `sources/` salt okunur. İnceleme sırasında boştu; başlangıç kodu veya katılımcı belgesi yoktu.
 
 ## Açık bilgiler / varsayım yapılmayan konular
 
-- Katılımcı e-postasındaki son değişiklikler, destek kanalı, kendi teslim workspace'inin API erişimi ve teslim adresi.
+- Son teslim adımları/form adresi ve kickoff'ta sonradan açıklanacağı söylenen
+  gizli brief dönemi platform test kotası. E-posta ve API erişimi artık incelendi.
 - Freya simülasyon kredi tarifesi, gerçekten tahsis edilmiş ücretsiz kredi ve bir vaka için doğrulanmış azami maliyet.
 - Builder token, RAM/CPU veya dış model istek kotası için ek katılımcı sınırı: kamu kaynaklarında ayrıca belirtilmiyor.
 - Takım adı ve ikinci geliştiricinin private depo davetini kabul durumu.
-  `mbirlik24` daveti gönderildi, kabul bekleniyor.
+  `mbirlik24` yazma erişimi GitHub API ile doğrulandı.
   Depo: https://github.com/Mehmetalimans/freya-builder .
-- Tarayıcıdan oluşturulan workflow'un v2 sürümü 10 Ekim'de yayınlandı. Otomatik API
-  dağıtımı, başlangıç benchmark skoru ve genelleme başarısı henüz **ölçülmedi**.
+- Miraç workflow'u API üzerinden v4 olarak yayınlandı. İlk geliştirme vakası
+  PUB-01 1/1 geçti; tüm geliştirme/holdout/genelleme başarısı henüz ölçülmedi.
 
-Site “birden çok üretim çalıştırması yapıp birini teslim edebilirsiniz” diyor;
-README'nin final özetinde “bir kez” deniyor. Tekrarlı canlı final üretimine ihtiyaç
-olursa organizatörün en güncel katılımcı açıklamasıyla bu tutarsızlık giderilecek.
+Güncel sitenin ayrıntılı Submit bölümü birden çok üretim çalıştırmasından birini
+seçmeye açıkça izin veriyor; Overview/README'nin final özetinde “bir kez” deniyor.
+Kickoff e-postası bu ayrıntıyı çözmüyor; tutarsızlık kaynaklarıyla kaydedildi.
 Bu sürüm gizli brief üzerinde otomatik tekrar veya düzeltme döngüsü yapmaz.
 
 ## Yerel tasarım tercihleri (yarışma kuralı değildir)

@@ -35,7 +35,7 @@ def write_json(path, value):
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     temp = path.with_suffix(path.suffix + ".tmp")
-    temp.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    temp.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
     os.replace(temp, path)
 
 
@@ -89,6 +89,14 @@ def check_run_workspace(saved, workspace_id):
         raise ContractError("Build workspace does not match the evaluation workspace; deploy separately in the intended workspace")
 
 
+def verify_key_workspace(response, workspace_id):
+    """Create routes infer the workspace from the key, so require one exact scope."""
+    items = response.get("workspaces", response.get("items")) if isinstance(response, dict) else response
+    if (not isinstance(items, list) or len(items) != 1 or not isinstance(items[0], dict)
+            or items[0].get("id") != workspace_id):
+        raise ContractError("API key workspace is ambiguous or differs from FREYA_WORKSPACE_ID; no mutation was sent")
+
+
 class NoRedirect(urllib.request.HTTPRedirectHandler):
     def redirect_request(self, *args, **kwargs):
         return None
@@ -117,6 +125,11 @@ class FreyaTransport:
         except urllib.error.HTTPError as error:
             # Do not log server bodies, headers, requests or keys. Mutations are never blindly retried.
             self.trace.emit("api_error", method=method, route=path, status=error.code)
+            # The organizer client explicitly waits on this rejection. Preserve its
+            # signal without leaking the server response or retrying ambiguous writes.
+            raw = error.read(65536).decode("utf-8", errors="replace")
+            if error.code in (403, 409, 429) and "concurrent simulations" in raw.lower():
+                raise RuntimeError("concurrent simulations: workspace is busy") from None
             raise ContractError(f"Freya returned HTTP {error.code}; inspect the platform privately") from None
         except (urllib.error.URLError, TimeoutError, json.JSONDecodeError):
             self.trace.emit("api_error", method=method, route=path, kind="transport_or_response")
@@ -136,6 +149,8 @@ def official_client(deadline, trace):
     spec.loader.exec_module(module)
     module.api = FreyaTransport(deadline, trace)
     module._ws = os.environ["FREYA_WORKSPACE_ID"]
+    verify_key_workspace(module.api("GET", "/api/v2/workspaces"), module._ws)
+    trace.emit("workspace_verified", workspace_id=module._ws)
     return module
 
 
@@ -148,6 +163,6 @@ def verify_readback(expected, exported):
         raise ContractError("Exported phone model is not the required event model")
     for key, node in expected["nodes"].items():
         stored = actual.get("nodes", {}).get(key, {})
-        for field in ("node_type", "task_message", "tools", "transitions", "terminal"):
+        for field in ("node_type", "task_message", "tools", "transitions", "terminal", "pre_actions", "passthrough", "passthrough_default_transition", "extraction_schema"):
             if field in node and stored.get(field) != node[field]:
                 raise ContractError("Platform readback changed a behavior field; inspect before testing")

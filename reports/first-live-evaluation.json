@@ -1,0 +1,45 @@
+{
+  "status": "measured",
+  "brief": "A",
+  "split": "dev",
+  "reps": 1,
+  "case_ids": [
+    "PUB-01"
+  ],
+  "passed": 1,
+  "total": 1,
+  "benchmark_success": 1.0,
+  "seconds": 79.953,
+  "evaluator_sha256": "8bbd169378f1db5b2d66cfcec5f70072979f0e9eda1e6275f96a7be823403dab",
+  "remote_simulation": {
+    "simulation_id": "3db2c2d2-7d56-4c84-8a8e-953074c30bf8",
+    "iteration_id": "099073b5-0998-46d6-9792-8691baffd351",
+    "status": "completed"
+  },
+  "credits_before": {
+    "creditsLeft": 199.7603,
+    "creditUsdRate": 0.5
+  },
+  "credits_after": {
+    "creditsLeft": 199.7204,
+    "creditUsdRate": 0.5
+  },
+  "observed_balance_delta_usd": 0.01995,
+  "actual_cost_usd": null,
+  "cost_mode": "authorized_credit_pilot",
+  "workflow_id": "82c69318-2c6a-43d3-9661-a93ea8b9b99d",
+  "workflow_version": 4,
+  "simulation_seconds": 41,
+  "scope": "One easy public development case; not holdout or final benchmark",
+  "tool_sequence": [
+    "verify_identity",
+    "verify_identity",
+    "get_account",
+    "create_promise",
+    "close_call"
+  ],
+  "tool_errors_observed": 0,
+  "platform_call_cost_raw": 0.019933,
+  "platform_call_cost_unit": "not documented; do not assume settled USD total",
+  "source_run": "runs/20261010T143548Z-dcb3f232"
+}

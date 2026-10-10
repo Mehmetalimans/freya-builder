@@ -8,6 +8,7 @@ import hashlib
 import json
 import re
 from urllib.parse import urlsplit
+from builder.calendar import calendar_spec, calendar_node, deadline_bands, offer_node, offer_extraction
 
 TOOLS = frozenset({"verify_identity", "get_account", "create_promise", "add_note",
                    "schedule_callback", "transfer_to_agent", "close_call"})
@@ -244,8 +245,21 @@ GUIDANCE = """You are the bank's digital phone assistant. Speak English, one que
 Follow the supplied policy, including its exception precedence and amended sections.
 Use actual tool calls for every required bank record. Call one tool at a time. After
 each result continue with a short relevant utterance or the next required tool; do not stall.
-Check the response body, not just HTTP success. Never announce an action as completed
-unless its result confirms it. Do not add transport retries; follow the brief's retry rules.
+For identity checks, transport success or ok=true means the request was processed;
+it does NOT mean the answer was correct. Use verified and all_verified for that.
+A rejected identity answer is not a service error. While policy allows another attempt,
+ask that same unanswered security question again. Do not skip to a different question
+or claim a technical failure. Use the returned remaining-attempt count and hints.
+Use ONLY now supplied with this call for dates; never use your real clock. Resolve relative
+dates, weekends, holidays, minimum amounts and deadlines from this brief and account results.
+Keep per-product decisions separate and preserve the bank's product order. Copy identifiers
+from results, never infer them. Preserve partial answers until complete; use the caller's
+latest correction and reconfirm any changed promise before recording it.
+Questions, digressions and incidental dates are not consent, payment offers or refusals
+unless the brief explicitly says so. Apply the brief's rules for third parties and identity.
+Do not invent terms, policy, tools, services, facts or outcomes. Tool descriptions are
+an interface reference; the supplied policy determines when each operation is allowed.
+Say the required farewell BEFORE close_call. Never make another bank call after it succeeds.
 
 TOOL FAULT PROTOCOL:
 If create_promise returns an error or ok: false, NEVER say the promise is recorded!
@@ -292,10 +306,21 @@ def compile_workflow(briefs, document):
     references = canonical({name: {"request": op["schema"], "responses": op["responses"]} for name, op in ops.items()})
     calendar_guidance = extract_calendar_guidance(combined)
     system = GUIDANCE + calendar_guidance + "\nCall variables: customer_id={{customer_id}}, first_name={{first_name}}, last_name={{last_name}}, title={{title}}, now={{now}}.\n\nSUPPLIED POLICY (complete, unabridged):\n" + combined + "\n\nSUPPLIED TOOL CONTRACTS:\n" + references
+    calendar = calendar_spec(briefs)
+
     gated = boolean_response(ops["verify_identity"], "all_verified")
     closing = success_transition("close_call", "ok", "finished")
 
     def conversation(name, tool_names, task, transitions):
+        if calendar:
+            task += ("\nDATE LOOKUP computed from call now and the supplied holiday calendar:\n{{calendar_facts}}\n"
+                     "Use these computed dates, never mental weekday or business-day arithmetic. "
+                     "For an Nth-business-day deadline select the line marked #N, separately for each product's policy band. "
+                     "Keep the proposed date distinct from the deadline. When the customer clarifies a vague period with an exact day, use that exact day. "
+                     "A holiday/weekend before the deadline is NOT a request beyond the deadline. "
+                     "When the policy requires moving it forward, use its explicit NEXT BUSINESS DAY value, then check the deadline. "
+                     "Do not substitute the deadline just because a day is a holiday or a prior answer was vague. "
+                     "The calendar is arithmetic assistance, not a replacement for the supplied date policy.")
         return {"name": name, "node_type": "conversation", "task_message": task,
                 "on_enter": {"type": "llm"}, "on_enter_first_entry_only": True,
                 "tools": [make_tool(ops[t]) for t in sorted(tool_names)],
@@ -344,17 +369,40 @@ def compile_workflow(briefs, document):
             "Never ask 'how much can you pay?'. Follow all deadline, floor, retry, and multi-product add_note rules. "
             "Speak the farewell and close_call as the final bank tool.", [closing])
         initial = "conversation"
+    bands = deadline_bands(briefs)
+    if calendar and bands and gated:
+        date_transition = {"target_node": "date_offer", "description": "A precise payment date needs calculation.",
+            "condition": {"logic": "or", "conditions": [{"variable": "payment_offer_action", "operator": "equals", "operand": "resolve", "mode": "exact"}]}}
+        nodes["collection"]["extraction_schema"] = offer_extraction()
+        nodes["collection"]["transitions"].append(date_transition)
+        nodes["date_offer"] = offer_node(calendar, bands)
+        nodes["date_reply"] = conversation("date_reply", TOOLS - {"verify_identity"},
+            "The bank account is already known. Resolve the customer's date using these freshly computed facts:\n"
+            "{{payment_date_facts}}\n"
+            "Use DATE TO OFFER for the relevant product. If a non-business offer is inside its window, briefly "
+            "explain the business-day adjustment and offer that calculated date; do not replace it with the deadline. "
+            "If it is outside the window, explain and offer the calculated deadline according to the policy. "
+            "Then complete the amount agreement, explicit read-back confirmation and actual bank records. "
+            "In a multi-product call apply the amended per-product rules, including one combined read-back. "
+            "Answer any customer question and handle exceptions before continuing; a date proposal is not a refusal. "
+            "Follow the rest of the supplied policy through closing.", [closing, date_transition])
+        nodes["date_reply"]["extraction_schema"] = offer_extraction()
     nodes["finished"] = {"name": "finished", "node_type": "end_call", "on_enter": {"type": "silent"},
         "disable_inactivity_monitor": True, "transitions": [], "terminal": {"type": "function", "function": {
             "name": "finished_end", "handler": "__function__:end_call", "description": "", "parameters": {"type": "object",
             "properties": {"message_mode": {"type": "string", "default": "none"}}}}}}
     workflow = {"initial_node": initial, "system_prompt": system, "nodes": nodes, "global_nodes": {}}
+    if calendar:
+        nodes["calendar_setup"] = calendar_node(calendar, initial)
+        workflow["initial_node"] = "calendar_setup"
     analysis = {"strategy": "lossless_policy_template_v1", "semantic_policy_extraction": False,
         "builder_model_calls": 0, "identity_gate": "bank_all_verified" if gated else "dialogue_only",
+        "calendar": calendar or {"status": "unsupported_definition_policy_only"},
+        "deadline_bands": bands,
         "documents": [{"name": name, "sha256": digest(text), "characters": len(text),
             "headings": re.findall(r"^#{1,6}\s+(.+)$", text, flags=re.M)} for name, text in briefs],
         "operations": [{"name": name, "url": op["url"], "required": op["schema"].get("required", [])} for name, op in sorted(ops.items())],
-        "limitations": ["Policy interpretation and date arithmetic remain the fixed phone model's responsibility.",
+        "limitations": ["Policy interpretation remains the fixed phone model's responsibility; calendar arithmetic supports only the documented recognized definition and a 90-day horizon.",
             "No benchmark success is implied by compilation or local validation.",
             "Only scalar POST JSON tool bodies are supported; unsupported contracts fail explicitly."]}
     validate_workflow(workflow, ops)
@@ -377,10 +425,19 @@ def validate_workflow(workflow, operations):
         raise ContractError("Missing entry node")
     seen_tools = set()
     for name, node in nodes.items():
-        if node.get("name") != name or node.get("node_type") not in {"conversation", "end_call"}:
+        if node.get("name") != name or node.get("node_type") not in {"conversation", "end_call", "code"}:
             raise ContractError("Invalid baseline node")
-        if node.get("pre_actions"):
+        if node.get("pre_actions") and name not in {"calendar_setup", "date_offer"}:
             raise ContractError("Unexpected pre_actions")
+        if name in {"calendar_setup", "date_offer"}:
+            action = node.get("pre_actions", [{}])[0].get("function", {})
+            code = action.get("parameters", {}).get("properties", {}).get("code", {}).get("default", "")
+            if action.get("handler") != "__function__:code_exec" or not code or "{{" in code or "}}" in code:
+                raise ContractError("Invalid calendar calculation")
+            try:
+                compile(code, name, "exec")
+            except SyntaxError:
+                raise ContractError("Generated calendar code has invalid syntax") from None
         for transition in node.get("transitions", []):
             if transition["target_node"] not in nodes:
                 raise ContractError("Dangling transition")
