@@ -1,0 +1,25 @@
+name: Offline checks
+on:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  offline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.14'
+      - name: Unit tests
+        run: python -m unittest discover -s tests -v
+      - name: Git and credential check
+        run: python scripts/check_git_safety.py
+      - name: Offline A and A+B builds
+        run: |
+          python builder/build.py starter-v3/build-the-builder/briefs/brief-a.md starter-v3/build-the-builder/tools/openapi.json --slot ci-a
+          python builder/build.py starter-v3/build-the-builder/briefs/brief-a.md starter-v3/build-the-builder/tools/openapi.json --extra-brief starter-v3/build-the-builder/briefs/brief-b.md --slot ci-b
+      - name: Source release
+        run: python scripts/release.py

@@ -4,6 +4,12 @@ __pycache__/
 env.sh
 .env
 .env.*
+!.env.example
+.envrc
+*.local.env
+.vscode/
+.idea/
+handoff/
 state/
 runs/
 dist/
