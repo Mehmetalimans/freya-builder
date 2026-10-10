@@ -1,0 +1,11 @@
+{
+  "currency": "USD",
+  "total_authorized_usd": 100,
+  "authorization_date": "2026-10-10",
+  "authorization_source": "User in this chat; Freya and external builder model spending combined",
+  "verified_max_cost_per_case_usd": null,
+  "cost_bound_evidence": null,
+  "live_tests_enabled": false,
+  "max_simulations": 3,
+  "max_case_runs": 39
+}

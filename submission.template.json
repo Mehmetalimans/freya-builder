@@ -1,0 +1,9 @@
+{
+  "team": null,
+  "repo": null,
+  "commit": null,
+  "run_command": "python builder/build.py {brief_path} {tool_api_path} --deploy --slot {brief_label}",
+  "workflows": {"hidden-1": null, "hidden-2": null},
+  "traces": {"hidden-1": null, "hidden-2": null},
+  "status": "NOT_READY_NOT_SUBMITTED"
+}

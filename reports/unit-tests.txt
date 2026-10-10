@@ -1,0 +1,33 @@
+{"status": "offline_validated", "run_directory": "C:\\Users\\asus\\.codex\\.chatgpt-projects\\g-p-6aca2978a33481919b0eeebee0f0aae4\\freya-builder\\dist\\clean-010370c9\\runs\\test-temp\\tmp88s5rwpn\\20261010T125045Z-b37afb9d", "error": null, "error_type": null}
+test_all_seven_tools_and_schema_enums (test_builder.CompilerTests.test_all_seven_tools_and_schema_enums) ... ok
+test_changed_enums_are_input_driven (test_builder.CompilerTests.test_changed_enums_are_input_driven) ... ok
+test_changed_required_field_is_preserved (test_builder.CompilerTests.test_changed_required_field_is_preserved) ... ok
+test_cli_offline_never_uses_network (test_builder.CompilerTests.test_cli_offline_never_uses_network) ... ok
+test_deterministic (test_builder.CompilerTests.test_deterministic) ... ok
+test_empty_brief_rejected (test_builder.CompilerTests.test_empty_brief_rejected) ... ok
+test_external_and_cyclic_refs_rejected (test_builder.CompilerTests.test_external_and_cyclic_refs_rejected) ... ok
+test_full_policy_and_no_test_customer_in_artifact (test_builder.CompilerTests.test_full_policy_and_no_test_customer_in_artifact) ... ok
+test_identity_tools_unavailable_before_bank_verification (test_builder.CompilerTests.test_identity_tools_unavailable_before_bank_verification) ... ok
+test_local_ref_resolution (test_builder.CompilerTests.test_local_ref_resolution) ... ok
+test_missing_verification_signal_is_explicit_fallback (test_builder.CompilerTests.test_missing_verification_signal_is_explicit_fallback) ... ok
+test_raw_memo_and_overrides_are_preserved_in_order (test_builder.CompilerTests.test_raw_memo_and_overrides_are_preserved_in_order) ... ok
+test_unknown_close_success_signal_fails (test_builder.CompilerTests.test_unknown_close_success_signal_fails) ... ok
+test_unsupported_shapes_and_hosts_rejected (test_builder.CompilerTests.test_unsupported_shapes_and_hosts_rejected) ... ok
+test_workflow_tampering_rejected (test_builder.CompilerTests.test_workflow_tampering_rejected) ... ok
+test_dev_and_holdout_are_disjoint_and_cover_13 (test_builder.EvaluationTests.test_dev_and_holdout_are_disjoint_and_cover_13) ... ok
+test_incomplete_and_optimistic_scores_rejected (test_builder.EvaluationTests.test_incomplete_and_optimistic_scores_rejected) ... ok
+test_invalid_rates_and_limits_rejected (test_builder.EvaluationTests.test_invalid_rates_and_limits_rejected) ... ok
+test_no_overspend (test_builder.EvaluationTests.test_no_overspend) ... ok
+test_simulation_quota (test_builder.EvaluationTests.test_simulation_quota) ... ok
+test_unknown_cost_cannot_run (test_builder.EvaluationTests.test_unknown_cost_cannot_run) ... ok
+test_credentials_never_in_trace (test_builder.RuntimeTests.test_credentials_never_in_trace) ... ok
+test_exclusive_state (test_builder.RuntimeTests.test_exclusive_state) ... ok
+test_expired_deadline_has_no_network_call (test_builder.RuntimeTests.test_expired_deadline_has_no_network_call) ... ok
+test_missing_credentials_and_forbidden_model (test_builder.RuntimeTests.test_missing_credentials_and_forbidden_model) ... ok
+test_publish_on_initial_create_then_readback (test_builder.RuntimeTests.test_publish_on_initial_create_then_readback) ... ok
+test_readback_rejects_dropped_tools (test_builder.RuntimeTests.test_readback_rejects_dropped_tools) ... ok
+
+----------------------------------------------------------------------
+Ran 27 tests in 0.058s
+
+OK

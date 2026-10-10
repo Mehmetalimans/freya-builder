@@ -1,0 +1,3 @@
+# No third-party runtime or test dependencies.
+# Validated runtime: CPython 3.12.14 (64-bit Windows).
+# Official kit's optional Claude SDK example is reference-only, not our execution path.

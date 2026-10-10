@@ -1,0 +1,2 @@
+# Preserve exact bytes: the vendored client and source release are SHA-256 pinned.
+* -text
