@@ -1,8 +1,37 @@
-# Freya builder 0.1.1 — ilk baseline
+# Freya builder 0.1.2 — ekip çalışma sürümü
 
 Resmî Build the Builder **v3** paketi üzerine kurulu, bağımlılıksız Python builder.
-Bu bir **yerel olarak doğrulanmış başlangıç sürümüdür**. Freya hesabında henüz
-çalıştırılmadı; ölçülmüş yarışma skoru ve final teslime hazır olma iddiası yoktur.
+Bu bir **yerel olarak doğrulanmış başlangıç sürümüdür**. Üretilen A workflow'u
+tarayıcıda bir test workspace'ine aktarıldı ve yayınlandı; resmî istemciyle
+dağıtım, ücretli simülasyon, ölçülmüş yarışma skoru ve final teslimi henüz yoktur.
+
+## Ekip ve depo
+
+Private GitHub deposu: [Mehmetalimans/freya-builder](https://github.com/Mehmetalimans/freya-builder).
+Görev analizi, agent üretimi ve otomatik düzeltme kullanıcıya; Freya entegrasyonu,
+simülasyon ve sonuç kaydı ekip arkadaşına aittir. Mevcut dosya sınırları ve ortak
+girdi/çıktı sözleşmesi [docs/contracts.md](docs/contracts.md), görevler
+[docs/tasks.md](docs/tasks.md), doğrulanmış ve açık yarışma kuralları
+[docs/hackathon-rules.md](docs/hackathon-rules.md) içindedir. AI araçları önce
+[AGENTS.md](AGENTS.md) dosyasını okumalıdır.
+
+Her kişi `master` tabanından kendi dalını açar; örnekler `builder/policy-analysis`
+ve `integration/first-live-run`. Değişiklikleri test edip pull request açar, diğer
+kişi inceleyince birleştirir. Ana dala doğrudan geliştirme push'u yapılmaz.
+Başlangıç dalı `master` olarak korunur. GitHub erişimi olan ikinci bilgisayarda:
+
+```console
+git clone https://github.com/Mehmetalimans/freya-builder.git
+cd freya-builder
+git switch master
+git switch -c integration/first-live-run
+python -m unittest discover -s tests -v
+```
+
+Private repo için arkadaşın GitHub kullanıcı adına erişim daveti gerekecek;
+henüz kullanıcı adı bildirilmedi. GitHub dal koruma ve zorunlu inceleme ayarları
+ayrıca doğrulanana kadar bu akış ekip kuralıdır, etkinleştirilmiş depo koruması
+olduğu varsayılmaz.
 
 ## Hızlı çalıştırma
 
@@ -50,8 +79,8 @@ Kullanıcının toplam bütçesi **100 USD**. `budget.json` bu sınırı kaydede
 Freya tarifesi/kredisi doğrulanmadan `live_tests_enabled` açılmaz. Önce bir vaka
 çalıştırmasının **doğrulanmış en yüksek USD maliyeti** ve dayanağı kaydedilmelidir;
 bu tahmin veya ortalama ücret değildir. Ücretsiz kredi ise kapsamı teyit edilmeli.
-Mevcut builder dış modele çağrı yapmaz. Sonradan kullanılan dış model maliyeti
-`state/budget-ledger.json` içindeki `other_spend_usd` hesabına da dahil edilmelidir.
+Mevcut builder dış modele çağrı yapmaz. Kullanıcı ek dış model API harcamasını
+yetkilendirmedi; bu bütçe yalnız Freya içindir ve iki bilgisayar arasında ortaktır.
 Yerel rezerv defteri servis tarafında bir harcama kilidi değildir; güvenilir fiyat
 üst sınırı olmadan 100 USD'yi garanti edemez, bu yüzden çalışmayı reddeder.
 

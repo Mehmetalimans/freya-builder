@@ -16,8 +16,9 @@ def files():
         result.extend(p for p in (ROOT / folder).rglob("*") if p.is_file()
                       and not set(p.relative_to(ROOT).parts) & {"__pycache__", "results", "traces"}
                       and p.suffix in {".py", ".md", ".json"})
-    result.extend(ROOT / name for name in ("README.md", "requirements.lock", ".python-version", ".gitignore", ".gitattributes", "budget.json",
+    result.extend(ROOT / name for name in ("README.md", "AGENTS.md", ".env.example", "requirements.lock", ".python-version", ".gitignore", ".gitattributes", "budget.json",
         "submission.template.json", "starter-v3/build-the-builder/VERSION", "starter-v3/build-the-builder/env.example"))
+    result.extend(p for p in (ROOT / ".github").rglob("*") if p.is_file() and p.suffix in {".md", ".yml", ".yaml"})
     result.extend(ROOT / "evidence" / name for name in ("hackathon.txt", "build-the-builder-v3.zip"))
     return sorted(set(result))
 

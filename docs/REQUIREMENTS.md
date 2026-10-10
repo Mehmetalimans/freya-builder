@@ -43,21 +43,25 @@ Kit bazı eski açıklamaları “not confirmed” işaretliyor; uygulama yalnı
 
 ## Kullanıcının doğruladıkları
 
-- Model ve Freya testleri için birleşik toplam üst sınır **100 USD**.
-- Hesap şu an arkadaşında; bu ortamda erişim yok. Anahtarlar sohbetten istenmeyecek.
-- Kullanıcı daha sonra erişilebilir bir staging workspace bağlantısı verdi ve bunun
-  **ayrı bir takımın hesabı** olduğunu belirtti. Kendi teslim hesabı farklı olacak.
-  Bu düzenin takım başına bir anahtar/workspace kuralına uygunluğu henüz doğrulanmadı;
-  başka takımın workspace'inde benchmark veya kredi tüketen test başlatılmadı.
+- Toplam üst sınır **100 USD**; son kullanıcı talimatıyla yalnızca Freya platformu
+  üzerinden harcanabilir. Ek OpenAI/ChatGPT veya başka dış model API harcaması yok.
+- Kullanıcı staging workspace'e tarayıcıda giriş yaptı; buranın izin verdiği test
+  alanı olduğunu açıkça belirtti. Kendi teslim hesabı farklı olacak. Bu yetki kullanıcı
+  talimatıdır; organizatörün hesap kuralları hakkında yeni bir doğrulama değildir.
+- Tarayıcıda kullanılabilir Freya bakiyesi **96,20 USD** görüldü. Aynı hesapta başka
+  çalışma da test başlattığından bakiye farkı tek başına bizim maliyetimiz sayılamaz.
+- Anahtarlar sohbetten istenmez veya çıktılara yazılmaz.
 - `sources/` salt okunur. İnceleme sırasında boştu; başlangıç kodu veya katılımcı belgesi yoktu.
 
 ## Açık bilgiler / varsayım yapılmayan konular
 
-- Katılımcı e-postasındaki son değişiklikler, destek kanalı, Freya workspace erişimi ve teslim adresi.
+- Katılımcı e-postasındaki son değişiklikler, destek kanalı, kendi teslim workspace'inin API erişimi ve teslim adresi.
 - Freya simülasyon kredi tarifesi, gerçekten tahsis edilmiş ücretsiz kredi ve bir vaka için doğrulanmış azami maliyet.
 - Builder token, RAM/CPU veya dış model istek kotası için ek katılımcı sınırı: kamu kaynaklarında ayrıca belirtilmiyor.
-- Takım adı ve teslim edilecek GitHub deposu/erişim yöntemi.
-- API'nin gerçek hesaptaki davranışı, başlangıç skoru ve genelleme başarısı **ölçülmedi**.
+- Takım adı ve ikinci geliştiricinin GitHub kullanıcı adı/erişim daveti. Private
+  depo oluşturuldu: https://github.com/Mehmetalimans/freya-builder .
+- Tarayıcıdan oluşturulan workflow'un v2 sürümü 10 Ekim'de yayınlandı. Otomatik API
+  dağıtımı, başlangıç benchmark skoru ve genelleme başarısı henüz **ölçülmedi**.
 
 Site “birden çok üretim çalıştırması yapıp birini teslim edebilirsiniz” diyor;
 README'nin final özetinde “bir kez” deniyor. Tekrarlı canlı final üretimine ihtiyaç
@@ -71,6 +75,9 @@ Bu sürüm gizli brief üzerinde otomatik tekrar veya düzeltme döngüsü yapma
 - İlk 7 A vakası geliştirme; kalan 3 A ve 3 B vaka ayrılmış kontrol seti.
   Kontrol setinin script/check içerikleri geliştirmede kullanılmadı. Bunlar
   organizatörün gizli final seti değil, bizim ayırdığımız public vakalardır.
-- Bilinmeyen maliyetle ücretli test çalıştırılmaz. Varsayılan canlı test kapalıdır.
+- Toplu otomatik test varsayılan kapalıdır. Kullanıcının Freya bütçesiyle arayüzden
+  tek vaka / tek tekrar / 180 saniye sınırında ilk bağlantı testi hazırlanmıştır.
+  Arayüz persona ve analiz seçiminde yalnız Freya YC LLM gösterir; böyle bir koşu
+  resmî kitin Google simülatör/judge koşusuna eşdeğer sayılmaz.
 - Farklı banka sunucusu veya karmaşık/nested araç alanı gelirse açık hata verilir;
   belgesiz bir endpoint ya da şema dönüşümü tahmin edilmez.

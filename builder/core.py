@@ -143,7 +143,7 @@ def make_tool(operation):
 def success_transition(tool, field, target):
     return {"target_node": target, "description": "The bank explicitly confirmed success.", "condition": {
         "logic": "or", "conditions": [
-            {"variable": f"{tool}_response.data.{field}", "operator": "equals", "operand": spelling}
+            {"variable": f"{tool}_response.data.{field}", "operator": "equals", "operand": spelling, "mode": "exact"}
             for spelling in ("true", "True")]}}
 
 
@@ -204,7 +204,7 @@ def compile_workflow(briefs, document):
         initial = "conversation"
     nodes["finished"] = {"name": "finished", "node_type": "end_call", "on_enter": {"type": "silent"},
         "disable_inactivity_monitor": True, "transitions": [], "terminal": {"type": "function", "function": {
-            "name": "finished_end", "handler": "__function__:end_call", "parameters": {"type": "object",
+            "name": "finished_end", "handler": "__function__:end_call", "description": "", "parameters": {"type": "object",
             "properties": {"message_mode": {"type": "string", "default": "none"}}}}}}
     workflow = {"initial_node": initial, "system_prompt": system, "nodes": nodes, "global_nodes": {}}
     analysis = {"strategy": "lossless_policy_template_v1", "semantic_policy_extraction": False,
