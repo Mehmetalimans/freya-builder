@@ -83,6 +83,12 @@ def check_environment(require_bank=False):
             raise ContractError("Practice bank host must match kit v3")
 
 
+def check_run_workspace(saved, workspace_id):
+    """A recorded deployment must be evaluated with the same workspace context."""
+    if not workspace_id or saved.get("workspace_id") != workspace_id:
+        raise ContractError("Build workspace does not match the evaluation workspace; deploy separately in the intended workspace")
+
+
 class NoRedirect(urllib.request.HTTPRedirectHandler):
     def redirect_request(self, *args, **kwargs):
         return None

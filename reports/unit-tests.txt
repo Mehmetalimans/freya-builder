@@ -1,4 +1,4 @@
-{"status": "offline_validated", "run_directory": "C:\\Users\\asus\\.codex\\.chatgpt-projects\\g-p-6aca2978a33481919b0eeebee0f0aae4\\freya-builder\\dist\\clean-010370c9\\runs\\test-temp\\tmp88s5rwpn\\20261010T125045Z-b37afb9d", "error": null, "error_type": null}
+{"status": "offline_validated", "run_directory": "C:\\Users\\asus\\.codex\\.chatgpt-projects\\g-p-6aca2978a33481919b0eeebee0f0aae4\\freya-builder\\dist\\clean-4fcc115f\\runs\\test-temp\\tmp5dp3lqv3\\20261010T125918Z-afc21b80", "error": null, "error_type": null}
 test_all_seven_tools_and_schema_enums (test_builder.CompilerTests.test_all_seven_tools_and_schema_enums) ... ok
 test_changed_enums_are_input_driven (test_builder.CompilerTests.test_changed_enums_are_input_driven) ... ok
 test_changed_required_field_is_preserved (test_builder.CompilerTests.test_changed_required_field_is_preserved) ... ok
@@ -23,11 +23,13 @@ test_unknown_cost_cannot_run (test_builder.EvaluationTests.test_unknown_cost_can
 test_credentials_never_in_trace (test_builder.RuntimeTests.test_credentials_never_in_trace) ... ok
 test_exclusive_state (test_builder.RuntimeTests.test_exclusive_state) ... ok
 test_expired_deadline_has_no_network_call (test_builder.RuntimeTests.test_expired_deadline_has_no_network_call) ... ok
+test_matching_workspace_is_accepted (test_builder.RuntimeTests.test_matching_workspace_is_accepted) ... ok
+test_mismatched_or_unrecorded_workspace_is_rejected (test_builder.RuntimeTests.test_mismatched_or_unrecorded_workspace_is_rejected) ... ok
 test_missing_credentials_and_forbidden_model (test_builder.RuntimeTests.test_missing_credentials_and_forbidden_model) ... ok
 test_publish_on_initial_create_then_readback (test_builder.RuntimeTests.test_publish_on_initial_create_then_readback) ... ok
 test_readback_rejects_dropped_tools (test_builder.RuntimeTests.test_readback_rejects_dropped_tools) ... ok
 
 ----------------------------------------------------------------------
-Ran 27 tests in 0.058s
+Ran 29 tests in 0.060s
 
 OK

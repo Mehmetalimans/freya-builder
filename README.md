@@ -1,4 +1,4 @@
-# Freya builder 0.1.0 — ilk baseline
+# Freya builder 0.1.1 — ilk baseline
 
 Resmî Build the Builder **v3** paketi üzerine kurulu, bağımlılıksız Python builder.
 Bu bir **yerel olarak doğrulanmış başlangıç sürümüdür**. Freya hesabında henüz
@@ -29,6 +29,9 @@ Varsayılan çalışma çevrimdışıdır ve sıfır API isteği yapar. `runs/<r
 ayarlayın. Anahtarları komut satırı argümanlarına, sohbete veya repoya koymayın.
 Builder `.env` dosyasını otomatik okumaz. Hesap seçimi açık workspace ID gerektirir.
 Anahtarları ekrana yazdıran komutlar kullanılmamalıdır.
+Üretim kaydı workspace ID'sini saklar; farklı workspace kimliğiyle değerlendirme
+bütçe ayırmadan durur. Workspace bilgisi olmayan eski üretim kayıtları da reddedilir.
+Bu yerel eşleşme kontrolü, API anahtarının sunucudaki yetkisini doğrulamanın yerine geçmez.
 
 ```console
 python builder/build.py starter-v3/build-the-builder/briefs/brief-a.md starter-v3/build-the-builder/tools/openapi.json --slot practice-a --deploy

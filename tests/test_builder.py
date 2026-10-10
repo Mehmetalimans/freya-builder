@@ -10,7 +10,7 @@ from unittest.mock import patch
 from builder.build import deploy_workflow, main
 from builder.core import ContractError, TOOLS, canonical, compile_workflow, read_contract, validate_workflow
 from builder.evaluate import reserve_budget, selected_cases, validate_results
-from builder.runtime import KIT, Trace, FreyaTransport, check_environment, exclusive, redact, verify_readback
+from builder.runtime import KIT, Trace, FreyaTransport, check_environment, check_run_workspace, exclusive, redact, verify_readback
 
 API = json.loads((KIT / "tools/openapi.json").read_text(encoding="utf-8"))
 BRIEF = (KIT / "briefs/brief-a.md").read_text(encoding="utf-8")
@@ -128,6 +128,14 @@ class CompilerTests(unittest.TestCase):
 
 
 class RuntimeTests(unittest.TestCase):
+    def test_matching_workspace_is_accepted(self):
+        check_run_workspace({"workspace_id": "team-a"}, "team-a")
+
+    def test_mismatched_or_unrecorded_workspace_is_rejected(self):
+        for saved in ({"workspace_id": "team-b"}, {}, {"workspace_id": None}):
+            with self.subTest(saved=saved), self.assertRaises(ContractError):
+                check_run_workspace(saved, "team-a")
+
     def test_publish_on_initial_create_then_readback(self):
         wf, _ = compile_workflow([("brief", BRIEF)], API)
         class FakeClient:

@@ -45,6 +45,10 @@ Kit bazı eski açıklamaları “not confirmed” işaretliyor; uygulama yalnı
 
 - Model ve Freya testleri için birleşik toplam üst sınır **100 USD**.
 - Hesap şu an arkadaşında; bu ortamda erişim yok. Anahtarlar sohbetten istenmeyecek.
+- Kullanıcı daha sonra erişilebilir bir staging workspace bağlantısı verdi ve bunun
+  **ayrı bir takımın hesabı** olduğunu belirtti. Kendi teslim hesabı farklı olacak.
+  Bu düzenin takım başına bir anahtar/workspace kuralına uygunluğu henüz doğrulanmadı;
+  başka takımın workspace'inde benchmark veya kredi tüketen test başlatılmadı.
 - `sources/` salt okunur. İnceleme sırasında boştu; başlangıç kodu veya katılımcı belgesi yoktu.
 
 ## Açık bilgiler / varsayım yapılmayan konular

@@ -12,7 +12,7 @@ import time
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from builder.core import ContractError, digest
-from builder.runtime import ROOT, KIT, Trace, check_environment, exclusive, official_client, redact, write_json
+from builder.runtime import ROOT, KIT, Trace, check_environment, check_run_workspace, exclusive, official_client, redact, write_json
 
 
 def selected_cases(brief, split):
@@ -62,6 +62,9 @@ def validate_results(report, ids, reps):
 
 def worker(run_dir, runtime, brief, split, reps, style, seconds):
     # Run the untouched organizer runner in an isolated scratch copy, with a bounded transport.
+    check_environment(require_bank=True)
+    saved = json.loads((run_dir / "result.json").read_text(encoding="utf-8"))
+    check_run_workspace(saved, os.environ["FREYA_WORKSPACE_ID"])
     sys.path.insert(0, str(runtime / "tools"))
     sys.path.insert(0, str(runtime))
     trace = Trace(run_dir / "evaluation.trace.jsonl")
@@ -93,7 +96,6 @@ def worker(run_dir, runtime, brief, split, reps, style, seconds):
     runner = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(runner)
     ids = [c["id"] for c in selected_cases(brief, split)]
-    saved = json.loads((run_dir / "result.json").read_text(encoding="utf-8"))
     sys.argv = ["run_cases.py", saved["agent_id"], "--brief", brief, "--only", ",".join(ids),
                 "--reps", str(reps), "--out", str(run_dir / "evaluation.raw.json")]
     if style: sys.argv.extend(["--style", style])
@@ -125,6 +127,8 @@ def main(argv=None):
         if saved["status"] != "deployed_verified": raise ContractError("First deploy and verify this build on Freya")
         if (run_dir / "evaluation.json").exists(): raise ContractError("This build already has an evaluation record; preserve it and create a new build run")
         check_environment(require_bank=True)
+        check_run_workspace(saved, os.environ["FREYA_WORKSPACE_ID"])
+        summary["workspace_id"] = saved["workspace_id"]
         ids = [c["id"] for c in selected_cases(args.brief, args.split)]
         scope = digest(os.environ["FREYA_WORKSPACE_ID"])[:16]
         with exclusive(ROOT / "state" / "budget.lock"), exclusive(ROOT / "state" / f"{scope}.lock"):

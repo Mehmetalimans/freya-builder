@@ -73,6 +73,7 @@ def main(argv=None):
         if time.monotonic() - start >= args.max_seconds: raise TimeoutError("Builder time limit reached")
         if args.deploy:
             check_environment()
+            result["workspace_id"] = os.environ["FREYA_WORKSPACE_ID"]
             scope = digest(os.environ["FREYA_WORKSPACE_ID"])[:16]
             with exclusive(ROOT / "state" / f"{scope}.lock"):
                 client = official_client(start + args.max_seconds, trace)
