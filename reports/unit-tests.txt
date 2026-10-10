@@ -1,4 +1,8 @@
-{"status": "offline_validated", "run_directory": "C:\\Users\\asus\\.codex\\.chatgpt-projects\\g-p-6aca2978a33481919b0eeebee0f0aae4\\freya-builder\\dist\\clean-5f085ac4\\runs\\test-temp\\tmp9yasjlk_\\20261010T205032Z-47443612", "error": null, "error_type": null}
+{"status": "offline_validated", "run_directory": "C:\\Users\\asus\\.codex\\.chatgpt-projects\\g-p-6aca2978a33481919b0eeebee0f0aae4\\freya-builder\\dist\\clean-a33e2018\\runs\\test-temp\\tmpcmofvkgh\\20261010T211427Z-93fe0eaf", "error": null, "error_type": null}
+test_array_products_use_actual_lateness_and_missing_values_do_not_become_zero (test_audit_fixes.AuditBoundaries.test_array_products_use_actual_lateness_and_missing_values_do_not_become_zero) ... ok
+test_calendar_requires_explicit_workdays (test_audit_fixes.AuditBoundaries.test_calendar_requires_explicit_workdays) ... ok
+test_readback_checks_behavior_not_only_prompt (test_audit_fixes.AuditBoundaries.test_readback_checks_behavior_not_only_prompt) ... ok
+test_version_binding_accepts_normalized_export_but_rejects_stale_or_unpublished (test_audit_fixes.AuditBoundaries.test_version_binding_accepts_normalized_export_but_rejects_stale_or_unpublished) ... ok
 test_all_seven_tools_and_schema_enums (test_builder.CompilerTests.test_all_seven_tools_and_schema_enums) ... ok
 test_arbitrary_holidays_extracted_from_brief (test_builder.CompilerTests.test_arbitrary_holidays_extracted_from_brief) ... ok
 test_calendar_counts_after_today_and_crosses_holiday_year_boundary (test_builder.CompilerTests.test_calendar_counts_after_today_and_crosses_holiday_year_boundary) ... ok
@@ -99,6 +103,6 @@ test_unrecognized_calendar_does_not_invent_weekdays_or_holidays (test_integratio
 test_unseen_policy_has_no_stale_bank_dates_or_numeric_rules (test_integration_regressions.IntegrationRegressions.test_unseen_policy_has_no_stale_bank_dates_or_numeric_rules) ... ok
 
 ----------------------------------------------------------------------
-Ran 98 tests in 0.541s
+Ran 102 tests in 0.478s
 
 OK
