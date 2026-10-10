@@ -219,8 +219,9 @@ def extract_calendar_guidance(brief_text):
     return f"""
 BANK HOLIDAYS AND EXACT DATE RESOLUTION:
 Freya Bank Holidays to skip: {holiday_str}.
-Business days are Monday through Friday, excluding bank holidays. Counting starts on the day AFTER `now`.
-Exact Resolution from now={{now}} (e.g. Wednesday 2026-10-14):
+Business days are Monday through Friday, excluding weekends and bank holidays.
+Day counting starts on the first business day strictly AFTER `now`.
+Reference Resolution when now={{now}} (e.g. Wednesday 2026-10-14):
 - Today: 2026-10-14 (Wednesday)
 - Tomorrow: 2026-10-15 (Thursday)
 - This Friday / last business day of this week: 2026-10-16 (Friday)
@@ -229,7 +230,13 @@ Exact Resolution from now={{now}} (e.g. Wednesday 2026-10-14):
 - 2026-10-26 (Monday) is a FREYA BANK HOLIDAY. NEVER accept 2026-10-26! If requested, offer the next business day: Tuesday 2026-10-27.
 - Early Band Deadline (12 business days after today, skipping 2026-10-26): 2026-11-02 (Monday)
 - If customer suggests a date after deadline, state: 'The latest date I can record is [deadline date].' and offer it.
+DYNAMIC DATE CALCULATION FOR ANY ARBITRARY `now`:
+- To compute 'this Friday': take the Friday of current week (if now is already Friday, propose next Friday).
+- To compute Late Band Deadline: count exactly 7 business days after `now`, skipping weekends and all holidays ({holiday_str}).
+- To compute Early Band Deadline: count exactly 12 business days after `now`, skipping weekends and all holidays ({holiday_str}).
+- If customer requests a weekend or a holiday, offer the immediate next business day.
 """
+
 
 
 GUIDANCE = """You are the bank's digital phone assistant. Speak English, one question at a time.

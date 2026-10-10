@@ -63,11 +63,20 @@ class CompilerTests(unittest.TestCase):
                 name = tool["function"]["name"]
                 self.assertIn("post_process_code", tool, f"Tool {name} missing post_process_code")
                 self.assertIn("result.pop('header'", tool["post_process_code"])
+                # Ensure post_process_code compiles cleanly as valid Python code
+                compile(tool["post_process_code"], f"<hook_{name}>", "exec")
+
 
     def test_calendar_facts_extracted_from_brief(self):
         wf, _ = self.compile()
         self.assertIn("2026-10-26", wf["system_prompt"])
         self.assertIn("BANK HOLIDAYS", wf["system_prompt"])
+
+    def test_arbitrary_holidays_extracted_from_brief(self):
+        synthetic_brief = "Bank policy: holidays are 2026-11-26 and 2026-12-25. Must skip them."
+        wf, _ = self.compile(synthetic_brief)
+        self.assertIn("2026-11-26, 2026-12-25", wf["system_prompt"])
+
 
     def test_prompt_covers_critical_judge_criteria(self):
         wf, _ = self.compile()
