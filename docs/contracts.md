@@ -17,6 +17,7 @@ node'u bu ifadenin açık bir gün içermesini arar ve kullanımdan sonra temizl
 eksik/belirsiz ifadede tarih uydurmak yerine netleştirme ister. Bu, İngilizce
 gün ifadeleri için sınırlı bir kontroldür; alıntının ve ISO tarihin çıkarımı
 hâlâ modele bağlıdır. Desteklenmeyen ifadeler ek netleştirme gerektirebilir.
+0.1.12 bu denetime yazıyla söylenen 1–31 gün biçimlerini de ekler.
 
 ## Girdi ve saf üretim
 
@@ -94,6 +95,9 @@ Rezerv ikinci denemeyi engeller ve otomatik serbest bırakılmaz.
 
 10 Ekim'deki geniş test izni için `--monitored-credit` eklendi. Her simülasyon
 öncesinde kredi kontrol edilir; bakiye 20 USD veya altındaysa yeni test başlamaz.
+Kümülatif workspace tüketimi de okunur; eklenen kredi izin sınırını büyütmez.
+Gözlenen toplam tüketim 80 USD'ye ulaştığında yeni test engellenir.
+Geçersiz/eksik kullanım verisi ve gerileyen sayaç yeniden uzlaştırma gerektirir.
 Bir simülasyonda en fazla yedi vaka, kampanyada `budget.json` kotaları uygulanır.
 Bu tampon hizmet sağlayıcının fiyat garantisi değildir. Yarım kalan koşunun
 `monitored_pending_run` rezervi uzaktaki durum incelenene kadar yeni testi engeller.

@@ -1,5 +1,9 @@
 # Canlı doğrulama — 10 Ekim 2026
 
+**Ara verildi:** 0.1.11'in ilk iki tekrarı 6/7 ve 7/7; üçüncü tur sırasında
+kullanıcı durma istedi. 0.1.12 yalnız kod/temiz ortam doğrulaması aşamasında.
+[Devam kaydı](resume-checkpoint.md) ve [son uzak durum](../reports/live-pause.json).
+
 Bu ölçümler public practice vakalarıdır, gizli final benchmark sonucu değildir.
 Ham kayıtlar `runs/` altında yerel tutulur; paylaşılabilir özet
 [`reports/live-validation.json`](../reports/live-validation.json) dosyasındadır.

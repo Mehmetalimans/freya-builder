@@ -21,7 +21,7 @@ def files():
     result.extend(p for p in (ROOT / ".github").rglob("*") if p.is_file() and p.suffix in {".md", ".yml", ".yaml"})
     result.extend(ROOT / "evidence" / name for name in ("hackathon.txt", "build-the-builder-v3.zip"))
     result.extend(ROOT / "reports" / name for name in ("first-live-evaluation.json", "extended-evaluation.json",
-                  "mirac-review-regressions.json", "live-validation.json", "history/mirac-7dc5e56-verification.json")
+                  "mirac-review-regressions.json", "live-validation.json", "live-pause.json", "history/mirac-7dc5e56-verification.json")
                   if (ROOT / "reports" / name).exists())
     return sorted(set(result))
 

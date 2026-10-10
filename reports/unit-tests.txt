@@ -1,4 +1,4 @@
-{"status": "offline_validated", "run_directory": "C:\\Users\\asus\\.codex\\.chatgpt-projects\\g-p-6aca2978a33481919b0eeebee0f0aae4\\freya-builder\\dist\\clean-2d0aee4e\\runs\\test-temp\\tmpmlxlzfjv\\20261010T171600Z-818f3ce5", "error": null, "error_type": null}
+{"status": "offline_validated", "run_directory": "C:\\Users\\asus\\.codex\\.chatgpt-projects\\g-p-6aca2978a33481919b0eeebee0f0aae4\\freya-builder\\dist\\clean-1953af78\\runs\\test-temp\\tmpmq0vpslq\\20261010T173002Z-f2448368", "error": null, "error_type": null}
 test_all_seven_tools_and_schema_enums (test_builder.CompilerTests.test_all_seven_tools_and_schema_enums) ... ok
 test_arbitrary_holidays_extracted_from_brief (test_builder.CompilerTests.test_arbitrary_holidays_extracted_from_brief) ... ok
 test_calendar_counts_after_today_and_crosses_holiday_year_boundary (test_builder.CompilerTests.test_calendar_counts_after_today_and_crosses_holiday_year_boundary) ... ok
@@ -81,6 +81,8 @@ test_088_multi_product_offer_code_multi_product_iteration (test_calendar_scenari
 test_all_extraction_fields_use_real_input_placeholders (test_date_evidence.DateEvidenceTests.test_all_extraction_fields_use_real_input_placeholders) ... ok
 test_date_evidence_cannot_be_reused_without_new_extraction (test_date_evidence.DateEvidenceTests.test_date_evidence_cannot_be_reused_without_new_extraction) ... ok
 test_explicit_days_can_reach_calendar_calculation (test_date_evidence.DateEvidenceTests.test_explicit_days_can_reach_calendar_calculation) ... ok
+test_spoken_amounts_and_vague_periods_are_not_days (test_date_evidence.DateEvidenceTests.test_spoken_amounts_and_vague_periods_are_not_days) ... ok
+test_spoken_cardinal_dates_reach_deadline_check (test_date_evidence.DateEvidenceTests.test_spoken_cardinal_dates_reach_deadline_check) ... ok
 test_vague_period_with_hallucinated_iso_date_cannot_produce_offer (test_date_evidence.DateEvidenceTests.test_vague_period_with_hallucinated_iso_date_cannot_produce_offer) ... ok
 test_bank_write_retries_remain_disabled_and_connect_retries_are_bounded (test_integration_regressions.IntegrationRegressions.test_bank_write_retries_remain_disabled_and_connect_retries_are_bounded) ... ok
 test_changed_close_and_transfer_enums_have_no_stale_hook_instructions (test_integration_regressions.IntegrationRegressions.test_changed_close_and_transfer_enums_have_no_stale_hook_instructions) ... ok
@@ -97,6 +99,6 @@ test_unrecognized_calendar_does_not_invent_weekdays_or_holidays (test_integratio
 test_unseen_policy_has_no_stale_bank_dates_or_numeric_rules (test_integration_regressions.IntegrationRegressions.test_unseen_policy_has_no_stale_bank_dates_or_numeric_rules) ... ok
 
 ----------------------------------------------------------------------
-Ran 96 tests in 0.267s
+Ran 98 tests in 0.278s
 
 OK

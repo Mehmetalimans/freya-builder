@@ -38,7 +38,7 @@ Bu ayarı çift banka kaydı oluşturan bir HTTP retry olarak nitelemek doğru o
 - Miraç'ın önceki Python 3.13.5 paket raporu [tarihsel kopyada](../reports/history/mirac-7dc5e56-verification.json)
   korundu; yeni sürümün kanıtı olarak kullanılmaz.
 
-Bu çalışma Freya çağrısı, dağıtım veya ücretli test başlatmadı. 0.1.10'un canlı
+Bu ilk kod incelemesi Freya çağrısı, dağıtım veya ücretli test başlatmadı. O aşamada 0.1.10'un canlı
 başarısı bilinmiyor; platformdaki önceki 0.1.9 workflow'u değişmedi. Birim testleri
 telefon modelinin talimatlara uyduğunu veya yeni sürümün daha yüksek puan
 alacağını kanıtlamaz. Yeni hook'ların canlı yayın/export/geri okuma doğrulaması
@@ -62,3 +62,7 @@ kod/prompt düzeltmesinde kullanılmadı.
 Sonraki adım: bekleyen önceki değerlendirme kaydını uzlaştır; 0.1.10'u gerçek
 Freya validate/publish/readback yoluyla doğrula; geliştirme kümesinde tekrarlı
 ölç; kullanılan B vakalarını bağımsız genelleme testi olarak etiketleme.
+
+Bu sonraki adımlar 10 Ekim'deki canlı çalışmada başlatıldı: 0.1.9 kaydı
+kurtarıldı, 0.1.10 yayın/geri okuması ve 21 çağrılık testi tamamlandı.
+Güncel sonuç ve ek düzeltmeler [canlı doğrulama kaydındadır](live-validation.md).

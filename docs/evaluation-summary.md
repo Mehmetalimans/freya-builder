@@ -1,5 +1,12 @@
 # Ölçümler, başarısız denemeler ve açık işler
 
+**Güncelleme:** Aşağıdaki 0.1.3–0.1.9 tablosu ilk raporun tarihsel kaydıdır.
+Sonradan 0.1.9 salt okunur kurtarmayla 1/2 puanlandı; 0.1.10 üç tekrarda 6/7
+vaka, 19/21 çağrı geçti. Sonraki adaylar ve güncel ölçümler
+[canlı doğrulama kaydında](live-validation.md) ve
+[`reports/live-validation.json`](../reports/live-validation.json) tutulur.
+98 yerel test, son kod adayına aittir; aşağıdaki eski sayılar korunmuştur.
+
 Bu belge 10 Ekim 2026'daki kayıtların özetidir; yeni canlı test veya güncel servis
 sağlığı kontrolü değildir. İncelenen kod sürümü **0.1.9**, kod commit'i
 `a05c54341c3fcf37fd0afd3d1c6d4fd498d27659`; rapor ve paket güncellemesi `e390cc4`.
