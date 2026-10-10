@@ -63,18 +63,37 @@ tüm public vakalar geliştirme sırasında çalıştırılmaz. Depodaki mevcut
 
 ## Karar ve sonraki ölçüm
 
-Kullanıcı fiyat analizi istedi; belirsiz tarifeyle tek deneme istisnası vermedi.
-`live_tests_enabled=false` korunuyor. Bu yerel depo tedbiridir, organizatörün
+İlk fiyat incelemesi sırasında kullanıcı yalnız analiz istemişti. Sonraki açık
+talimatında GitHub incelemesi sonrası mevcut 100 USD krediyle test başlatmaya izin
+verdi. `live_tests_enabled=false` toplu koşular için korunuyor; ayrı
+`credit_pilot_authorized=true` ile tek geliştirme vakası ölçüldü. Bu yerel depo tedbiridir, organizatörün
 her testten önce fiyat onayı istediği anlamına gelmez. Freya toplam 100 USD
 yetkisi ve dış model harcaması yasağı değişmedi; satın alma yapılmadı.
 
 Eksik bilgi: hackathon **chat simülasyonunda** telefon modeli, persona, judge ve
 otomatik tekrarlar dahil ücret/kredi hesabı; bakiye bitince durma veya ek ücret
 davranışı. Bu bilgiler organizatörden gelince doğrulanmış üst sınır kaydedilir.
-Alternatif olarak kullanıcı açıkça tek ölçümlük istisna verirse, bir geliştirme
-vakası/tek tekrar ile önce-sonra kredi farkı ölçülebilir. Bu ölçüm gözlenen maliyet
-olur; sonraki tüm vakalar için garanti üst sınır olarak kullanılamaz.
+Kullanıcının sonraki izniyle bir geliştirme vakası/tek tekrar için önce-sonra kredi
+farkı ölçüldü. Bu gözlenen maliyettir; sonraki tüm vakalar için garanti üst sınır
+olarak kullanılamaz.
 
 İlk gerçek ölçüm için ortak operatör koordinasyonu, sabit banka takım anahtarı,
 tek vaka `--only` seçimi, API sonucu ve kredi farkı birlikte kaydedilmeli. Başka
 işler veya sonradan düşen ücretler varsa bakiye farkı tek çağrıya atfedilmemeli.
+
+## İlk canlı ölçüm sonucu — 14:47–14:49 UTC
+
+Kullanıcının açık test izni ve arkadaşının yeni testleri durdurma teyidiyle,
+workspace'teki önceki iş bittikten sonra PUB-01 tek tekrar çalıştırıldı.
+Resmî sonuç **1/1 PASS**, simülasyon 41 saniye, wrapper toplamı 79,953 saniye.
+Kredi 199,7603 → 199,7204: gözlenen fark **0,01995 USD**. Son bakiye yaklaşık
+**99,86 USD**. Önceden başka operatörün tüketimi bulunduğundan 100 USD'den
+toplam düşüşün tamamı bizim testimize ait değildir.
+
+Çağrı kaydındaki `cost` değeri 0,019933; genel API şeması birimini açıklamadığı
+için bunu kesin USD faturası olarak kullanmadık. Workspace kullanım API'si
+0,6113 toplam kullanılan kredi gösteriyor; toplam bakiye farkıyla aynı değil.
+Bu nedenle `actual_cost_usd=null` ve gözlenen bakiye farkı ayrı tutuldu.
+Bir kolay vakadaki maliyet tüm zor vakalar için azami fiyat değildir.
+Rezerv henüz bırakılmadı; sınırsız/toplu test döngüsü açılmadı.
+Kanıt: `reports/first-live-evaluation.json`; özel ham kanıt `runs/` altında.

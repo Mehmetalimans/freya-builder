@@ -1,6 +1,6 @@
 # Build the Builder | Freya × Y Combinator — Hackathon Kılavuzu & Özet
 
-Bu belge, **Build the Builder** hackathonu için gerekli tüm kural, sistem mimarisi, API entegrasyonu ve değerlendirme kriterlerini bir araya getiren başvuru kılavuzudur.
+Bu belge, **Build the Builder** hackathonu için ekip tarafından hazırlanmış yardımcı özettir; doğrulanmış kurallar için [hackathon-rules.md](hackathon-rules.md), API kanıtı için [kickoff-mail.md](kickoff-mail.md) esas alınır.
 
 ---
 
@@ -19,7 +19,7 @@ Bu belge, **Build the Builder** hackathonu için gerekli tüm kural, sistem mima
 ### Temel Amaç ("Agent Building an Agent")
 Bir bankanın borç tahsilat (debt collection) şartnamesini (Brief) ve banka OpenAPI aracını okuyarak, Freya üzerinde otomatik olarak bir **Phone Agent (Workflow)** üreten bir **Builder** programı geliştirmek.
 - Telefon ajanı elle düzenlenemez; tamamen builder tarafından üretilir.
-- Organizatörler gizli brief'leri yayınlar, builder bir kez çalıştırılır, üretilen workflow export edilir ve test edilir.
+- Organizatörler gizli brief'leri yayınlar, builder otomatik çalıştırılır, üretilen workflow export edilir ve test edilir. Güncel Submit bölümü birden fazla üretimden birini seçmeye izin verir; README özetindeki tek koşu ifadesiyle tutarsızlık kaynak kaydında belirtilmiştir.
 
 ---
 
@@ -29,7 +29,7 @@ Bir vakanın (simüle müşteri) başarılı (`PASS`) sayılması için 3 kriter
 
 1. **Outcome (Sonuç / Banka Defteri):**
    - Bankanın mock API'sindeki defter (ledger) doğru duruma gelmelidir.
-   - Doğru ürün kimliği, doğru vade tarihi ve doğru tutar ile tam olarak 1 kez `create_promise` (veya ret ise not/callback) kaydedilmiş olmalıdır.
+   - Vakanın gerektirdiği kayıtlar doğru olmalıdır; her vaka için tek ödeme sözü zorunluluğu yoktur. Birden fazla ürün, doğru ret, callback veya transfer gibi sonuçlar brief ve vaka ölçütüne bağlıdır; yinelenen istenmeyen işlem yapılmaz.
 2. **Policy (Politika / Şartnameye Uygunluk):**
    - Kimlik doğrulanmadan önce asla borç veya ürün bilgisi açıklanmamalıdır.
    - Banka kurallarındaki gecikme bantlarına (early band, late band) ve tatil günlerine uyulmalıdır.
@@ -87,6 +87,6 @@ Her kullanıcı mesajı sonrasında platform 3 ayrı model çağrısı yapar:
 2. **Google Drive Linki:** `https://drive.google.com/file/d/1237DMLa-a0xWAB1GfRcqBDsJ0S1XgDWr/view`
    - HTTP 404 (Erişilemedi / dosya silinmiş veya paylaşım izinleri kapalı).
 3. **Freya Belgeleri:** `https://docs.freyavoice.ai/api-reference/authentication`
-   - `docs/freya_docs/` dizinine 190 markdown sayfası ve 2 OpenAPI JSON şeması tam olarak indirildi.
+   - `docs/freya_docs/` altında 188 Markdown ve 4 JSON dosyası var; iki OpenAPI şeması ikişer kez bulunuyor. [Envanter ve kaynak sınırları](reference-index.md).
 4. **Freya API Anahtarı:**
-   - Doğrulandı: `Mirac Birlik's Workspace` (Owner yetkisi aktif).
+   - API erişimi ve workflow dağıtımı doğrulandı: `Mirac Birlik's Workspace`. Owner rolü bu repodaki erişim kanıtıyla doğrulanmış sayılmaz.

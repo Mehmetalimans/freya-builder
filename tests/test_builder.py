@@ -9,7 +9,7 @@ from unittest.mock import patch
 
 from builder.build import deploy_workflow, main
 from builder.core import ContractError, TOOLS, canonical, compile_workflow, read_contract, validate_workflow
-from builder.evaluate import reserve_budget, selected_cases, validate_results
+from builder.evaluate import reserve_budget, selected_cases, validate_results, bounded_simulation_body
 from builder.runtime import KIT, Trace, FreyaTransport, check_environment, check_run_workspace, exclusive, redact, verify_readback, verify_key_workspace
 
 API = json.loads((KIT / "tools/openapi.json").read_text(encoding="utf-8"))
@@ -195,6 +195,24 @@ class RuntimeTests(unittest.TestCase):
 
 
 class EvaluationTests(unittest.TestCase):
+    def test_credit_pilot_requires_authorization_and_reserves_remaining_budget(self):
+        policy = self.policy()
+        with self.assertRaises(ContractError): reserve_budget(policy, {}, 1, 1, True)
+        policy.update(credit_pilot_authorized=True, live_tests_enabled=False, verified_max_cost_per_case_usd=None)
+        state, reserve = reserve_budget(policy, {"other_spend_usd": 2}, 1, 1, True)
+        self.assertEqual(reserve, 98)
+        self.assertTrue(state["credit_pilot_started"])
+        with self.assertRaises(ContractError): reserve_budget(policy, state, 1, 1, True)
+        with self.assertRaises(ContractError): reserve_budget(policy, {}, 2, 1, True)
+        with self.assertRaises(ContractError): reserve_budget(policy, {}, 1, 2, True)
+
+    def test_simulation_has_no_automatic_retries(self):
+        body = {"mode": "chat", "runsPerPersona": 1, "maxRetries": 5, "maxConcurrentCalls": 5, "maxCallDurationSeconds": 420}
+        bounded = bounded_simulation_body(body)
+        self.assertEqual((bounded["maxRetries"], bounded["maxConcurrentCalls"]), (0, 1))
+        self.assertEqual(body["maxRetries"], 5)
+        with self.assertRaises(ContractError): bounded_simulation_body({**body, "mode": "voice"})
+
     def policy(self):
         return {"live_tests_enabled": True, "verified_max_cost_per_case_usd": 2,
                 "cost_bound_evidence": "TEST FIXTURE ONLY", "total_authorized_usd": 100,

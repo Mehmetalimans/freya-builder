@@ -14,7 +14,7 @@ def files():
     result = []
     for folder in ("builder", "tests", "scripts", "docs", "starter-v3"):
         result.extend(p for p in (ROOT / folder).rglob("*") if p.is_file()
-                      and not set(p.relative_to(ROOT).parts) & {"__pycache__", "results", "traces"}
+                      and not set(p.relative_to(ROOT).parts) & {"__pycache__", "results", "traces", "freya_docs"}
                       and p.suffix in {".py", ".md", ".json"})
     result.extend(ROOT / name for name in ("README.md", "AGENTS.md", ".env.example", "requirements.lock", ".python-version", ".gitignore", ".gitattributes", "budget.json",
         "submission.template.json", "starter-v3/build-the-builder/VERSION", "starter-v3/build-the-builder/env.example"))
