@@ -195,6 +195,60 @@ class CompilerTests(unittest.TestCase):
     def test_empty_brief_rejected(self):
         with self.assertRaises(ContractError): self.compile("  ")
 
+    def test_openapi_with_null_and_omitted_documentation_fields(self):
+        doc = deepcopy(API)
+        for path_item in doc["paths"].values():
+            op = path_item["post"]
+            op["summary"] = None
+            op["description"] = None
+            for prop in op["requestBody"]["content"]["application/json"]["schema"]["properties"].values():
+                prop["description"] = None
+        wf, _ = compile_workflow([("brief", BRIEF)], doc)
+        self.assertIn("identity", wf["nodes"])
+        for tool in wf["nodes"]["identity"]["tools"]:
+            self.assertIsInstance(tool["function"]["description"], str)
+
+    def test_calendar_synonyms_and_non_holiday_iso_dates(self):
+        brief = ("# Policy\nBusiness days are Monday through Friday, except bank holidays: 2027-04-15.\n"
+                 "The call took place on 2027-04-01. Customer was late.\n"
+                 "| 1 to 7 | early | the 7th business day after today | 1 |\n"
+                 "| 8 to 45 | late | the 7th business day after today | 2 |")
+        wf, analysis = compile_workflow([("policy.md", brief)], self.doc)
+        self.assertIn("2027-04-15", wf["system_prompt"])
+        self.assertNotIn("2027-04-01", analysis["calendar"]["holidays"])
+
+    def test_verify_identity_hook_execution_matrix(self):
+        from builder.core import make_post_process_code
+        code = make_post_process_code("verify_identity")
+        scenarios = [
+            ({"data": {"all_verified": True}}, "All security questions PASSED"),
+            ({"data": {"verified": True}}, "Date of birth verified"),
+            ({"data": {"hint": "day_month_swapped"}}, "Day and month were swapped"),
+            ({"data": {"verified": False, "wrong_answers_left": 2}}, "2 attempts left"),
+            ({"data": {"verified": False, "wrong_answers_left": 0}}, "Three wrong answers reached"),
+            ({"data": {"verified": False}}, "Answer did not match"),
+        ]
+        for res, expected in scenarios:
+            scope = {"result": deepcopy(res)}
+            exec(code, scope)
+            self.assertIn(expected, scope["result"]["data"].get("what_to_do_next", ""))
+
+    def test_create_promise_hook_execution_matrix(self):
+        from builder.core import make_post_process_code
+        code = make_post_process_code("create_promise")
+        success_scope = {"result": {"data": {"ok": True}}}
+        exec(code, success_scope)
+        self.assertIn("Payment promise RECORDED", success_scope["result"]["data"]["what_to_do_next"])
+
+        fail_scope = {"result": {"data": {"ok": False}}}
+        exec(code, fail_scope)
+        self.assertIn("Promise recording FAILED", fail_scope["result"]["data"]["what_to_do_next"])
+
+    def test_deadline_bands_with_dash_and_arbitrary_ranges(self):
+        policy = "# Policy\n| 1 - 7 | early | the 5th business day after today |\n| 8 - 30 | late | the 3rd business day after today |"
+        bands = deadline_bands([("policy.md", policy)])
+        self.assertEqual(bands, [[1, 7, 5], [8, 30, 3]])
+
     def test_cli_offline_never_uses_network(self):
         with temporary_directory() as td, patch("urllib.request.OpenerDirector.open", side_effect=AssertionError("No network")):
             code = main([str(KIT / "briefs/brief-a.md"), str(KIT / "tools/openapi.json"), "--output", td])
@@ -381,6 +435,140 @@ class EvaluationTests(unittest.TestCase):
         report["final"][0]["pass"] = False; report["passed"] = 0
         validate_results(report, ["case"], 1)
         with self.assertRaises(ContractError): validate_results(report, ["case"], 3)
+
+
+
+class StressTests(unittest.TestCase):
+    def test_post_process_hooks_resilient_to_primitive_and_empty_inputs(self):
+        from builder.core import TOOLS, make_post_process_code
+        for name in TOOLS:
+            code = make_post_process_code(name)
+            for bad_input in (None, "", 0, 42, [], [1, 2], {}, {"header": {"auth": "secret"}}, {"data": "not-a-dict"}):
+                scope = {"result": deepcopy(bad_input)}
+                try:
+                    exec(code, scope)
+                except Exception as e:
+                    self.fail(f"Hook {name} crashed on input {bad_input!r}: {e}")
+                if isinstance(scope.get("result"), dict):
+                    self.assertNotIn("header", scope["result"])
+
+    def test_calendar_code_with_leap_year_and_end_of_year(self):
+        spec = calendar_spec([("policy", "Business days are Monday to Friday, except bank holidays: 2028-03-01.")])
+        snippet = calendar_code(spec)
+        # Leap year leap day: 2028-02-29 is Tuesday
+        values = {"now": "2028-02-28T09:00"}
+        exec(snippet, {"vars": values})
+        facts = values["calendar_facts"]
+        self.assertIn("2028-02-29 Tuesday | business day AFTER today #1", facts)
+        self.assertIn("2028-03-01 Wednesday | NON-BUSINESS DAY", facts)
+
+    def test_calendar_code_when_now_is_weekend_or_holiday(self):
+        spec = calendar_spec([("policy", "Business days are Monday to Friday, except bank holidays: 2026-10-26.")])
+        snippet = calendar_code(spec)
+        # Saturday now
+        values = {"now": "2026-10-24T14:30"}
+        exec(snippet, {"vars": values})
+        self.assertIn("NON-BUSINESS DAY", values["calendar_facts"])
+        self.assertIn("NEXT BUSINESS DAY = 2026-10-27 Tuesday", values["calendar_facts"])
+
+    def test_offer_code_with_single_and_multiple_products(self):
+        spec = calendar_spec([("policy", "Business days are Monday to Friday, except bank holidays: 2026-10-26.")])
+        bands = [[1, 7, 7], [8, 45, 7]]
+        code = offer_code(spec, bands)
+        values = {
+            "now": "2026-10-14T10:00",
+            "payment_offer_date": "2026-10-20",
+            "get_account_response.data.products.0.product_id": "p1",
+            "get_account_response.data.products.0.days_late": 5,
+            "get_account_response.data.products.1.product_id": "p2",
+            "get_account_response.data.products.1.days_late": 20,
+        }
+        exec(code, {"vars": values})
+        self.assertEqual(values["payment_offer_action"], "none")
+        self.assertIn("PRODUCT p1", values["payment_date_facts"])
+        self.assertIn("PRODUCT p2", values["payment_date_facts"])
+
+    def test_offer_code_with_days_late_exceeding_bands(self):
+        spec = calendar_spec([("policy", "Business days are Monday to Friday, except bank holidays: 2026-10-26.")])
+        bands = [[1, 7, 7], [8, 45, 7]]
+        code = offer_code(spec, bands)
+        values = {
+            "now": "2026-10-14T10:00",
+            "payment_offer_date": "2026-10-20",
+            "get_account_response.data.products.0.product_id": "p_orphan",
+            "get_account_response.data.products.0.days_late": 99,
+        }
+        exec(code, {"vars": values})
+        self.assertIn("deadline not computed; consult policy", values["payment_date_facts"])
+
+    def test_offer_code_malformed_input_graceful_fallback(self):
+        spec = calendar_spec([("policy", "Business days are Monday to Friday, except bank holidays: 2026-10-26.")])
+        bands = [[1, 7, 7]]
+        code = offer_code(spec, bands)
+        for bad_date in ("gibberish", "", "2026-99-99", None):
+            values = {"now": "2026-10-14T10:00", "payment_offer_date": bad_date}
+            exec(code, {"vars": values})
+            self.assertEqual(values["payment_offer_action"], "none")
+            self.assertIn("unavailable", values["payment_date_facts"])
+
+    def test_compile_with_three_hierarchical_documents(self):
+        doc = deepcopy(API)
+        p1 = ("policy.md", "# Base Policy\nBusiness days are Monday to Friday, except bank holidays: 2026-10-26.\n"
+              "| 1 to 7 | early | the 7th business day after today | 1 |\n")
+        p2 = ("amendment.md", "# Amendment 1\nFloor payments allowed for credit cards.\n")
+        p3 = ("override.md", "# Branch Memo\nCallbacks accepted between 10:00 and 19:00.\n")
+        wf, analysis = compile_workflow([p1, p2, p3], doc)
+        self.assertEqual(len(analysis["documents"]), 3)
+        self.assertIn("Base Policy", wf["system_prompt"])
+        self.assertIn("Amendment 1", wf["system_prompt"])
+        self.assertIn("Branch Memo", wf["system_prompt"])
+
+    def test_compile_with_international_characters_and_emojis(self):
+        doc = deepcopy(API)
+        brief = ("# Bank Brief — Çağrı Merkezi Politikası 💳\n"
+                 "Business days are Monday to Friday, except bank holidays: 2026-10-26.\n"
+                 "| 1 to 7 | early | the 7th business day after today | 1 |\n"
+                 "Müşteri Türkçe ve İngilizce konuşabilir; yanıtlar strictly in English.\n")
+        wf, analysis = compile_workflow([("intl.md", brief)], doc)
+        self.assertIn("Çağrı Merkezi", wf["system_prompt"])
+        self.assertEqual(analysis["documents"][0]["characters"], len(brief))
+
+    def test_openapi_with_various_scalar_types(self):
+        doc = deepcopy(API)
+        props = doc["paths"]["/add_note"]["post"]["requestBody"]["content"]["application/json"]["schema"]["properties"]
+        props["priority"] = {"type": "integer"}
+        props["amount"] = {"type": "number"}
+        props["flag"] = {"type": "boolean"}
+        wf, _ = compile_workflow([("brief", BRIEF)], doc)
+        tool = next(t for t in wf["nodes"]["collection"]["tools"] if t["function"]["name"] == "add_note")
+        tool_props = tool["function"]["parameters"]["properties"]["body"]["properties"]
+        self.assertIn("priority", tool_props)
+        self.assertIn("amount", tool_props)
+        self.assertIn("flag", tool_props)
+
+    def test_validate_workflow_enforces_isolated_nodes(self):
+        wf, _ = compile_workflow([("brief", BRIEF)], API)
+        # Inject disconnected island node
+        wf["nodes"]["island"] = {
+            "name": "island", "node_type": "conversation", "task_message": "lost",
+            "tools": [], "transitions": []
+        }
+        with self.assertRaises(ContractError):
+            validate_workflow(wf, read_contract(API))
+
+    def test_read_contract_rejects_non_scalar_properties(self):
+        doc = deepcopy(API)
+        props = doc["paths"]["/add_note"]["post"]["requestBody"]["content"]["application/json"]["schema"]["properties"]
+        props["nested_object"] = {"type": "object", "properties": {"foo": {"type": "string"}}}
+        with self.assertRaises(ContractError):
+            read_contract(doc)
+
+    def test_read_contract_rejects_array_properties(self):
+        doc = deepcopy(API)
+        props = doc["paths"]["/add_note"]["post"]["requestBody"]["content"]["application/json"]["schema"]["properties"]
+        props["items_list"] = {"type": "array", "items": {"type": "string"}}
+        with self.assertRaises(ContractError):
+            read_contract(doc)
 
 
 if __name__ == "__main__": unittest.main()

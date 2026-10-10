@@ -1,9 +1,15 @@
-{"status": "offline_validated", "run_directory": "C:\\Users\\asus\\.codex\\.chatgpt-projects\\g-p-6aca2978a33481919b0eeebee0f0aae4\\freya-builder\\dist\\clean-56b36ec8\\runs\\test-temp\\tmp2k00ae0i\\20261010T155017Z-a3e66687", "error": null, "error_type": null}
+{"status": "offline_validated", "run_directory": "C:\\Users\\mirac\\Documents\\antigravity\\noble-einstein\\dist\\clean-bedb761e\\runs\\test-temp\\tmph2gslqit\\20261010T161353Z-e527468e", "error": null, "error_type": null}
 test_all_seven_tools_and_schema_enums (test_builder.CompilerTests.test_all_seven_tools_and_schema_enums) ... ok
+test_arbitrary_holidays_extracted_from_brief (test_builder.CompilerTests.test_arbitrary_holidays_extracted_from_brief) ... ok
 test_calendar_counts_after_today_and_crosses_holiday_year_boundary (test_builder.CompilerTests.test_calendar_counts_after_today_and_crosses_holiday_year_boundary) ... ok
+test_calendar_facts_extracted_from_brief (test_builder.CompilerTests.test_calendar_facts_extracted_from_brief) ... ok
+test_calendar_synonyms_and_non_holiday_iso_dates (test_builder.CompilerTests.test_calendar_synonyms_and_non_holiday_iso_dates) ... ok
 test_changed_enums_are_input_driven (test_builder.CompilerTests.test_changed_enums_are_input_driven) ... ok
 test_changed_required_field_is_preserved (test_builder.CompilerTests.test_changed_required_field_is_preserved) ... ok
 test_cli_offline_never_uses_network (test_builder.CompilerTests.test_cli_offline_never_uses_network) ... ok
+test_compile_brief_b_multi_product (test_builder.CompilerTests.test_compile_brief_b_multi_product) ... ok
+test_create_promise_hook_execution_matrix (test_builder.CompilerTests.test_create_promise_hook_execution_matrix) ... ok
+test_deadline_bands_with_dash_and_arbitrary_ranges (test_builder.CompilerTests.test_deadline_bands_with_dash_and_arbitrary_ranges) ... ok
 test_deterministic (test_builder.CompilerTests.test_deterministic) ... ok
 test_empty_brief_rejected (test_builder.CompilerTests.test_empty_brief_rejected) ... ok
 test_external_and_cyclic_refs_rejected (test_builder.CompilerTests.test_external_and_cyclic_refs_rejected) ... ok
@@ -12,9 +18,13 @@ test_identity_tools_unavailable_before_bank_verification (test_builder.CompilerT
 test_local_ref_resolution (test_builder.CompilerTests.test_local_ref_resolution) ... ok
 test_missing_verification_signal_is_explicit_fallback (test_builder.CompilerTests.test_missing_verification_signal_is_explicit_fallback) ... ok
 test_offer_calculation_uses_input_bands_and_each_account_product (test_builder.CompilerTests.test_offer_calculation_uses_input_bands_and_each_account_product) ... ok
+test_openapi_with_null_and_omitted_documentation_fields (test_builder.CompilerTests.test_openapi_with_null_and_omitted_documentation_fields) ... ok
+test_prompt_covers_critical_judge_criteria (test_builder.CompilerTests.test_prompt_covers_critical_judge_criteria) ... ok
 test_raw_memo_and_overrides_are_preserved_in_order (test_builder.CompilerTests.test_raw_memo_and_overrides_are_preserved_in_order) ... ok
+test_tools_include_post_process_hooks (test_builder.CompilerTests.test_tools_include_post_process_hooks) ... ok
 test_unknown_close_success_signal_fails (test_builder.CompilerTests.test_unknown_close_success_signal_fails) ... ok
 test_unsupported_shapes_and_hosts_rejected (test_builder.CompilerTests.test_unsupported_shapes_and_hosts_rejected) ... ok
+test_verify_identity_hook_execution_matrix (test_builder.CompilerTests.test_verify_identity_hook_execution_matrix) ... ok
 test_workflow_tampering_rejected (test_builder.CompilerTests.test_workflow_tampering_rejected) ... ok
 test_credit_pilot_requires_authorization_and_reserves_remaining_budget (test_builder.EvaluationTests.test_credit_pilot_requires_authorization_and_reserves_remaining_budget) ... ok
 test_dev_and_holdout_are_disjoint_and_cover_13 (test_builder.EvaluationTests.test_dev_and_holdout_are_disjoint_and_cover_13) ... ok
@@ -38,8 +48,20 @@ test_missing_credentials_and_forbidden_model (test_builder.RuntimeTests.test_mis
 test_only_explicit_simulation_conflict_is_waitable (test_builder.RuntimeTests.test_only_explicit_simulation_conflict_is_waitable) ... ok
 test_publish_on_initial_create_then_readback (test_builder.RuntimeTests.test_publish_on_initial_create_then_readback) ... ok
 test_readback_rejects_dropped_tools (test_builder.RuntimeTests.test_readback_rejects_dropped_tools) ... ok
+test_calendar_code_when_now_is_weekend_or_holiday (test_builder.StressTests.test_calendar_code_when_now_is_weekend_or_holiday) ... ok
+test_calendar_code_with_leap_year_and_end_of_year (test_builder.StressTests.test_calendar_code_with_leap_year_and_end_of_year) ... ok
+test_compile_with_international_characters_and_emojis (test_builder.StressTests.test_compile_with_international_characters_and_emojis) ... ok
+test_compile_with_three_hierarchical_documents (test_builder.StressTests.test_compile_with_three_hierarchical_documents) ... ok
+test_offer_code_malformed_input_graceful_fallback (test_builder.StressTests.test_offer_code_malformed_input_graceful_fallback) ... ok
+test_offer_code_with_days_late_exceeding_bands (test_builder.StressTests.test_offer_code_with_days_late_exceeding_bands) ... ok
+test_offer_code_with_single_and_multiple_products (test_builder.StressTests.test_offer_code_with_single_and_multiple_products) ... ok
+test_openapi_with_various_scalar_types (test_builder.StressTests.test_openapi_with_various_scalar_types) ... ok
+test_post_process_hooks_resilient_to_primitive_and_empty_inputs (test_builder.StressTests.test_post_process_hooks_resilient_to_primitive_and_empty_inputs) ... ok
+test_read_contract_rejects_array_properties (test_builder.StressTests.test_read_contract_rejects_array_properties) ... ok
+test_read_contract_rejects_non_scalar_properties (test_builder.StressTests.test_read_contract_rejects_non_scalar_properties) ... ok
+test_validate_workflow_enforces_isolated_nodes (test_builder.StressTests.test_validate_workflow_enforces_isolated_nodes) ... ok
 
 ----------------------------------------------------------------------
-Ran 39 tests in 0.078s
+Ran 61 tests in 0.305s
 
 OK

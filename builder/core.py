@@ -89,8 +89,8 @@ def read_contract(document):
                     x in spec for x in ("oneOf", "anyOf", "allOf", "nullable")):
                 raise ContractError("Baseline supports scalar body fields; nested/union schema needs an adapter")
         result[name] = {"name": name, "url": base + path, "schema": schema,
-                        "summary": op.get("summary", ""), "description": op.get("description", ""),
-                        "responses": op.get("responses", {})}
+                        "summary": op.get("summary") or "", "description": op.get("description") or "",
+                        "responses": op.get("responses") or {}}
     if set(result) != TOOLS:
         raise ContractError("Expected exactly the seven bank tools supplied by the event")
     if not boolean_response(result["close_call"], "ok"):
@@ -99,10 +99,11 @@ def read_contract(document):
 
 
 def boolean_response(operation, field):
-    for status, response in operation["responses"].items():
-        if str(status).startswith("2"):
-            schema = response.get("content", {}).get("application/json", {}).get("schema", {})
-            if schema.get("properties", {}).get(field, {}).get("type") == "boolean":
+    for status, response in (operation.get("responses") or {}).items():
+        if str(status).startswith("2") and isinstance(response, dict):
+            schema = (response.get("content") or {}).get("application/json", {}).get("schema") or {}
+            props = schema.get("properties") or {}
+            if props.get(field, {}).get("type") == "boolean":
                 return True
     return False
 
@@ -132,11 +133,13 @@ def make_post_process_code(name):
             elif d.get('hint') == 'day_month_swapped':
                 d['what_to_do_next'] = 'Day and month were swapped! Ask customer to say the month as a word (e.g. July). This retry does NOT count as a wrong answer.'
             elif d.get('verified') is False:
-                left = d.get('wrong_answers_left', 0)
-                if left > 0:
+                left = d.get('wrong_answers_left')
+                if left == 0:
+                    d['what_to_do_next'] = 'Three wrong answers reached! Tell customer to use the mobile app or visit a branch, say goodbye, and call close_call(outcome="not_verified", reason="failed").'
+                elif left is not None and left > 0:
                     d['what_to_do_next'] = f'Answer did not match. {left} attempts left. Tell customer it did not match and ask the question again.'
                 else:
-                    d['what_to_do_next'] = 'Three wrong answers reached! Tell customer to use the mobile app or visit a branch, say goodbye, and call close_call(outcome="not_verified", reason="failed").'
+                    d['what_to_do_next'] = 'Answer did not match. Tell customer it did not match and ask the question again (up to 3 wrong answers allowed).'
 except Exception:
     pass
 """,
@@ -188,15 +191,21 @@ def make_tool(operation):
     name = operation["name"]
     body = deepcopy(operation["schema"])
     for field, spec in body["properties"].items():
+        for k in list(spec.keys()):
+            if spec[k] is None:
+                del spec[k]
         # Unique names avoid accidentally baking a previous tool's values on node entry.
         spec["default"] = "{{customer_id}}" if field == "customer_id" else "{{arg_" + name + "_" + field + "}}"
         if "enum" in spec:
-            spec["description"] = spec.get("description", "") + " Allowed values: " + canonical(spec["enum"])
-    body["required"] = [k for k in body.get("required", []) if k != "customer_id"]
+            spec["description"] = (spec.get("description") or "") + " Allowed values: " + canonical(spec["enum"])
+    body["required"] = [k for k in body.get("required") or [] if k != "customer_id"]
+    summary = operation.get("summary") or ""
+    desc = operation.get("description") or ""
+    tool_doc = "\n".join(filter(None, [TRIGGERS[name], summary, desc]))
     return {
         "type": "function", "config": {"timeoutMs": 12000, "maxRetries": 0},
         "function": {"name": name, "handler": "__function__:api_call",
-            "description": TRIGGERS[name] + "\n" + operation["summary"] + "\n" + operation["description"],
+            "description": tool_doc,
             "parameters": {"type": "object", "properties": {
                 "url": {"type": "string", "default": operation["url"]},
                 "method": {"type": "string", "default": "POST"},
@@ -215,8 +224,12 @@ def success_transition(tool, field, target):
             for spelling in ("true", "True")]}}
 
 
-def extract_calendar_guidance(brief_text):
-    holidays = sorted(set(re.findall(r"\b(20\d{2}-\d{2}-\d{2})\b", brief_text)))
+def extract_calendar_guidance(brief_text, cal_spec=None):
+    if cal_spec and cal_spec.get("holidays"):
+        holidays = cal_spec["holidays"]
+    else:
+        holiday_lines = [line for line in brief_text.splitlines() if re.search(r"\bholiday", line, re.I)]
+        holidays = sorted(set(re.findall(r"\b(20\d{2}-\d{2}-\d{2})\b", "\n".join(holiday_lines))))
     holiday_str = ", ".join(holidays) if holidays else "None specified"
     return f"""
 BANK HOLIDAYS AND EXACT DATE RESOLUTION:
@@ -304,9 +317,9 @@ def compile_workflow(briefs, document):
     ops = read_contract(document)
     combined = "\n\n".join(f"--- INPUT DOCUMENT {i+1}: {name} ---\n{text}" for i, (name, text) in enumerate(briefs))
     references = canonical({name: {"request": op["schema"], "responses": op["responses"]} for name, op in ops.items()})
-    calendar_guidance = extract_calendar_guidance(combined)
-    system = GUIDANCE + calendar_guidance + "\nCall variables: customer_id={{customer_id}}, first_name={{first_name}}, last_name={{last_name}}, title={{title}}, now={{now}}.\n\nSUPPLIED POLICY (complete, unabridged):\n" + combined + "\n\nSUPPLIED TOOL CONTRACTS:\n" + references
     calendar = calendar_spec(briefs)
+    calendar_guidance = extract_calendar_guidance(combined, calendar)
+    system = GUIDANCE + calendar_guidance + "\nCall variables: customer_id={{customer_id}}, first_name={{first_name}}, last_name={{last_name}}, title={{title}}, now={{now}}.\n\nSUPPLIED POLICY (complete, unabridged):\n" + combined + "\n\nSUPPLIED TOOL CONTRACTS:\n" + references
 
     gated = boolean_response(ops["verify_identity"], "all_verified")
     closing = success_transition("close_call", "ok", "finished")
