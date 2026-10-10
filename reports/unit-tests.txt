@@ -1,4 +1,4 @@
-{"status": "offline_validated", "run_directory": "C:\\Users\\mirac\\Documents\\antigravity\\noble-einstein\\dist\\clean-4a553de9\\runs\\test-temp\\tmp32cww_o3\\20261010T162043Z-c99332fa", "error": null, "error_type": null}
+{"status": "offline_validated", "run_directory": "C:\\Users\\mirac\\Documents\\antigravity\\noble-einstein\\dist\\clean-87871ce8\\runs\\test-temp\\tmpgttftzw0\\20261010T162509Z-874ef90a", "error": null, "error_type": null}
 test_all_seven_tools_and_schema_enums (test_builder.CompilerTests.test_all_seven_tools_and_schema_enums) ... ok
 test_arbitrary_holidays_extracted_from_brief (test_builder.CompilerTests.test_arbitrary_holidays_extracted_from_brief) ... ok
 test_calendar_counts_after_today_and_crosses_holiday_year_boundary (test_builder.CompilerTests.test_calendar_counts_after_today_and_crosses_holiday_year_boundary) ... ok
@@ -62,6 +62,6 @@ test_read_contract_rejects_non_scalar_properties (test_builder.StressTests.test_
 test_validate_workflow_enforces_isolated_nodes (test_builder.StressTests.test_validate_workflow_enforces_isolated_nodes) ... ok
 
 ----------------------------------------------------------------------
-Ran 61 tests in 0.288s
+Ran 61 tests in 0.289s
 
 OK

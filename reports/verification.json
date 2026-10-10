@@ -1,5 +1,5 @@
 {
-  "verified_at_utc": "2026-10-10T16:20:44.670495+00:00",
+  "verified_at_utc": "2026-10-10T16:25:10.949459+00:00",
   "python": "3.13.5",
   "platform": "Windows-11-10.0.26300-SP0",
   "archive": {
@@ -17,16 +17,16 @@
       "repeat_workflow_hash_equal": true,
       "workflow_sha256": "b42b12991ef069c1ed2cf5c8c26757b2b91e4a56b3eb71a014933a5ee4462fb8",
       "wall_seconds": [
-        0.2045,
-        0.1874
+        0.1903,
+        0.1767
       ]
     },
     "B": {
       "repeat_workflow_hash_equal": true,
       "workflow_sha256": "8503385b657b5e898e38bc5f6754bb047a2e5b7216a33da522fea4397140cdad",
       "wall_seconds": [
-        0.2042,
-        0.2016
+        0.1803,
+        0.1782
       ]
     }
   },
@@ -36,5 +36,5 @@
   "benchmark_pass_rate": null,
   "live_api_validation": "not_run",
   "holdout_behavioral_evaluation": "not_run",
-  "clean_directory": "C:\\Users\\mirac\\Documents\\antigravity\\noble-einstein\\dist\\clean-4a553de9"
+  "clean_directory": "C:\\Users\\mirac\\Documents\\antigravity\\noble-einstein\\dist\\clean-87871ce8"
 }
