@@ -6,8 +6,8 @@
   "external_model_spending_allowed": false,
   "browser_smoke_max_calls": 1,
   "browser_smoke_max_duration_seconds": 180,
-  "observed_freya_balance_usd": 100,
-  "balance_observation_date": "2026-10-10",
+  "observed_freya_balance_usd": 244.93,
+  "balance_observation_date": "2026-10-11",
   "verified_max_cost_per_case_usd": null,
   "cost_bound_evidence": null,
   "live_tests_enabled": false,
@@ -17,5 +17,5 @@
   "credit_pilot_authorization_source": "User on 2026-10-10 explicitly authorized starting tests using the existing 100 USD Freya credit after repository review; first measurement limited to one development case and no retry.",
   "monitored_campaign_authorized": true,
   "campaign_stop_balance_usd": 20,
-  "monitored_campaign_authorization_source": "User 2026-10-10: extensive tests, diagnose and fix code/workflow, full permission within existing 100 USD Freya credit; stop conflicting same-project tests if possible."
+  "monitored_campaign_authorization_source": "User on 2026-10-11 explicitly authorized extensive testing using current balance (~245 USD, spending up to 100 USD authorized, 20 USD safety buffer)."
 }

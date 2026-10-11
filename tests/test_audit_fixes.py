@@ -300,5 +300,21 @@ Official bank holidays:
             verify_readback(workflow, tampered_nodes)
 
 
+    def test_item11_vague_period_rule_21_schema_and_prompts(self):
+        """Rule 21 vague periods: prompts instruct asking for exact day and action extractor sets none."""
+        workflow, _ = compile_workflow([("brief-a.md", self.brief_a)], self.openapi)
+        col_node = workflow["nodes"]["collection"]
+        self.assertIn("VAGUE PERIODS (Rule 21)", col_node["task_message"])
+        schema = {v["name"]: v for v in col_node["extraction_schema"]}
+        self.assertIn("payment_offer_action", schema)
+        self.assertIn("extraction_prompt", schema["payment_offer_action"])
+        self.assertIn("the week after next", schema["payment_offer_action"]["extraction_prompt"])
+        self.assertIn("payment_offer_date", schema)
+        self.assertIn("the week after next", schema["payment_offer_date"]["extraction_prompt"])
+        reply_node = workflow["nodes"]["date_reply"]
+        self.assertIn("the week after next", reply_node["task_message"])
+
+
 if __name__ == "__main__":
     unittest.main()
+

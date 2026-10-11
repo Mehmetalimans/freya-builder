@@ -213,17 +213,36 @@ def offer_node(spec, bands):
 
 
 def offer_extraction():
-    prompt = ("{{extractor.type_preamble}}\nCALL NOW is {{now}}. Use only that date as the anchor, never the real date. "
-              "Extract a specific PAYMENT date from the latest customer utterance and recent dialogue. "
-              "If it is a day of month without a month, use the month indicated by call now and the dialogue. "
-              "Next weekday means the following calendar week. Vague periods like next week are NOT exact dates. "
-              "Set payment_offer_action to resolve only for an explicit payment date or corrected date. "
-              "For yes/no, unrelated dates, identity details or vague periods set payment_offer_action to none. "
-              "Do not extract dates merely quoted by the assistant unless the customer explicitly changes them. "
-              "Latest speech: {{extractor.speech}}\nRecent dialogue: {{extractor.conversation.last-10}}\n"
-              "Variables: {{extractor.variables_list}}")
-    return [{"name": "payment_offer_date", "type": "date", "min_confidence": 0.5,
-             "description": "Exact date explicitly proposed by the customer for payment, anchored to call now.",
-             "extraction_prompt": prompt},
-            {"name": "payment_offer_action", "type": "string", "min_confidence": 0.5,
-             "enum_values": ["resolve", "none"], "description": "resolve only if latest customer utterance explicitly proposes or corrects an exact payment date; otherwise none."}]
+    date_prompt = (
+        "{{extractor.type_preamble}}\nCALL NOW is {{now}}. Use only that date as the anchor, never the real date. "
+        "Extract a specific PAYMENT date from the latest customer utterance and recent dialogue. "
+        "If it is a day of month without a month, use the month indicated by call now and the dialogue. "
+        "Next weekday means the following calendar week. "
+        "CRITICAL RULE: Vague periods like 'next week', 'the week after next', 'end of the month', 'when my salary comes', "
+        "'in two weeks', 'in a few days' are NOT exact dates. For any vague period or general timeframe, "
+        "do NOT extract a payment date (leave payment_offer_date empty/null). "
+        "Only extract when the customer explicitly provides an exact, specific day or date (e.g. 'Monday the 26th', 'October 27th', 'tomorrow'). "
+        "Do not extract dates merely quoted by the assistant unless the customer explicitly changes them.\n"
+        "Latest speech: {{extractor.speech}}\nRecent dialogue: {{extractor.conversation.last-10}}\n"
+        "Variables: {{extractor.variables_list}}"
+    )
+    action_prompt = (
+        "{{extractor.type_preamble}}\n"
+        "Set payment_offer_action to 'resolve' ONLY if the latest customer utterance explicitly proposes or corrects "
+        "an EXACT payment date or weekday (e.g. 'October 26th', 'next Tuesday', 'Friday', 'the 25th', '2026-10-26').\n"
+        "CRITICAL RULE: If the customer utterance gives a vague period or general timeframe (such as 'next week', "
+        "'the week after next', 'end of the month', 'when my salary comes', 'in two weeks', 'in a couple of weeks', "
+        "'sometime later'), you MUST set payment_offer_action strictly to 'none'. Do NOT set resolve.\n"
+        "For yes/no, confirmations, refusals, questions, or non-date statements, set payment_offer_action to 'none'.\n"
+        "Latest speech: {{extractor.speech}}\nRecent dialogue: {{extractor.conversation.last-10}}\n"
+        "Variables: {{extractor.variables_list}}"
+    )
+    return [
+        {"name": "payment_offer_date", "type": "date", "min_confidence": 0.5,
+         "description": "Exact date explicitly proposed by the customer for payment, anchored to call now.",
+         "extraction_prompt": date_prompt},
+        {"name": "payment_offer_action", "type": "string", "min_confidence": 0.5,
+         "enum_values": ["resolve", "none"],
+         "description": "resolve ONLY if latest customer utterance explicitly names an exact payment date or weekday; 'none' for vague periods ('the week after next', 'next week', etc.) or non-date answers.",
+         "extraction_prompt": action_prompt}
+    ]

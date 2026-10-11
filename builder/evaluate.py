@@ -43,14 +43,17 @@ def verify_platform_version_binding(client, saved, workspace_id, export_path=Non
     expected_sha = saved.get("workflow_sha256")
     if export_path:
         p = Path(export_path)
-        if p.exists():
-            export_data = json.loads(p.read_text(encoding="utf-8"))
-            exported_workflow = export_data.get("workflow", {})
-            if expected_sha and digest(canonical(exported_workflow)) != expected_sha:
+        local = p.with_name("workflow.local.json")
+        if p.exists() and local.exists():
+            compiled = json.loads(local.read_text(encoding="utf-8"))
+            if expected_sha and digest(canonical(compiled)) != expected_sha:
                 raise ContractError(
-                    f"Exported workflow sha256 mismatch with result.json: "
-                    f"{digest(canonical(exported_workflow))} != {expected_sha}"
+                    f"workflow.local.json sha256 mismatch with result.json: "
+                    f"{digest(canonical(compiled))} != {expected_sha}"
                 )
+            export_data = json.loads(p.read_text(encoding="utf-8"))
+            from builder.runtime import verify_readback
+            verify_readback(compiled, export_data)
     try:
         resp = client.api("GET", f"/api/v2/versions/workflow/{workflow_id}", workspaceId=workspace_id)
         versions = resp.get("versions", [])

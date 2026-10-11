@@ -554,6 +554,7 @@ def compile_workflow(briefs, document):
             task += ("\nDATE LOOKUP computed from call now and the supplied holiday calendar:\n{{calendar_facts}}\n"
                      "Use these computed dates, never mental weekday or business-day arithmetic. "
                      "For an Nth-business-day deadline select the line marked #N, separately for each product's policy band. "
+                     "Vague period rule: If the customer proposes a vague period ('next week', 'the week after next', 'end of the month', 'when my salary comes', 'in two weeks'), ask once for the exact day before proposing any date. Propose the deadline only if they still give no exact day. "
                      "Keep the proposed date distinct from the deadline. When the customer clarifies a vague period with an exact day, use that exact day. "
                      "A holiday/weekend before the deadline is NOT a request beyond the deadline. "
                      "When the policy requires moving it forward, use its explicit NEXT BUSINESS DAY value, then check the deadline. "
@@ -620,8 +621,9 @@ def compile_workflow(briefs, document):
         "Ask if they can pay the full amount today. Never ask 'how much can you pay?'. "
         "If full amount is too much, offer the floor amount once (stating the rest stays overdue). "
         + persuasion_task +
-        "If customer proposes a weekend or bank holiday, offer the next business day. "
-        "If customer proposes a date after a product's deadline, state the latest allowed date is the deadline and offer it on the deadline; if other products have later deadlines, keep their dates. "
+        "VAGUE PERIODS (Rule 21): If the customer gives a vague period ('next week', 'the week after next', 'end of the month', 'when my salary comes', 'in two weeks'), ask ONCE for the exact day. Propose no date until they clarify or refuse. If they still give no exact day after being asked, propose the deadline. "
+        "If customer proposes an exact date on a weekend or bank holiday, offer the next business day. "
+        "If customer proposes an exact date after a product's deadline, state the latest allowed date is the deadline and offer it on the deadline; if other products have later deadlines, keep their dates. "
         "Read back product(s), amount(s) and date(s) before create_promise. After promise, ALWAYS say: 'You will receive a text message confirming this promise.' "
         "If create_promise fails, retry once immediately. Never say recorded if the tool call failed. "
         "BRIEF B / MULTI-PRODUCT: If multiple products exist, state each product and amount first. Ask if they can pay all today. If not, negotiate one-by-one in get_account order with the persuasion rules above. Read back all promises together for one confirmation, then call create_promise for each. "
@@ -645,6 +647,7 @@ def compile_workflow(briefs, document):
         nodes["date_reply"] = conversation("date_reply", TOOLS - {"verify_identity"},
             "The bank account is already known. Resolve the customer's date using these freshly computed facts:\n"
             "{{payment_date_facts}}\n"
+            "If the customer gave a vague period ('the week after next', 'next week', 'end of the month', 'when my salary comes') instead of an exact day, ask once for the exact day first before proposing any date. "
             "Use DATE TO OFFER for the relevant product. If a non-business offer is inside its window, briefly "
             "explain the business-day adjustment and offer that calculated date; do not replace it with the deadline. "
             "If it is outside the window, explain and offer the calculated deadline according to the policy. "
