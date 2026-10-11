@@ -1,4 +1,4 @@
-{"status": "offline_validated", "run_directory": "C:\\Users\\mirac\\Documents\\antigravity\\noble-einstein\\dist\\clean-681d441b\\runs\\test-temp\\tmpvmcifno9\\20261010T200951Z-1494330e", "error": null, "error_type": null}
+{"status": "offline_validated", "run_directory": "C:\\Users\\mirac\\Documents\\antigravity\\noble-einstein\\dist\\clean-d249ebd3\\runs\\test-temp\\tmp7_9f2vcl\\20261011T133153Z-c73c7f9f", "error": null, "error_type": null}
 test_all_seven_tools_and_schema_enums (test_builder.CompilerTests.test_all_seven_tools_and_schema_enums) ... ok
 test_arbitrary_holidays_extracted_from_brief (test_builder.CompilerTests.test_arbitrary_holidays_extracted_from_brief) ... ok
 test_calendar_counts_after_today_and_crosses_holiday_year_boundary (test_builder.CompilerTests.test_calendar_counts_after_today_and_crosses_holiday_year_boundary) ... ok
@@ -164,6 +164,6 @@ test_099_fault_protocol_verify_identity_is_not_service_error (test_scenarios_100
 test_100_final_farewell_and_terminal_guarantee (test_scenarios_100.HundredScenariosTest.test_100_final_farewell_and_terminal_guarantee) ... ok
 
 ----------------------------------------------------------------------
-Ran 163 tests in 0.169s
+Ran 163 tests in 0.288s
 
 OK
