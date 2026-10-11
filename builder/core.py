@@ -118,25 +118,27 @@ class Policy(dict):
 def parse_policy(briefs, ops):
     combined = "\n\n".join(text for _, text in briefs)
 
-    # Bank name
+    # Institution / Bank name
     bank_name = "Freya Bank"
-    m_bank = re.search(r"calling from ([A-Za-z0-9 ]+? Bank)\b", combined, re.I)
+    m_bank = re.search(r"calling from ([A-Z][A-Za-z0-9 ]*?)\s+(?:on a|on the|regarding)", combined, re.I)
     if m_bank:
         bank_name = m_bank.group(1).strip()
     else:
-        m_bank2 = re.search(r"\b([A-Za-z0-9]+ Bank)\b", combined, re.I)
-        if m_bank2:
-            bank_name = m_bank2.group(1).strip()
+        m_title = re.search(r"#\s*Brief\s+[A-Za-z0-9]+:\s*([^,\n]+)", combined, re.I)
+        if m_title:
+            bank_name = m_title.group(1).strip()
+        else:
+            m_bank2 = re.search(r"\b([A-Za-z0-9 ]+?\s+(?:Bank|Finance|Financial|Capital|Credit|Trust))\b", combined, re.I)
+            if m_bank2:
+                bank_name = m_bank2.group(1).strip()
 
     # Maximum wrong answers allowed
     max_wrong = 3
-    m_wrong = re.search(r"(\d+)\s+wrong answers?\b", combined, re.I)
+    word_to_num = {"one": 1, "two": 2, "three": 3, "four": 4, "five": 5}
+    m_wrong = re.search(r"(?:only\s+|up\s+to\s+)?(\d+|one|two|three|four|five)\s+(?:wrong|incorrect)?\s*(?:answers?|attempts?)\b", combined, re.I)
     if m_wrong:
-        max_wrong = int(m_wrong.group(1))
-    else:
-        m_att = re.search(r"up to (\d+)\s+attempts?\b", combined, re.I)
-        if m_att:
-            max_wrong = int(m_att.group(1))
+        raw_val = m_wrong.group(1).lower()
+        max_wrong = int(raw_val) if raw_val.isdigit() else word_to_num.get(raw_val, 3)
 
     # Callback hours
     callback_hours = "10:00-19:00"
