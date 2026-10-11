@@ -215,6 +215,16 @@ All required source text and platform references are included in this prompt; PD
 Return ONLY one JSON object with keys "requirements" and "workflow"; no Markdown fences.
 The parent will save the exact returned objects under {output}. Do not edit source or inputs.
 The transport mock has already passed its documented fixtures. Its base URL is {mock_url}.
+Prototype boundary: produce a runnable text-conversation workflow using the documented mocked services.
+Missing production integrations outside the provided API are limitations, not a reason to omit all valid flows.
+For an intended external handoff whose integration is absent, use the source-defined final dialogue
+and the documented end_call mechanism to record terminal intent. Clearly state that physical
+telephony routing is unimplemented; do not invent a transfer API or pretend integration is verified.
+Where the backend owns eligibility but exposes no pre-check, preserve unknown eligibility,
+avoid unconditional eligibility claims, require consent for any write, and accept the actual
+write result as authoritative. Never use a write as an eligibility probe or fabricate a flag.
+Missing optional flags should not block otherwise documented successful paths. Missing request/response
+contracts, identity binding or required consent semantics remain blocking.
 Use the embedded platform references from {context}; do not invent platform features.
 Read every business source in full, including attachments and meeting transcripts.
 Extracted binary document text is in {output.parent / 'document-text'}; originals remain authoritative.
@@ -299,7 +309,10 @@ def run_generator(case, mock_url, out, model, seconds, trace):
     requirements = response['requirements']
     write_json(generated/'requirements.json',requirements)
     write_json(generated/'workflow.json',response['workflow'])
-    if requirements.get('unresolved_conflicts'):
+    conflicts = requirements.get('unresolved_conflicts', [])
+    if not isinstance(conflicts, list) or any(not isinstance(c, dict) for c in conflicts):
+        raise ContractError('Unresolved conflicts need structured classifications')
+    if any(c.get('blocking', True) is not False for c in conflicts):
         raise ContractError('Generator reports unresolved conflicts; no deployment permitted')
     return response['workflow'], requirements
 
