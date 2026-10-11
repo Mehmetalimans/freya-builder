@@ -184,7 +184,7 @@ TRIGGERS = {
     "get_account": "CALL only after all identity checks required by the supplied brief succeed. Use returned facts and identifiers.",
     "create_promise": "CALL only after the brief's amount/date checks and explicit confirmation. Reconfirm if amount or date modified. Do not claim success before the result.",
     "add_note": "CALL only when the supplied brief requires a note; never add notes merely because the tool exists.",
-    "schedule_callback": "CALL only for a callback permitted by the supplied brief and agreed by the caller.",
+    "schedule_callback": "CALL only for a callback permitted by the supplied brief and agreed by the caller. Call this tool alone; do not call close_call in the same turn.",
     "transfer_to_agent": "CALL when the supplied brief requires transfer. Copy an allowed queue from this tool schema.",
     "close_call": "CALL exactly once at the end, after all required records and the spoken farewell. It is the last bank tool call.",
 }
@@ -468,7 +468,7 @@ def make_persuasion_guidance(bands):
 PERSUASION ATTEMPTS BY BAND:
 Count attempts per product:
 - Early band (days_late: 1 to 7): 1 persuasion attempt maximum.
-  * Attempt 1: propose the last business day of this week (this Friday). If refused, stop for this product.
+  * Attempt 1: propose the last business day of this week (this Friday). If refused, stop for this product. NEVER make a second attempt and NEVER propose the deadline date if Attempt 1 was refused! There is NO Attempt 2 for early band!
 - Late band (days_late: 8 to 45): EXACTLY 2 persuasion attempts required before accepting refusal!
   * Attempt 1: propose the last business day of this week (this Friday).
   * Attempt 2 (MANDATORY if Attempt 1 refused): propose the FLOOR amount on the product's DEADLINE date (minimum_payment for credit card, instalment_amount for loans).
@@ -480,7 +480,7 @@ When attempts are used up, stop. Do not repeat an offer the customer already ref
         label = f"Band ({b_min} to {b_max} days late)"
         attempts = 1 if b_days > 7 else 2
         lines.append(f"- {label}: {attempts} persuasion attempt(s) maximum.")
-        lines.append("  * Attempt 1: propose the last business day of this week.")
+        lines.append("  * Attempt 1: propose the last business day of this week. If refused and only 1 attempt allowed, STOP IMMEDIATELY! Do NOT propose the deadline!")
         if attempts > 1:
             lines.append(f"  * Attempt 2 (MANDATORY if Attempt 1 refused): propose the FLOOR amount on the product's DEADLINE date ({b_days} business days after today).")
     lines.append("When attempts are used up, stop. Do not repeat an offer the customer already refused.\n")
@@ -531,7 +531,7 @@ After a recorded promise, you MUST ALWAYS say: 'You will receive a text message 
 SPOKEN RESPONSE MANDATORY: Never return an empty message or a bare tool call without words spoken to the customer. ALWAYS say thank you and say goodbye BEFORE or in the same turn as calling close_call ('Thank you for your time, goodbye.'). close_call is the last bank tool call.
 
 THIRD PARTY & DISPUTES:
-If someone else answers, NEVER reveal debt or account facts; schedule_callback if agreed, else close_call.
+CALLBACK PROTOCOL: If someone else answers, NEVER reveal debt or account facts; ask when customer can be reached. If a callback is agreed, call schedule_callback FIRST in its own turn alone. Only AFTER schedule_callback succeeds, say goodbye and call close_call(outcome='not_reached', reason='callback'). NEVER call close_call before or in the same turn as schedule_callback! If not agreed, close_call.
 If debt is disputed, close as no_promise / dispute without taking a promise.
 If customer already paid, state payments take one business day to appear, take no promise, close as paid.
 TRANSFER PROTOCOL: On any transfer (restructuring, support, general), call transfer_to_agent FIRST in its own turn. Only AFTER transfer_to_agent succeeds (ok: true), call close_call(outcome='transferred', reason=queue). NEVER call close_call before or in the same turn as transfer_to_agent!
@@ -602,10 +602,11 @@ def compile_workflow(briefs, document):
     task_identity = (
         f"Begin with the required opening: say you are a digital assistant calling from {policy.bank_name} and this call is monitored. "
         "Ask 'Am I speaking with {title} {last_name}?'. Do not mention debt, collections, or products. "
-        f"If someone else answers, do not disclose anything; ask when the customer can be reached. If a callback is agreed (today or next business day {policy.callback_hours}), schedule_callback and close_call(outcome='not_reached', reason='callback'). "
+        f"If someone else answers, do not disclose anything; ask when the customer can be reached. If a callback is agreed (today or next business day {policy.callback_hours}), call schedule_callback alone first. Say goodbye and call close_call(outcome='not_reached', reason='callback') only after schedule_callback has completed. Never call schedule_callback and close_call in the same turn. "
         "If person says wrong number, close_call(outcome='not_reached', reason='wrong_number'). "
         "If customer died, say 'I am sorry for your loss.', ask nothing else, and close_call(outcome='not_reached', reason='deceased'). "
         "If customer confirms identity, perform verification following the exact questions and order in the supplied brief (for Brief A: ask date of birth first formatted YYYY-MM-DD, and only after it passes ask phone last 4). Ask one question at a time. "
+        "DISTRACTOR DATES: If the customer mentions an unrelated or incidental date (e.g. loan start, purchase, incident, wedding) alongside or before their birth date, extract ONLY the date explicitly identified as their birth date. Never pass incidental dates to verify_identity. "
         "When calling verify_identity, if it returns verified: false: that is a wrong answer; tell the customer it did not match and ask the question again. "
         "Transport or server errors (e.g. 500, timeout) are technical issues, NOT wrong answers; do not count them as customer wrong answers. "
         f"You must allow up to {policy.max_wrong_answers} wrong answers in total across the check. "
@@ -639,12 +640,15 @@ def compile_workflow(briefs, document):
         "If full amount is too much, offer the floor amount once (stating the rest stays overdue). "
         + persuasion_task +
         "VAGUE PERIODS (Rule 21): If the customer gives a vague period ('next week', 'the week after next', 'end of the month', 'when my salary comes', 'in two weeks'), ask ONCE for the exact day. Propose no date until they clarify or refuse. If they still give no exact day after being asked, propose the deadline. "
+        "MULTI-TURN DATES: If the customer supplies a date across multiple messages (e.g. specifies month or week first, and day of month in a follow-up, or gives a day number like 'the 15th'), combine these pieces with call 'now' into the complete ISO date YYYY-MM-DD before evaluating against policy. Do not drop earlier date context. "
+        "SALARY / PAYDAY OFFERS: If customer cannot pay today but offers a specific salary date or pay day, treat that exact date as their proposed payment date and check whether it falls within the allowed deadline. "
         "If customer proposes an exact date on a weekend or bank holiday, offer the next business day. "
         "If customer proposes an exact date after a product's deadline, state the latest allowed date is the deadline and offer it on the deadline; if other products have later deadlines, keep their dates. "
+        "OBJECTIONS & QUESTIONS: If customer declines a transfer or asks clarifying questions about their account, amounts, or options while declining, answer their question directly within policy instead of forcing a transfer or terminating the call. "
         "Read back product(s), amount(s) and date(s) before create_promise. After promise, ALWAYS say: 'You will receive a text message confirming this promise.' "
         "If create_promise fails, retry once immediately. Never say recorded if the tool call failed. "
         "TRANSFER PROTOCOL (Rule 41, 42, 32): When transferring to an agent (for restructuring, support, or general human), call transfer_to_agent FIRST in its own turn. NEVER call close_call before or in the same turn as transfer_to_agent! Only in the turn AFTER transfer_to_agent returns ok: true, say goodbye and call close_call(outcome='transferred', reason=queue). "
-        "BRIEF B / MULTI-PRODUCT: If multiple products exist, state each product and amount first. Ask if they can pay all today. If not, negotiate one-by-one in get_account order with the persuasion rules above. For Early band products (1-7 days late), make at most 1 attempt; if refused, do NOT ask again and do NOT repeat the offer! For Late band products (8-45 days late), make 2 attempts before stopping. Read back all promises together for one confirmation, then call create_promise for each. "
+        "BRIEF B / MULTI-PRODUCT: If multiple products exist, state each product and amount first. Ask if they can pay all today. If not, negotiate one-by-one in get_account order with the persuasion rules above. For Early band products (1-7 days late), make at most 1 attempt; if refused, do NOT ask again and do NOT repeat the offer! For Late band products (8-45 days late), make 2 attempts before stopping. If customer proposes a single shared payment date for all products, check that date against each product's individual deadline; if valid for all, accept for all; if it exceeds some products, explain those specific deadlines and keep valid dates for the rest. Read back all promises together for one confirmation, then call create_promise for each. "
         f"For every unpromised product, call add_note(customer_id, product_id, reason) with reason in {note_reasons_str}. On any transfer (restructuring, support, general), do NOT call add_note. "
         "CLOSING: ALWAYS thank the customer and say goodbye BEFORE or in the same turn as calling close_call. close_call must be the final bank tool."
     )
@@ -666,11 +670,14 @@ def compile_workflow(briefs, document):
             "The bank account is already known. Resolve the customer's date using these freshly computed facts:\n"
             "{{payment_date_facts}}\n"
             "If the customer gave a vague period ('the week after next', 'next week', 'end of the month', 'when my salary comes') instead of an exact day, ask once for the exact day first before proposing any date. "
+            "If the customer supplies a date across multiple messages (e.g. month first then day, or specifies a day number like 'the 15th'), combine the pieces with call 'now' into the complete date YYYY-MM-DD. "
             "Use DATE TO OFFER for the relevant product. If a non-business offer is inside its window, briefly "
             "explain the business-day adjustment and offer that calculated date; do not replace it with the deadline. "
             "If it is outside the window, explain and offer the calculated deadline according to the policy. "
             "Then complete the amount agreement, explicit read-back confirmation and actual bank records. "
+            + persuasion_task +
             "In a multi-product call apply the amended per-product rules, including one combined read-back. "
+            "BRIEF B / MULTI-PRODUCT: If multiple products exist, negotiate one-by-one in get_account order. For Early band products (1-7 days late), make at most 1 attempt; if refused, stop immediately! Do NOT ask again, do NOT propose the deadline, and do NOT repeat the offer! For Late band products (8-45 days late), make 2 attempts before stopping. Read back all promises together for one confirmation, then call create_promise for each. For every unpromised product, call add_note(customer_id, product_id, reason). "
             "Answer any customer question and handle exceptions before continuing; a date proposal is not a refusal. "
             "Follow the rest of the supplied policy through closing.", [closing, date_transition])
         nodes["date_reply"]["extraction_schema"] = offer_extraction()

@@ -314,6 +314,32 @@ Official bank holidays:
         reply_node = workflow["nodes"]["date_reply"]
         self.assertIn("the week after next", reply_node["task_message"])
 
+    def test_item12_conversation_quality_edge_cases(self):
+        """Verify prompt instructions for distractor dates, multi-turn dates, salary dates, and objections."""
+        workflow, _ = compile_workflow([("brief-a.md", self.brief_a)], self.openapi)
+        id_node = workflow["nodes"]["identity"]
+        col_node = workflow["nodes"]["collection"]
+        reply_node = workflow["nodes"]["date_reply"]
+
+        # 1. Distractor dates in identity
+        self.assertIn("DISTRACTOR DATES", id_node["task_message"])
+        self.assertIn("Never pass incidental dates to verify_identity", id_node["task_message"])
+
+        # 2. Multi-turn date assembly in collection and date_reply
+        self.assertIn("MULTI-TURN DATES", col_node["task_message"])
+        self.assertIn("combine these pieces with call 'now'", col_node["task_message"])
+        self.assertIn("combine the pieces with call 'now'", reply_node["task_message"])
+
+        # 3. Salary / payday offers in collection
+        self.assertIn("SALARY / PAYDAY OFFERS", col_node["task_message"])
+
+        # 4. Objections & questions during transfer decline
+        self.assertIn("OBJECTIONS & QUESTIONS", col_node["task_message"])
+
+        # 5. Shared date across multiple products (Brief B)
+        wf_b, _ = compile_workflow([("brief-a.md", self.brief_a), ("brief-b.md", (KIT / "briefs" / "brief-b.md").read_text(encoding="utf-8"))], self.openapi)
+        self.assertIn("single shared payment date for all products", wf_b["nodes"]["collection"]["task_message"])
+
 
 if __name__ == "__main__":
     unittest.main()

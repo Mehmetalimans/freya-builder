@@ -1,27 +1,18 @@
 # İki kişilik görev takibi
 
-Son güncelleme: 10 Ekim 2026. Durumlar yalnız bu repodaki kanıta dayanır.
-Güncel geniş test: 19 gerçek çağrı (önceki pilot hariç); 17'si birleşik scorer
-ile puanlandı, son ikisinin ledger okuması servis 500/1101 hatasında engellendi.
-En iyi tamamlanmış geniş tur 0.1.6 ile 6/7; 0.1.9 adayının tam skoru bilinmiyor.
-Kanıt ve sürüm ayrımı: `reports/extended-evaluation.json`,
-`docs/extended-test-notes.md`. Aşağıdaki ilk pilot bilgileri tarihsel kayıttır.
+Son güncelleme: 11 Ekim 2026. Durumlar yalnız bu repodaki kanıta dayanır.
+Canlı Freya simülasyonları:
+- **Brief A (v10):** 7/7 (%100 Başarı) — Happy path, callback, identity, dates/tatil atlama, hardship, amounts tümü geçti (`runs/20261011T162746Z-2c679007/evaluation.json`).
+- **Brief B (v10):** 3/3 (%100 Başarı) — PUB-11, PUB-12, PUB-13 çoklu ürün, ikna limitleri ve not kuralları geçti (`runs/20261011T164608Z-8ac4a608/evaluation.json`).
+- **Bakiye & Maliyet:** İki tam canlı değerlendirme turunda toplam ~0.43 USD kredi harcandı; kalan bakiye ~240.93 USD (20 USD güvenlik tamponu eksiksiz korundu).
 Ortak özel depo `Mehmetalimans/freya-builder`; geliştirme dalı → pull request →
 diğer kişinin incelemesi → ana dal sırasıyla çalışılır. `mbirlik24` yazma
 erişimi doğrulandı. GitHub kişisel private depoda dal korumasını
 bu planda uygulamıyor; zorunlu PR incelemesi ekip sürecidir.
 
-Çalışma hedefi artık [Mirac Birlik's Workspace](https://staging-app.freyavoice.ai/?workspaceId=8783bb12-56fc-489a-8608-590676971f6c).
-Buildo denemesi bırakıldı. Brief A'nın çevrimdışı üretilen tanımı Miraç
-workspace'inde [Brief A - Builder Baseline v3](https://staging-app.freyavoice.ai/workflow/82c69318-2c6a-43d3-9661-a93ea8b9b99d?workspaceId=8783bb12-56fc-489a-8608-590676971f6c)
-olarak UI üzerinden yayımlandı. Yeniden yüklenmiş JSON'da `identity`,
-`collection`, `finished` düğümleri ile `experimental-5` sağlayıcı/modeli
-görüldü. Ardından builder 0.1.3 ile aynı workflow API üzerinden **v4** olarak
-yayımlandı, resmî export ve davranış geri okuması `deployed_verified` oldu.
-Kanıt `runs/20261010T143548Z-dcb3f232/` altında. İlk resmî geliştirme ölçümü
-tamamlandı: **PUB-01 1/1 geçti**, simülasyon 41 saniye, gözlenen bakiye farkı
-0,01995 USD. Son görülen bakiye 99,8602 USD. Kalan geliştirme ve holdout henüz
-ölçülmedi; ayrıntı `reports/first-live-evaluation.json` içinde.
+Çalışma hedefi [Mirac Birlik's Workspace](https://staging-app.freyavoice.ai/?workspaceId=8783bb12-56fc-489a-8608-590676971f6c).
+Brief A `practice-a` slotunda (v10), Brief B `practice-b` slotunda (v10) olarak
+yayımlandı ve doğrulandı. Resmî export ve geri okuma kontrolleri eksiksiz geçti.
 
 | Sahip | İş | Durum / kabul ölçütü |
 | --- | --- | --- |

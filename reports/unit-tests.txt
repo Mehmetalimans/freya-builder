@@ -1,4 +1,40 @@
-{"status": "offline_validated", "run_directory": "C:\\Users\\mirac\\Documents\\antigravity\\noble-einstein\\dist\\clean-d249ebd3\\runs\\test-temp\\tmp7_9f2vcl\\20261011T133153Z-c73c7f9f", "error": null, "error_type": null}
+{"status": "offline_validated", "run_directory": "C:\\Users\\mirac\\Documents\\antigravity\\noble-einstein\\dist\\clean-0d21f5a7\\runs\\test-temp\\tmp0v9epy60\\20261011T165208Z-b454d227", "error": null, "error_type": null}
+test_item11_vague_period_rule_21_schema_and_prompts (test_audit_fixes.AuditFixesRegressionTest.test_item11_vague_period_rule_21_schema_and_prompts)
+Rule 21 vague periods: prompts instruct asking for exact day and action extractor sets none. ... ok
+test_item12_conversation_quality_edge_cases (test_audit_fixes.AuditFixesRegressionTest.test_item12_conversation_quality_edge_cases)
+Verify prompt instructions for distractor dates, multi-turn dates, salary dates, and objections. ... ok
+test_item1_dynamic_policy_derivation_different_bank_and_rules (test_audit_fixes.AuditFixesRegressionTest.test_item1_dynamic_policy_derivation_different_bank_and_rules)
+Custom bank name, questions, wrong answer limit, bands, and enums. ... ok
+test_item2_guidance_forbids_blanket_identity_service_error_prohibition (test_audit_fixes.AuditFixesRegressionTest.test_item2_guidance_forbids_blanket_identity_service_error_prohibition)
+Workflow system prompt must NOT claim verify_identity can never fail with service_error. ... ok
+test_item2_identity_hook_distinguishes_service_error_from_wrong_answer (test_audit_fixes.AuditFixesRegressionTest.test_item2_identity_hook_distinguishes_service_error_from_wrong_answer)
+HTTP 500 or timeout must NOT be treated as customer wrong answer. ... ok
+test_item3_alternative_identity_gate_supported (test_audit_fixes.AuditFixesRegressionTest.test_item3_alternative_identity_gate_supported)
+If schema uses identity_complete instead of all_verified, adapter supports it. ... ok
+test_item3_missing_identity_gate_fails_closed (test_audit_fixes.AuditFixesRegressionTest.test_item3_missing_identity_gate_fails_closed)
+When OpenAPI schema has no recognizable identity gate, fail closed with ContractError. ... ok
+test_item4_get_account_hook_handles_errors_honestly (test_audit_fixes.AuditFixesRegressionTest.test_item4_get_account_hook_handles_errors_honestly)
+get_account must never emit 'Account loaded' on status=error, 500, or ok=false. ... ok
+test_item5_create_promise_trigger_and_verification_boundary (test_audit_fixes.AuditFixesRegressionTest.test_item5_create_promise_trigger_and_verification_boundary)
+create_promise trigger enforces verified identity, bounds, and explicit confirmation. ... ok
+test_item6_calendar_friday_holiday_resolves_last_bday_to_thursday (test_audit_fixes.AuditFixesRegressionTest.test_item6_calendar_friday_holiday_resolves_last_bday_to_thursday)
+When Friday is a holiday, last business day of the week must resolve to Thursday. ... ok
+test_item6_calendar_tuesday_through_saturday_workweek (test_audit_fixes.AuditFixesRegressionTest.test_item6_calendar_tuesday_through_saturday_workweek)
+Custom workweek: Tuesday through Saturday (Sunday and Monday are weekend). ... ok
+test_item7_verify_platform_version_binding_matching_succeeds (test_audit_fixes.AuditFixesRegressionTest.test_item7_verify_platform_version_binding_matching_succeeds)
+Saved version matching live published version succeeds cleanly. ... ok
+test_item7_verify_platform_version_binding_mismatch_rejected (test_audit_fixes.AuditFixesRegressionTest.test_item7_verify_platform_version_binding_mismatch_rejected)
+Saved version 4 vs live platform version 99 must raise ContractError before tests. ... ok
+test_item8_readback_detects_altered_on_enter_and_global_nodes (test_audit_fixes.AuditFixesRegressionTest.test_item8_readback_detects_altered_on_enter_and_global_nodes)
+Altering on_enter or injecting global node triggers readback ContractError. ... ok
+test_brief_c_compilation_and_policy (test_brief_cde_matrix.TestBriefCDEMatrix.test_brief_c_compilation_and_policy)
+Test Brief C (Anatolia Global Bank, 14/5 business day bands, 3 wrong answers). ... ok
+test_brief_d_compilation_and_policy (test_brief_cde_matrix.TestBriefCDEMatrix.test_brief_d_compilation_and_policy)
+Test Brief D (Apex Commercial Finance, 8/3 bands, 2 wrong answers, corporate fields). ... ok
+test_brief_e_compilation_and_policy (test_brief_cde_matrix.TestBriefCDEMatrix.test_brief_e_compilation_and_policy)
+Test Brief E (Nordic Trust Financial, 4/2 bands, 1 wrong answer, micro-credit). ... ok
+test_diverse_case_policy_adaptation (test_brief_cde_matrix.TestBriefCDEMatrix.test_diverse_case_policy_adaptation)
+Verify that policies dynamically adapt across all 5 briefs (A, B, C, D, E). ... ok
 test_all_seven_tools_and_schema_enums (test_builder.CompilerTests.test_all_seven_tools_and_schema_enums) ... ok
 test_arbitrary_holidays_extracted_from_brief (test_builder.CompilerTests.test_arbitrary_holidays_extracted_from_brief) ... ok
 test_calendar_counts_after_today_and_crosses_holiday_year_boundary (test_builder.CompilerTests.test_calendar_counts_after_today_and_crosses_holiday_year_boundary) ... ok
@@ -56,6 +92,7 @@ test_generalized_freya_origin_and_working_day_bands (test_builder.StressTests.te
 test_natural_language_holidays_normalized (test_builder.StressTests.test_natural_language_holidays_normalized) ... ok
 test_offer_code_malformed_input_graceful_fallback (test_builder.StressTests.test_offer_code_malformed_input_graceful_fallback) ... ok
 test_offer_code_with_days_late_exceeding_bands (test_builder.StressTests.test_offer_code_with_days_late_exceeding_bands) ... ok
+test_offer_code_with_list_of_products_structure (test_builder.StressTests.test_offer_code_with_list_of_products_structure) ... ok
 test_offer_code_with_single_and_multiple_products (test_builder.StressTests.test_offer_code_with_single_and_multiple_products) ... ok
 test_openapi_with_various_scalar_types (test_builder.StressTests.test_openapi_with_various_scalar_types) ... ok
 test_post_process_hooks_resilient_to_primitive_and_empty_inputs (test_builder.StressTests.test_post_process_hooks_resilient_to_primitive_and_empty_inputs) ... ok
@@ -164,6 +201,6 @@ test_099_fault_protocol_verify_identity_is_not_service_error (test_scenarios_100
 test_100_final_farewell_and_terminal_guarantee (test_scenarios_100.HundredScenariosTest.test_100_final_farewell_and_terminal_guarantee) ... ok
 
 ----------------------------------------------------------------------
-Ran 163 tests in 0.288s
+Ran 182 tests in 0.295s
 
 OK

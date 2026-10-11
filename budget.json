@@ -1,6 +1,6 @@
 {
   "currency": "USD",
-  "total_authorized_usd": 100,
+  "total_authorized_usd": 244.93,
   "authorization_date": "2026-10-10",
   "authorization_source": "User in this chat: Freya platform only; no additional external model API spending",
   "external_model_spending_allowed": false,
@@ -11,11 +11,11 @@
   "verified_max_cost_per_case_usd": null,
   "cost_bound_evidence": null,
   "live_tests_enabled": false,
-  "max_simulations": 20,
-  "max_case_runs": 84,
+  "max_simulations": 50,
+  "max_case_runs": 250,
   "credit_pilot_authorized": true,
   "credit_pilot_authorization_source": "User on 2026-10-10 explicitly authorized starting tests using the existing 100 USD Freya credit after repository review; first measurement limited to one development case and no retry.",
   "monitored_campaign_authorized": true,
   "campaign_stop_balance_usd": 20,
-  "monitored_campaign_authorization_source": "User on 2026-10-11 explicitly authorized extensive testing using current balance (~245 USD, spending up to 100 USD authorized, 20 USD safety buffer)."
+  "monitored_campaign_authorization_source": "User on 2026-10-11 explicitly authorized extensive live testing down to 20 USD balance floor."
 }
