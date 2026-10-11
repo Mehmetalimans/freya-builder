@@ -23,3 +23,18 @@ report and refuses missing evidence or unresolved conflicts before publishing.
 The previous A/B practice runner remains available. Its pass rates do not measure
 the final task. New folder unit tests use an unrelated library API to check that
 the adapter does not depend on practice bank tool names or hostnames.
+
+20:42 update: the full folder is now available and preserved under cases/final.
+The October 9 recap explicitly amends the October 8 analysis. Extra identity
+verification is explicitly rejected by the bank; missing GBP is omitted rather
+than treated as zero. Outstanding capability gaps (yearly-change eligibility
+flag, routing implementation and masked-number distinction) must be recorded by
+the generation rather than filled with invented APIs.
+
+Worker deployed at https://freya-final-bank.freya-final-bank-mock.workers.dev,
+version 2a2d8bb2-f3a2-4509-9f05-9dce354f83e0. Local: 617 fixture responses
+passed; Python: 127 tests. First remote sweep: 464 passed, 153 connection errors
+during initial reachability; preserved under runs/final-live/mock-first-remote.json.
+A full second sweep is running; generation remains gated on its result.
+Freya preflight: zero active simulations, 481.5331 credits at 0.5 USD/credit.
+This is available trial balance, not a per-call tariff or measured final cost.
