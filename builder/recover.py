@@ -112,7 +112,9 @@ def recover_paused(directory):
     last = {'simulation_id':pause['simulation_id'], 'iteration_id':pause['iteration_id']}
     if last['simulation_id'] not in {r['simulation_id'] for r in history}:
         history.append(last)
-    if len(history) != 3 or len({r['simulation_id'] for r in history}) != 3:
+    allow_partial = pause.get('allow_partial') is True
+    if (not 1 <= len(history) <= 3 or len({r['simulation_id'] for r in history}) != len(history)
+            or (len(history) != 3 and not allow_partial)):
         raise ContractError('Paused recovery requires exactly three distinct recorded simulations')
     check_environment(require_bank=True)
     check_run_workspace(saved, os.environ['FREYA_WORKSPACE_ID'])
@@ -143,7 +145,7 @@ def recover_paused(directory):
         if current['status'] not in ('completed','paused'): raise ContractError('A recorded remote simulation is incomplete')
         iteration = client.get_iteration(remote['simulation_id'],remote['iteration_id'])
         if (iteration.get('runsTotal') != len(ids) or len(iteration['runs']) != len(ids)
-                or any(r.get('outcome') not in ('pass','fail') or not r.get('endedAt') for r in iteration['runs'])):
+                or any(r.get('outcome') not in ('pass','fail','inconclusive') or not r.get('endedAt') for r in iteration['runs'])):
             raise ContractError('Every remote call must have a terminal verdict and end timestamp')
         sessions = {}
         matched = [r for r in iteration['runs'] if by_persona.get(r['personaId']) in ids]
@@ -177,15 +179,16 @@ def recover_paused(directory):
         rows,*_ = runner.run_once(saved['agent_id'],cases,personas)
         repetitions.append(rows)
         write_json(directory/f'repetition-{index+1:02d}.recovered.json',{'rows':rows,**remote,'recovered_read_only':True})
+    reps = len(repetitions)
     final = [{'id':c['id'],'family':c['family'],'passes':sum(next(r for r in rep if r['id']==c['id'])['pass'] for rep in repetitions),
-              'runs':3,'pass':all(next(r for r in rep if r['id']==c['id'])['pass'] for rep in repetitions)} for c in cases]
+              'runs':reps,'pass':all(next(r for r in rep if r['id']==c['id'])['pass'] for rep in repetitions)} for c in cases]
     report = {'final':final,'all_rows':repetitions,'rows':repetitions[-1],'passed':sum(r['pass'] for r in final),
-              'total':len(ids),'runs':3,'seconds':None}
-    validate_results(report,ids,3)
+              'total':len(ids),'runs':reps,'seconds':None}
+    validate_results(report,ids,reps)
     after = credit_snapshot(client)
-    summary = {'status':'measured','brief':brief,'split':split,'reps':3,'case_ids':ids,'seconds':None,
+    summary = {'status':'measured' if reps==3 else 'incomplete','brief':brief,'split':split,'reps':reps,'planned_reps':3,'case_ids':ids,'seconds':None,
                'workspace_id':saved['workspace_id'],'results':report,'passed':report['passed'],'total':len(ids),
-               'benchmark_success':report['passed']/len(ids),'actual_cost_usd':None,'credits_after':after,
+               'benchmark_success':report['passed']/len(ids) if reps==3 else None,'actual_cost_usd':None,'credits_after':after,
                'recovered_read_only':True,'recovery_seconds':round(time.monotonic()-started,3),
                'recorded_local_wait_seconds':saved.get('seconds'),'remote_job_may_still_be_running':False,
                'cost_note':'Read-only recovery; no new simulation, no measured complete-run duration or invoice.'}
@@ -196,8 +199,13 @@ def recover_paused(directory):
     with exclusive(ROOT/'state/budget.lock'):
         ledger_path = ROOT/'state/budget-ledger.json'
         ledger = json.loads(ledger_path.read_text())
-        write_json(ledger_path,settle_campaign(ledger,after,directory.name))
-    print(json.dumps({'status':'measured','passed':report['passed'],'total':len(ids),'recovered_read_only':True}))
+        settled = settle_campaign(ledger,after,directory.name)
+        if reps != 3:
+            settled['last_completed_run'] = ledger.get('last_completed_run')
+            settled['last_incomplete_run'] = directory.name
+        write_json(ledger_path,settled)
+    print(json.dumps({'status':summary['status'],'passed':report['passed'] if reps==3 else None,'total':len(ids),
+                      'observed_repetitions':reps,'recovered_read_only':True}))
     return summary
 
 

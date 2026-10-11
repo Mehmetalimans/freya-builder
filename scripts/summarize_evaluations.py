@@ -54,6 +54,11 @@ def summarize(directory):
         result[key] = json.loads(infrastructure.read_text(encoding="utf-8"))
     if evaluation["status"] != "measured":
         result["error"] = evaluation.get("error")
+        result['planned_reps'] = evaluation.get('planned_reps')
+        partial = evaluation.get('results',{}).get('all_rows',[])
+        if partial:
+            result['observed_repetitions'] = [{'passed':sum(r['pass'] for r in rep),'total':len(rep)} for rep in partial]
+            result['partial_failures'] = [{'id':r['id'],'reasons':r['failed']} for rep in partial for r in rep if not r['pass']]
         return result
     report = evaluation["results"]
     validate_results(report, evaluation["case_ids"], evaluation["reps"])

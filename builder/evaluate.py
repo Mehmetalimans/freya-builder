@@ -1,5 +1,6 @@
 """Bounded wrapper around the official scorer; never treats local tests as scores."""
 import argparse
+from datetime import datetime
 import importlib.util
 import json
 import math
@@ -160,6 +161,28 @@ def bounded_simulation_body(body, concurrent_calls=1):
     return {**body, "maxRetries": 0, "maxConcurrentCalls": concurrent_calls}
 
 
+def terminal_results_ready(progress, personas, saved, now=None):
+    """Ended calls with final labels can exist while the simulation status is stale.
+
+    Inconclusive remains a non-pass in the untouched official scorer.
+    A two-minute quiet interval prevents interrupting normal finalization.
+    """
+    rows = progress.get('runs', [])
+    if (type(progress.get('runsTotal')) is not int or progress['runsTotal'] != len(personas)
+            or len(rows) != len(personas) or {r.get('personaId') for r in rows} != set(personas)):
+        return False
+    if any(r.get('outcome') not in ('pass','fail','inconclusive') or not r.get('callId')
+           or r.get('agentWorkflowId') != saved['workflow_id']
+           or r.get('agentVersionNumber') != saved['platform_version'] for r in rows):
+        return False
+    try:
+        ends = [datetime.fromisoformat(r['endedAt'].replace('Z','+00:00')) for r in rows]
+        if any(t.tzinfo is None for t in ends): return False
+        return (time.time() if now is None else now) - max(t.timestamp() for t in ends) >= 120
+    except (KeyError,TypeError,ValueError,AttributeError):
+        return False
+
+
 def validate_results(report, ids, reps):
     final = report.get("final", [])
     rows = report.get("all_rows", [])
@@ -188,25 +211,56 @@ def worker(run_dir, runtime, brief, split, reps, style, seconds, only=None, moni
     original_api = freya.api
     policy = json.loads((ROOT / "budget.json").read_text(encoding="utf-8"))
     simulation_history = []
+    owned, reconciled, last_checked = {}, set(), {}
     def tracked_api(method, path, body=None, **params):
         if method == "POST" and path == "/api/v2/simulations":
+            verify_platform_version_binding(freya, saved, os.environ['FREYA_WORKSPACE_ID'], run_dir/'workflow.export.json')
             if monitored:
                 check_campaign(policy, credit_snapshot(freya), len(body["selectedPersonaIds"]))
             body = bounded_simulation_body(body, policy.get("simulation_max_concurrent_calls", 1))
         result = original_api(method, path, body, **params)
         if method == "POST" and path == "/api/v2/simulations":
             sim = result.get("simulation", result)
+            owned[sim['id']] = set(body['selectedPersonaIds'])
             write_json(run_dir / "remote-simulation.json", {"simulation_id": sim["id"], "status": sim.get("status")})
             trace.emit("simulation_started", simulation_id=sim["id"], case_count=len(body["selectedPersonaIds"]), max_retries=0)
+        sim_id = path.removeprefix('/api/v2/simulations/')
+        if (monitored and method == 'GET' and sim_id in owned
+                and result.get('simulation',result).get('status') == 'running'
+                and time.monotonic()-last_checked.get(sim_id,0) >= 30):
+            last_checked[sim_id] = time.monotonic()
+            its = original_api('GET',f'/api/v2/simulations/{sim_id}/iterations')
+            iterations = its.get('iterations') or its.get('items') or []
+            if len(iterations) == 1:
+                iteration_id = iterations[0]['id']
+                progress = freya.get_iteration(sim_id,iteration_id)
+                if terminal_results_ready(progress,owned[sim_id],saved):
+                    calls = [freya.get_call(r['callId']) for r in progress['runs']]
+                    if any(not c.get('endedAt') for c in calls):
+                        raise ContractError('A call is still active; no reconciliation is permitted')
+                    original_api('PUT',f'/api/v2/simulations/{sim_id}',{'status':'paused'})
+                    result = original_api('GET',f'/api/v2/simulations/{sim_id}')
+                    actual_status = result.get('simulation',result).get('status')
+                    if actual_status not in ('paused','completed'):
+                        raise ContractError('Remote metadata did not settle; inspect before another simulation')
+                    reconciled.add(sim_id)
+                    write_json(run_dir/f'completion-reconciliation-{sim_id}.json',{
+                        'simulation_id':sim_id,'iteration_id':iteration_id,'actual_platform_status':actual_status,
+                        'reason':'All owned calls ended with final labels; simulation metadata stayed running for at least 120 seconds',
+                        'labels_preserved':True,'additional_calls_started':0})
+                    trace.emit('terminal_results_reconciled',simulation_id=sim_id,actual_platform_status=actual_status)
         return result
     freya.api = tracked_api
     original_run = freya.run_simulation
     def run_simulation(*args, **kwargs):
         sim_id, iteration_id, status = original_run(*args, **kwargs)
+        if status == 'paused' and sim_id in reconciled:
+            status = 'terminal_results_available'
         write_json(run_dir / "remote-simulation.json", {"simulation_id": sim_id, "iteration_id": iteration_id, "status": status})
         simulation_history.append({"simulation_id": sim_id, "iteration_id": iteration_id, "status": status})
         write_json(run_dir / "simulation-history.json", simulation_history)
-        if status != "completed": raise ContractError("Simulation did not complete; no benchmark score is valid")
+        if status not in ('completed','terminal_results_available'):
+            raise ContractError("Simulation did not complete; no benchmark score is valid")
         return sim_id, iteration_id, status
     freya.run_simulation = run_simulation
     sys.modules["freya"] = freya
@@ -319,7 +373,7 @@ def main(argv=None):
             if remote_file.exists():
                 remote = json.loads(remote_file.read_text(encoding="utf-8"))
                 summary["remote_simulation"] = remote
-                summary["remote_job_may_still_be_running"] = remote.get("status") not in ("completed", "failed", "paused")
+                summary["remote_job_may_still_be_running"] = remote.get("status") not in ("completed", "failed", "paused", "terminal_results_available")
             if child.returncode: raise ContractError("Official runner failed; see the redacted evaluation log")
             report = json.loads((run_dir / "evaluation.raw.json").read_text(encoding="utf-8"))
             validate_results(report, ids, args.reps)
