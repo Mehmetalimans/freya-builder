@@ -13,6 +13,9 @@ handoff/
 state/
 runs/
 dist/
+case-inputs/
+.wrangler/
+node_modules/
 .freya-agents.json
 .personas.json
 results/

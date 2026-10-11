@@ -1,3 +1,14 @@
+# Final görev durumu — 11 Ekim 20:39 İstanbul
+
+Kullanıcı bütün teknik yürütmeyi bu oturuma verdi. Miraç'ın paralel değişiklik yapmadığı varsayımıyla ayrı `final/case-folder-builder` dalında çalışılıyor; main'e doğrudan push yok.
+
+- Tamam: güncel vaka belgeleri alındı; eski BRIEF saklandı; 34 sentetik müşteri ve 617 servis cevabı için yerel sözleşme kontrolü geçti.
+- Devam: Cloudflare yayın ve HTTPS kontrolü, genel klasör builder'ının sabitlenmesi.
+- Sırada: kaydı tutulan gerçek üretim, Freya doğrulama/export, altı örnek ve ek hata senaryolarının ölçümü, temiz ortam ve teslim paketi.
+- E-posta: kullanıcı ayrıca gönderim onayı verecek. Miraç adresi mbirlik24@ku.edu.tr; Mehmet adresi mmansuroglu24@ku.edu.tr. Takım etiketi son onayda doğrulanacak.
+
+Aşağıdaki kayıtlar practice geçmişidir.
+
 # İki kişilik görev takibi
 
 **11 Ekim güncellemesi:** Kullanıcı son testleri sürdürdü. Güncel aday

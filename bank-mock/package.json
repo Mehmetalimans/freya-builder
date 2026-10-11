@@ -1,0 +1,8 @@
+{
+  "name": "freya-final-bank-mock",
+  "private": true,
+  "type": "module",
+  "scripts": {"test": "node --test test/worker.test.js", "dev": "wrangler dev", "deploy": "wrangler deploy"},
+  "devDependencies": {"wrangler": "4.149.0"},
+  "engines": {"node": ">=22"}
+}

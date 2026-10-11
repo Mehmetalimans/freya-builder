@@ -27,10 +27,14 @@ veya fiyat garantisi olarak yorumlama.
   Freya isteği ve maliyet belirt; diğer kişi incelemeli.
 - Telefon agent'ının modelini değiştirme; platform rotası veya davranışı uydurma.
   Yalnız resmî v3 kitindeki istemci ve doğrulanmış cevapları kullan.
-- Yarışma konuşmaları İngilizce, resmî simülasyon metindir (`mode=chat`).
-  Türkçe arayüz veya ses varsayılanlarına bakıp agent promptunu Türkçeye çevirme.
-  Sesli demo ayrı kapsamdır; TTS/STT ayarını benchmark zorunluluğu sayma.
-- Ücretli testleri yalnız entegrasyon sorumlusu yönetsin: ortak 100 USD Freya
+- Practice konuşmaları İngilizcedir. Final dilini, çağrı değişkenlerini ve
+  araç sözleşmesini güncel vaka klasöründen çıkar; eski practice politikasını
+  final üretimine taşıma. Resmî simülasyon metindir (`mode=chat`).
+- Final: yalnız ekibin Cloudflare mock'u kullanılır; tek export ve onu üreten
+  tam oturum izi gerekir. Vaka kuralları builder koduna sabitlenemez. Üretilen
+  workflow elle değiştirilemez; genel hata düzeltilip yeniden üretilir.
+- Teslim e-postası kullanıcının ayrıca açık gönderim onayını gerektirir.
+- Tarihsel practice bütçe talimatı (güncel kullanıcı kararı üsttedir): ortak 100 USD Freya
   üst sınırı, doğrulanmış vaka maliyeti, tek workspace'te tek simülasyon.
   Yerel kilit farklı bilgisayarları koordine etmez. Belirsiz timeout sonrası
   uzaktaki işi kontrol etmeden tekrar başlatma.

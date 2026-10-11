@@ -27,6 +27,10 @@ def deploy_workflow(client, slot, workflow, state_file, export_path):
 
 
 def main(argv=None):
+    supplied = list(sys.argv[1:] if argv is None else argv)
+    if supplied and Path(supplied[0]).is_dir():
+        from builder.case_folder import main as build_folder
+        return build_folder(supplied)
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("brief", type=Path)
     parser.add_argument("tool_api", type=Path)

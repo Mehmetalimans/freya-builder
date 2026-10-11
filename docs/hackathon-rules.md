@@ -1,3 +1,19 @@
+# Güncel final kuralları — 11 Ekim 2026
+
+Kaynaklar: [resmî kurallar ve teslim](https://www.freyavoice.ai/hackathon#submit), final açılış e-postası, vaka klasöründeki BRIEF.md ve README.md. 20:35 İstanbul kontrolü.
+
+- Son teslim 11 Ekim 20:00 UTC / 23:00 İstanbul. Tek final vaka, tek workflow, seçilen üretimin tam builder oturum izi.
+- Türkçe konuşma, metin simülasyonu. IVR çağrı değişkenleri `customerNumber` ve İstanbul zamanını taşıyan `now`.
+- Agent yalnız takımın Cloudflare mock servisini çağırır. Servis test müşterilerinin tam cevaplarını ve HTTP durum kodlarını korur; sonuçlar açıklanana kadar açık kalır.
+- Builder vaka klasörü ve mock adresini alır. İş kuralları çalışma anında belgeden çıkarılır; final bilgileri genel builder koduna sabitlenmez. Çıktı elle değiştirilmez, gerekirse yeniden üretilir.
+- Telefon modelini değiştirmiyoruz. Workspace'te tek simülasyon; birden çok builder üretimi yapılabilir, gönderilen workflow'un kendi tam izi gerekir.
+- Üç ek: `submission.json`, resmî `freya.export_workflow` çıktısı, tam üretim izi. Şema: team, members, repo, commit, run_command, workflow, trace, mock_url. Repo aynı workflow/izi içermeli.
+- Kullanıcı e-posta gönderiminden önce ayrıca onay istiyor. Bu kullanıcı kararıdır.
+
+Resmî gizli skor elde edilmiş değildir. Vaka başına kesin fiyat ve tüm kredi tarifesi doğrulanmış değildir; ölçülen bakiye farkları ayrıca kaydedilir. Eski iki hidden brief / İngilizce koşulları aşağıda tarihsel olarak korunur, final için uygulanmaz.
+
+## Tarihsel practice kuralları
+
 # Yarışma kuralları ve belirsizlikler
 
 10 Ekim 2026 itibarıyla [resmî etkinlik](https://events.ycombinator.com/AI-FDE-Build-the-Builder),

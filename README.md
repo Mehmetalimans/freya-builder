@@ -1,3 +1,26 @@
+# Freya builder 0.2.0 — final
+
+11 Ekim finali Türkçe, tek vaka klasörü, kendi Cloudflare mock servisi ve tek workflow teslimidir. Aşağıdaki practice geçmişi final gereksinimi veya final başarısı değildir. Güncel uygulama: [final-case-status](docs/final-case-status.md).
+
+## Final çalıştırma
+
+Python 3.12+, Node 24 ve ChatGPT oturumuyla giriş yapılmış Codex CLI gerekir. Harici model API anahtarı kullanılmaz.
+
+```console
+python -m pip install -r requirements-final.txt
+npm ci --prefix bank-mock
+npm test --prefix bank-mock
+node bank-mock/export-fixtures.js state/mock-fixtures.json
+python scripts/check_mock.py CASE_FOLDER MOCK_URL --fixtures state/mock-fixtures.json
+python builder/build.py CASE_FOLDER MOCK_URL
+```
+
+Son komut varsayılan olarak yeni üretimi Freya'ya yayımlar: süreç ortamında FREYA_API_KEY ve FREYA_WORKSPACE_ID gerekir. Anahtarları komut satırına, kaynak dosyasına veya sohbete koymayın. Sadece üretim/doğrulama için `--offline`, belge envanteri için `--prepare-only` kullanın. CASE_FOLDER bankanın orijinal klasörüdür; her dosyanın hash'i koşuda saklanır. Mock kontrolü aynı dosya kümesi ve adres için son iki saat içinde geçmelidir.
+
+Builder tam Codex oturumunu, kaynak hash'lerini, gereksinimlerin kaynaklarını ve resmî export'u `runs/` içinde saklar. Model üretimi deterministik değildir; tekrar üretilebilirlik aynı kaynak/girdi/komut ve denetlenebilir iz anlamındadır. Üretilmiş JSON elle düzenlenmez. Tamamlanmayan yayın veya test başarı olarak raporlanmaz.
+
+## Tarihsel practice sürümü ve ölçümleri
+
 # Freya builder 0.1.15
 
 11 Ekim onaylı düzeltme: Miraç'ın `3d731be` değişiklikleri mevcut çalışmalar

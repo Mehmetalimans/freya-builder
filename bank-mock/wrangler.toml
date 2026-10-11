@@ -1,0 +1,8 @@
+name = "freya-final-bank"
+main = "worker.js"
+compatibility_date = "2026-10-11"
+account_id = "b408a0ebe0d142659e6ba4d883dd60f4"
+workers_dev = true
+
+[observability]
+enabled = true

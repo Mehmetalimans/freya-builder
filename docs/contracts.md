@@ -1,3 +1,13 @@
+# Final klasör sözleşmesi (0.2.0)
+
+`python builder/build.py CASE_FOLDER MOCK_URL` belge envanteri → kaynaklı gereksinimler → otomatik workflow üretimi → doğrulama → Freya yayın/export/geri okuma yapar. Ön koşul aynı vaka hash'i için başarılı uzaktan mock sözleşme kontrolüdür. Bankaya özgü fixture verileri `bank-mock/` içindedir; genel builder bunları sabit cevap olarak kullanmaz.
+
+Girdiler: değiştirilmeyen belgeler, HTTPS mock adresi, yerel ortamda Freya yetkisi. Çıktılar: `input-manifest.json`, `builder-source-hashes.json`, `analysis.json`, `workflow.local.json`, `workflow.export.json`, `codex.session.jsonl`, `codex.events.jsonl`, `trace.jsonl`, `result.json`. Yayınlanmış başarı yalnız `deployed_verified`; üretim-only `offline_validated`.
+
+`unresolved_conflicts` üretimi engeller. Belgelenmiş güvenli geri dönüşle ele alınabilen eksik yetenekler `limitations` içinde açıkça belirtilir. Tarih ve müşteri kimliği çağrı girdisinden, hesap bilgisi yalnız servisten gelir. Tek seferlik değişikliklerde kör tekrar yasaktır.
+
+## Tarihsel brief/OpenAPI sözleşmesi
+
 # Builder ↔ Freya entegrasyonu: sözleşme v1
 
 Bu belge **mevcut kodun** ürettiği arayüzü tanımlar; planlanan düzeltme döngüsü
