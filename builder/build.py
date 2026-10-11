@@ -28,8 +28,8 @@ def deploy_workflow(client, slot, workflow, state_file, export_path):
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("brief", type=Path)
-    parser.add_argument("tool_api", type=Path)
+    parser.add_argument("brief", type=str, help="Path to brief file or case folder")
+    parser.add_argument("tool_api", type=str, help="Path to OpenAPI file or mock URL (e.g. https://...workers.dev)")
     parser.add_argument("--extra-brief", type=Path, action="append", default=[])
     parser.add_argument("--deploy", action="store_true", help="Validate, save, publish and export on Freya (requires local credentials)")
     parser.add_argument("--slot", default="baseline", help="Stable workflow slot; do not change it for every revision")
@@ -58,16 +58,52 @@ def main(argv=None):
     trace.emit("start", version=__version__, mode=result["mode"], strategy="lossless_policy_template_v1")
     try:
         briefs = []
-        for path in [args.brief, *args.extra_brief]:
-            raw = path.read_bytes()
-            if len(raw) > 1_000_000: raise ContractError("Brief exceeds local 1 MB input guard")
-            text = raw.decode("utf-8-sig")
-            briefs.append((path.name, text))
-            trace.emit("input", name=path.name, sha256=digest(raw), bytes=len(raw))
-        raw = args.tool_api.read_bytes()
-        if len(raw) > 2_000_000: raise ContractError("OpenAPI exceeds local 2 MB input guard")
-        document = json.loads(raw.decode("utf-8-sig"))
-        trace.emit("input", name=args.tool_api.name, sha256=digest(raw), bytes=len(raw))
+        brief_input = Path(args.brief)
+        extra_paths = [Path(p) for p in args.extra_brief]
+        found_openapi_path = None
+
+        if brief_input.is_dir():
+            md_files = sorted(brief_input.glob("*.md"))
+            main_briefs = [p for p in md_files if p.stem.lower() in ("brief", "brief-a", "brief_a")]
+            other_briefs = [p for p in md_files if p not in main_briefs]
+            selected_files = (main_briefs + other_briefs) if md_files else sorted(brief_input.glob("*.txt"))
+            if not selected_files:
+                raise ContractError(f"No brief document (.md or .txt) found in folder: {brief_input}")
+            for path in selected_files:
+                raw = path.read_bytes()
+                if len(raw) > 1_000_000: raise ContractError("Brief exceeds local 1 MB input guard")
+                text = raw.decode("utf-8-sig")
+                briefs.append((path.name, text))
+                trace.emit("input", name=path.name, sha256=digest(raw), bytes=len(raw))
+            for cand in brief_input.glob("*.json"):
+                if any(x in cand.stem.lower() for x in ("openapi", "service", "contract", "tool", "swagger")):
+                    found_openapi_path = cand
+                    break
+        else:
+            for path in [brief_input, *extra_paths]:
+                raw = path.read_bytes()
+                if len(raw) > 1_000_000: raise ContractError("Brief exceeds local 1 MB input guard")
+                text = raw.decode("utf-8-sig")
+                briefs.append((path.name, text))
+                trace.emit("input", name=path.name, sha256=digest(raw), bytes=len(raw))
+
+        is_mock_url = args.tool_api.startswith("http://") or args.tool_api.startswith("https://")
+        if is_mock_url:
+            mock_url = args.tool_api.rstrip("/")
+            if found_openapi_path and found_openapi_path.exists():
+                raw = found_openapi_path.read_bytes()
+            else:
+                raw = (ROOT / "starter-v3" / "build-the-builder" / "tools" / "openapi.json").read_bytes()
+            document = json.loads(raw.decode("utf-8-sig"))
+            document["servers"] = [{"url": mock_url}]
+            trace.emit("input", name="mock_url", sha256=digest(mock_url), url=mock_url)
+        else:
+            api_path = Path(args.tool_api)
+            raw = api_path.read_bytes()
+            if len(raw) > 2_000_000: raise ContractError("OpenAPI exceeds local 2 MB input guard")
+            document = json.loads(raw.decode("utf-8-sig"))
+            trace.emit("input", name=api_path.name, sha256=digest(raw), bytes=len(raw))
+
         workflow, analysis = compile_workflow(briefs, document)
         write_json(out / "workflow.local.json", workflow)
         write_json(out / "analysis.json", analysis)

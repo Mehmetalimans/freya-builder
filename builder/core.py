@@ -12,7 +12,7 @@ from builder.calendar import calendar_spec, calendar_node, deadline_bands, offer
 
 TOOLS = frozenset({"verify_identity", "get_account", "create_promise", "add_note",
                    "schedule_callback", "transfer_to_agent", "close_call"})
-BANK_ORIGINS = (".freyavoice.workers.dev", ".freyavoice.ai", ".freyavoice.com", ".freya.ai")
+BANK_ORIGINS = (".workers.dev", ".freyavoice.workers.dev", ".freyavoice.ai", ".freyavoice.com", ".freya.ai")
 
 
 class ContractError(ValueError):
