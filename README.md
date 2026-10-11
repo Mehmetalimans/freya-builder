@@ -1,4 +1,4 @@
-# Freya builder 0.2.0 — final
+# Freya builder 0.2.1 — final
 
 11 Ekim finali Türkçe, tek vaka klasörü, kendi Cloudflare mock servisi ve tek workflow teslimidir. Aşağıdaki practice geçmişi final gereksinimi veya final başarısı değildir. Güncel uygulama: [final-case-status](docs/final-case-status.md).
 

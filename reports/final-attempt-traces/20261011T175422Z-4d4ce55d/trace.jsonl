@@ -1,0 +1,5 @@
+{"at_utc": "2026-10-11T17:54:22.481121+00:00", "elapsed_seconds": 0.046, "event": "start", "strategy": "source_grounded_folder_v1", "model": "gpt-6.1-sol", "input_sha256": "2fc1892102853f0027f00ca02a4bac275b1676016bea14fca677f71566b5cf7b"}
+{"at_utc": "2026-10-11T17:54:23.006452+00:00", "elapsed_seconds": 0.578, "event": "model_run_start", "model": "gpt-6.1-sol", "prompt_summary": "Derive source-grounded contract and workflow from case-folder documents"}
+{"at_utc": "2026-10-11T17:54:56.855465+00:00", "elapsed_seconds": 34.421, "event": "model_run_end", "model": "gpt-6.1-sol", "session_id": "01a12c19-fd74-7ec3-8d5d-4faa3fe57a10", "exit_code": 0}
+{"at_utc": "2026-10-11T17:54:56.858463+00:00", "elapsed_seconds": 34.421, "event": "failed", "error_type": "FileNotFoundError"}
+{"at_utc": "2026-10-11T17:54:56.860500+00:00", "elapsed_seconds": 34.421, "event": "end", "status": "failed", "seconds": 34.421}

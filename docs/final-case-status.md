@@ -18,7 +18,7 @@ and currency coverage; these remain evidence questions until the full pack arriv
 Folder generation uses a recorded Codex run against a frozen input manifest and
 the unmodified official platform references. Source code does not contain the
 final case's business rules. It requires a fresh successful remote mock contract
-report and refuses missing evidence or unresolved conflicts before publishing.
+report and refuses missing required API evidence or blocking conflicts before publishing.
 
 The previous A/B practice runner remains available. Its pass rates do not measure
 the final task. New folder unit tests use an unrelated library API to check that
@@ -58,3 +58,10 @@ out of builder code and avoids requiring model filesystem access.
 
 20:56 clean source checkpoint: 948da58. A second recorded production generation
 has started; neither its output nor its success is yet assumed.
+
+21:15 handoff: third generation (355d8d4 source) stopped after 12 minutes with no
+model output. It is recorded as failed/cancelled, with full session log saved.
+No final workflow has been deployed, exported, or conversation-tested. The user
+requested push and handoff to Miraç; next owner should complete a bounded recorded
+generation before running live examples. Clean source tests remain 127/127 and
+remote mock checks 617/617. No final submission e-mail was sent.

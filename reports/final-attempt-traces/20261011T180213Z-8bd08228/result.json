@@ -1,0 +1,16 @@
+{
+  "builder_version": "0.2.0",
+  "status": "failed",
+  "run_id": "20261011T180213Z-8bd08228",
+  "started_at": "2026-10-11T18:02:13.344083+00:00",
+  "mode": "folder-live",
+  "benchmark_success": null,
+  "builder_model_cost_usd": null,
+  "mock_url": "https://freya-final-bank.freya-final-bank-mock.workers.dev",
+  "case_sha256": "2fc1892102853f0027f00ca02a4bac275b1676016bea14fca677f71566b5cf7b",
+  "source_commit": "355d8d4c127e1bcf994cb0686a3de4053a47cc0d",
+  "error_type": "ContractError",
+  "error": "Generation failed or identified missing/conflicting evidence; see run artifacts",
+  "ended_at": "2026-10-11T18:15:03.862193+00:00",
+  "seconds": 770.515
+}

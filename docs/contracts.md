@@ -4,7 +4,7 @@
 
 Girdiler: değiştirilmeyen belgeler, HTTPS mock adresi, yerel ortamda Freya yetkisi. Çıktılar: `input-manifest.json`, `builder-source-hashes.json`, `analysis.json`, `workflow.local.json`, `workflow.export.json`, `codex.session.jsonl`, `codex.events.jsonl`, `trace.jsonl`, `result.json`. Yayınlanmış başarı yalnız `deployed_verified`; üretim-only `offline_validated`.
 
-`unresolved_conflicts` üretimi engeller. Belgelenmiş güvenli geri dönüşle ele alınabilen eksik yetenekler `limitations` içinde açıkça belirtilir. Tarih ve müşteri kimliği çağrı girdisinden, hesap bilgisi yalnız servisten gelir. Tek seferlik değişikliklerde kör tekrar yasaktır.
+`unresolved_conflicts` içindeki `blocking=true` veya sınıflandırılmamış maddeler üretimi engeller. Açıkça `blocking=false` olan güvenli geri dönüşler sınırlama olarak saklanır. Belgelenmiş güvenli geri dönüşle ele alınabilen eksik yetenekler `limitations` içinde açıkça belirtilir. Tarih ve müşteri kimliği çağrı girdisinden, hesap bilgisi yalnız servisten gelir. Tek seferlik değişikliklerde kör tekrar yasaktır.
 
 ## Tarihsel brief/OpenAPI sözleşmesi
 

@@ -1,0 +1,15 @@
+{
+  "builder_version": "0.2.0",
+  "status": "failed",
+  "run_id": "20261011T175422Z-4d4ce55d",
+  "started_at": "2026-10-11T17:54:22.428129+00:00",
+  "mode": "folder-live",
+  "benchmark_success": null,
+  "builder_model_cost_usd": null,
+  "mock_url": "https://freya-final-bank.freya-final-bank-mock.workers.dev",
+  "case_sha256": "2fc1892102853f0027f00ca02a4bac275b1676016bea14fca677f71566b5cf7b",
+  "source_commit": "1acf7b508be5feba3a44f25e6507aa67417e79da",
+  "error_type": "FileNotFoundError",
+  "ended_at": "2026-10-11T17:54:56.858463+00:00",
+  "seconds": 34.421
+}

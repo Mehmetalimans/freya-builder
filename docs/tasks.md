@@ -1,3 +1,7 @@
+# Devir güncellemesi — 11 Ekim 21:05 İstanbul
+
+Kullanıcı mevcut çalışmanın sonuçlandırılmasını, GitHub'a pushlanmasını ve sonrasında Miraç'ın devam etmesini istedi. Güncel dal `final/case-folder-builder`, taslak PR #7. Teknik durum ve sonraki adımlar `docs/mirac-final-handoff.md` dosyasında tamamlanacak. Bu oturum devirden sonra simülasyon veya workflow değişikliği başlatmayacak.
+
 # Final görev durumu — 11 Ekim 20:39 İstanbul
 
 Kullanıcı bütün teknik yürütmeyi bu oturuma verdi. Miraç'ın paralel değişiklik yapmadığı varsayımıyla ayrı `final/case-folder-builder` dalında çalışılıyor; main'e doğrudan push yok.
