@@ -1,0 +1,1027 @@
+{
+ "workflow_id": "0a6cee47-2d9b-4b99-993b-ebd1b1e23690",
+ "agent_id": "4a0fefbd-f7a4-4eb2-acc1-986483f619d6",
+ "updated_at": "2026-10-11T19:15:38.257Z",
+ "workflow": {
+  "nodes": {
+   "gorusme_sonu": {
+    "name": "gorusme_sonu",
+    "tools": [],
+    "on_enter": {
+     "type": "silent"
+    },
+    "terminal": {
+     "type": "function",
+     "function": {
+      "name": "closing_end",
+      "handler": "__function__:end_call",
+      "parameters": {
+       "type": "object",
+       "properties": {
+        "message_mode": {
+         "type": "string",
+         "default": "none"
+        }
+       }
+      },
+      "description": ""
+     }
+    },
+    "node_type": "end_call",
+    "assertions": [],
+    "passthrough": false,
+    "pre_actions": [],
+    "transitions": [],
+    "role_message": "",
+    "task_message": "",
+    "interruptible": true,
+    "max_node_turns": null,
+    "response_mapping": [],
+    "extraction_schema": [],
+    "max_turn_transition": null,
+    "truncation_strategy": "keep_all",
+    "suppress_tool_results": false,
+    "truncation_window_size": 10,
+    "on_enter_first_entry_only": false,
+    "disable_inactivity_monitor": true,
+    "passthrough_default_transition": null,
+    "return_to_previous_on_interrupt": false
+   },
+   "kredi_karti_ekstre_borcu": {
+    "name": "kredi_karti_ekstre_borcu",
+    "tools": [
+     {
+      "type": "function",
+      "config": {
+       "timeoutMs": 25000,
+       "maxRetries": 0
+      },
+      "function": {
+       "name": "cards_list",
+       "handler": "__function__:api_call",
+       "parameters": {
+        "type": "object",
+        "required": [
+         "url",
+         "method",
+         "body"
+        ],
+        "properties": {
+         "url": {
+          "type": "string",
+          "default": "https://freya-final-bank.freya-final-bank-mock.workers.dev/voice/v1/cards.list"
+         },
+         "body": {
+          "type": "object",
+          "required": [
+           "customerNo"
+          ],
+          "properties": {
+           "call": {
+            "type": "object",
+            "properties": {
+             "lang": {
+              "type": "string",
+              "default": "tr"
+             }
+            }
+           },
+           "data": {
+            "type": "object",
+            "required": [
+             "customerNo"
+            ],
+            "properties": {
+             "customerNo": {
+              "type": "string",
+              "default": "{{customerNumber}}"
+             }
+            }
+           },
+           "customerNo": {
+            "type": "string",
+            "default": "{{customerNumber}}",
+            "description": "8 haneli m\u00fc\u015fteri numaras\u0131"
+           }
+          }
+         },
+         "method": {
+          "type": "string",
+          "default": "POST"
+         },
+         "headers": {
+          "type": "object",
+          "default": {
+           "User-Agent": "Mozilla/5.0 (build-the-builder)",
+           "Content-Type": "application/json"
+          },
+          "properties": {
+           "User-Agent": {
+            "type": "string",
+            "default": "Mozilla/5.0 (build-the-builder)"
+           },
+           "Content-Type": {
+            "type": "string",
+            "default": "application/json"
+           }
+          }
+         }
+        }
+       },
+       "description": "M\u00fc\u015fterinin kredi kartlar\u0131n\u0131 listeler. G\u00f6r\u00fc\u015fme ba\u015f\u0131nda ilk olarak \u00c7A\u011eIRIN."
+      },
+      "pre_process_code": "try:\n    if isinstance(config, dict):\n        b = config.get('body')\n        if not isinstance(b, dict):\n            b = {}\n        d = b.get('data')\n        if not isinstance(d, dict):\n            d = {}\n        for k, v in list(b.items()):\n            if k not in ('data', 'call'):\n                if v is not None and str(v).strip() != '' and not str(v).startswith('{' + '{'):\n                    d[k] = v\n                b.pop(k, None)\n        for k, v in list(d.items()):\n            if str(v).startswith('{' + '{'):\n                d.pop(k, None)\n        req_set = ('customerNo',)\n        if isinstance(vars, dict):\n            if 'customerNo' in req_set and not d.get('customerNo') and vars.get('customerNumber'):\n                d['customerNo'] = str(vars.get('customerNumber'))\n            if 'intAddressInfoType' in req_set and not d.get('intAddressInfoType'):\n                d['intAddressInfoType'] = 'E'\n            if 'currencyType' in req_set and not d.get('currencyType'):\n                d['currencyType'] = 'TL'\n            if 'cardNumber' in req_set:\n                cn = str(d.get('cardNumber') or '').strip()\n                cards = []\n                for i in range(10):\n                    c_num = vars.get(f'cards_list_response.data.data.cards.{i}.cardNumber')\n                    c_l4 = vars.get(f'cards_list_response.data.data.cards.{i}.cardNumberLast4')\n                    c_pn = vars.get(f'cards_list_response.data.data.cards.{i}.productName')\n                    if c_num:\n                        cards.append((str(c_num), str(c_l4 or ''), str(c_pn or '')))\n                if (not cn or '*' not in cn) and cards:\n                    matched = ''\n                    if cn:\n                        cn_dig = ''.join(ch for ch in cn if ch.isdigit())\n                        m_exact = [c_num for c_num, c_l4, _ in cards if len(cn_dig) >= 10 and cn_dig[:6] == c_num[:6] and cn_dig[-4:] == c_l4]\n                        if len(m_exact) == 1:\n                            matched = m_exact[0]\n                        else:\n                            m_l4 = [c_num for c_num, c_l4, _ in cards if cn == c_l4 or (len(cn_dig) == 4 and cn_dig == c_l4)]\n                            if len(m_l4) == 1:\n                                matched = m_l4[0]\n                            else:\n                                m_pn = [c_num for c_num, _, c_pn in cards if c_pn and (cn.lower() == c_pn.lower() or cn.lower() in c_pn.lower() or c_pn.lower() in cn.lower())]\n                                if len(m_pn) == 1:\n                                    matched = m_pn[0]\n                    if not matched and len(cards) == 1:\n                        matched = cards[0][0]\n                    if not matched and vars.get('active_card_number'):\n                        matched = str(vars.get('active_card_number'))\n                    if matched:\n                        d['cardNumber'] = matched\n                if d.get('cardNumber') and '*' in str(d.get('cardNumber')):\n                    vars['active_card_number'] = str(d['cardNumber'])\n            if 'newStatementWeek' in req_set and d.get('newStatementWeek') is not None:\n                nsw = str(d['newStatementWeek']).strip()\n                for ch in ('1', '2', '3', '4'):\n                    if ch in nsw:\n                        d['newStatementWeek'] = int(ch)\n                        break\n            if 'statementDay' in req_set and not d.get('statementDay'):\n                sd = vars.get('statement_week_get_response.data.data.statementDay')\n                if sd is not None and str(sd).strip() != '':\n                    d['statementDay'] = sd\n            if 'statementDate' in req_set and not d.get('statementDate'):\n                sdate = vars.get('cards_balance_response.data.data.statementDate')\n                if sdate:\n                    d['statementDate'] = str(sdate)\n            if 'emailAddress' in req_set and not d.get('emailAddress'):\n                em = vars.get('contact_email_get_response.data.data.ibanEmail')\n                if em:\n                    d['emailAddress'] = str(em)\n        b['data'] = d\n        b['call'] = {'lang': 'tr'}\n        config['body'] = b\nexcept Exception:\n    pass\n",
+      "post_process_code": "try:\n    if isinstance(result, dict):\n        result.pop('header', None)\n        d = result.get('data')\n        if isinstance(d, dict) and isinstance(d.get('data'), dict):\n            for c in d['data'].get('cards') or []:\n                if isinstance(c, dict) and len(str(c.get('productName') or '')) > 35:\n                    c['productName'] = ''\nexcept Exception:\n    pass\n"
+     },
+     {
+      "type": "function",
+      "config": {
+       "timeoutMs": 25000,
+       "maxRetries": 0
+      },
+      "function": {
+       "name": "cards_balance",
+       "handler": "__function__:api_call",
+       "parameters": {
+        "type": "object",
+        "required": [
+         "url",
+         "method",
+         "body"
+        ],
+        "properties": {
+         "url": {
+          "type": "string",
+          "default": "https://freya-final-bank.freya-final-bank-mock.workers.dev/voice/v1/cards.balance"
+         },
+         "body": {
+          "type": "object",
+          "required": [
+           "cardNumber"
+          ],
+          "properties": {
+           "call": {
+            "type": "object",
+            "properties": {
+             "lang": {
+              "type": "string",
+              "default": "tr"
+             }
+            }
+           },
+           "data": {
+            "type": "object",
+            "required": [
+             "cardNumber"
+            ],
+            "properties": {
+             "cardNumber": {
+              "type": "string",
+              "default": "{{cardNumber}}"
+             }
+            }
+           },
+           "cardNumber": {
+            "type": "string",
+            "default": "{{cardNumber}}",
+            "description": "cards_list sonucundaki cardNumber de\u011feri (\u00f6rn: 540000******2000)"
+           }
+          }
+         },
+         "method": {
+          "type": "string",
+          "default": "POST"
+         },
+         "headers": {
+          "type": "object",
+          "default": {
+           "User-Agent": "Mozilla/5.0 (build-the-builder)",
+           "Content-Type": "application/json"
+          },
+          "properties": {
+           "User-Agent": {
+            "type": "string",
+            "default": "Mozilla/5.0 (build-the-builder)"
+           },
+           "Content-Type": {
+            "type": "string",
+            "default": "application/json"
+           }
+          }
+         }
+        }
+       },
+       "description": "Se\u00e7ilen kart\u0131n g\u00fcncel ekstre borcu ve asgari \u00f6deme bilgilerini d\u00f6ner. cardNumber olarak cards_list sonucundaki maskeli cardNumber de\u011ferini (\u00f6rn: 540000******2000) vererek \u00c7A\u011eIRIN."
+      },
+      "pre_process_code": "try:\n    if isinstance(config, dict):\n        b = config.get('body')\n        if not isinstance(b, dict):\n            b = {}\n        d = b.get('data')\n        if not isinstance(d, dict):\n            d = {}\n        for k, v in list(b.items()):\n            if k not in ('data', 'call'):\n                if v is not None and str(v).strip() != '' and not str(v).startswith('{' + '{'):\n                    d[k] = v\n                b.pop(k, None)\n        for k, v in list(d.items()):\n            if str(v).startswith('{' + '{'):\n                d.pop(k, None)\n        req_set = ('cardNumber',)\n        if isinstance(vars, dict):\n            if 'customerNo' in req_set and not d.get('customerNo') and vars.get('customerNumber'):\n                d['customerNo'] = str(vars.get('customerNumber'))\n            if 'intAddressInfoType' in req_set and not d.get('intAddressInfoType'):\n                d['intAddressInfoType'] = 'E'\n            if 'currencyType' in req_set and not d.get('currencyType'):\n                d['currencyType'] = 'TL'\n            if 'cardNumber' in req_set:\n                cn = str(d.get('cardNumber') or '').strip()\n                cards = []\n                for i in range(10):\n                    c_num = vars.get(f'cards_list_response.data.data.cards.{i}.cardNumber')\n                    c_l4 = vars.get(f'cards_list_response.data.data.cards.{i}.cardNumberLast4')\n                    c_pn = vars.get(f'cards_list_response.data.data.cards.{i}.productName')\n                    if c_num:\n                        cards.append((str(c_num), str(c_l4 or ''), str(c_pn or '')))\n                if (not cn or '*' not in cn) and cards:\n                    matched = ''\n                    if cn:\n                        cn_dig = ''.join(ch for ch in cn if ch.isdigit())\n                        m_exact = [c_num for c_num, c_l4, _ in cards if len(cn_dig) >= 10 and cn_dig[:6] == c_num[:6] and cn_dig[-4:] == c_l4]\n                        if len(m_exact) == 1:\n                            matched = m_exact[0]\n                        else:\n                            m_l4 = [c_num for c_num, c_l4, _ in cards if cn == c_l4 or (len(cn_dig) == 4 and cn_dig == c_l4)]\n                            if len(m_l4) == 1:\n                                matched = m_l4[0]\n                            else:\n                                m_pn = [c_num for c_num, _, c_pn in cards if c_pn and (cn.lower() == c_pn.lower() or cn.lower() in c_pn.lower() or c_pn.lower() in cn.lower())]\n                                if len(m_pn) == 1:\n                                    matched = m_pn[0]\n                    if not matched and len(cards) == 1:\n                        matched = cards[0][0]\n                    if not matched and vars.get('active_card_number'):\n                        matched = str(vars.get('active_card_number'))\n                    if matched:\n                        d['cardNumber'] = matched\n                if d.get('cardNumber') and '*' in str(d.get('cardNumber')):\n                    vars['active_card_number'] = str(d['cardNumber'])\n            if 'newStatementWeek' in req_set and d.get('newStatementWeek') is not None:\n                nsw = str(d['newStatementWeek']).strip()\n                for ch in ('1', '2', '3', '4'):\n                    if ch in nsw:\n                        d['newStatementWeek'] = int(ch)\n                        break\n            if 'statementDay' in req_set and not d.get('statementDay'):\n                sd = vars.get('statement_week_get_response.data.data.statementDay')\n                if sd is not None and str(sd).strip() != '':\n                    d['statementDay'] = sd\n            if 'statementDate' in req_set and not d.get('statementDate'):\n                sdate = vars.get('cards_balance_response.data.data.statementDate')\n                if sdate:\n                    d['statementDate'] = str(sdate)\n            if 'emailAddress' in req_set and not d.get('emailAddress'):\n                em = vars.get('contact_email_get_response.data.data.ibanEmail')\n                if em:\n                    d['emailAddress'] = str(em)\n        b['data'] = d\n        b['call'] = {'lang': 'tr'}\n        config['body'] = b\nexcept Exception:\n    pass\n",
+      "post_process_code": "try:\n    if isinstance(result, dict):\n        result.pop('header', None)\n        d = result.get('data')\n        if isinstance(d, dict) and isinstance(d.get('data'), dict):\n            for c in d['data'].get('cards') or []:\n                if isinstance(c, dict) and len(str(c.get('productName') or '')) > 35:\n                    c['productName'] = ''\nexcept Exception:\n    pass\n"
+     },
+     {
+      "type": "function",
+      "config": {
+       "timeoutMs": 25000,
+       "maxRetries": 0
+      },
+      "function": {
+       "name": "statement_week_get",
+       "handler": "__function__:api_call",
+       "parameters": {
+        "type": "object",
+        "required": [
+         "url",
+         "method",
+         "body"
+        ],
+        "properties": {
+         "url": {
+          "type": "string",
+          "default": "https://freya-final-bank.freya-final-bank-mock.workers.dev/voice/v1/statement.week.get"
+         },
+         "body": {
+          "type": "object",
+          "required": [
+           "cardNumber"
+          ],
+          "properties": {
+           "call": {
+            "type": "object",
+            "properties": {
+             "lang": {
+              "type": "string",
+              "default": "tr"
+             }
+            }
+           },
+           "data": {
+            "type": "object",
+            "required": [
+             "cardNumber"
+            ],
+            "properties": {
+             "cardNumber": {
+              "type": "string",
+              "default": "{{cardNumber}}"
+             }
+            }
+           },
+           "cardNumber": {
+            "type": "string",
+            "default": "{{cardNumber}}",
+            "description": "cards_list sonucundaki cardNumber de\u011feri"
+           }
+          }
+         },
+         "method": {
+          "type": "string",
+          "default": "POST"
+         },
+         "headers": {
+          "type": "object",
+          "default": {
+           "User-Agent": "Mozilla/5.0 (build-the-builder)",
+           "Content-Type": "application/json"
+          },
+          "properties": {
+           "User-Agent": {
+            "type": "string",
+            "default": "Mozilla/5.0 (build-the-builder)"
+           },
+           "Content-Type": {
+            "type": "string",
+            "default": "application/json"
+           }
+          }
+         }
+        }
+       },
+       "description": "Kart\u0131n mevcut hesap \u00f6zeti haftas\u0131n\u0131 ve sonraki kesim tarihlerini d\u00f6ner. M\u00fc\u015fteri hesap kesim tarihini/haftas\u0131n\u0131 de\u011fi\u015ftirmek istedi\u011finde \u00c7A\u011eIRIN."
+      },
+      "pre_process_code": "try:\n    if isinstance(config, dict):\n        b = config.get('body')\n        if not isinstance(b, dict):\n            b = {}\n        d = b.get('data')\n        if not isinstance(d, dict):\n            d = {}\n        for k, v in list(b.items()):\n            if k not in ('data', 'call'):\n                if v is not None and str(v).strip() != '' and not str(v).startswith('{' + '{'):\n                    d[k] = v\n                b.pop(k, None)\n        for k, v in list(d.items()):\n            if str(v).startswith('{' + '{'):\n                d.pop(k, None)\n        req_set = ('cardNumber',)\n        if isinstance(vars, dict):\n            if 'customerNo' in req_set and not d.get('customerNo') and vars.get('customerNumber'):\n                d['customerNo'] = str(vars.get('customerNumber'))\n            if 'intAddressInfoType' in req_set and not d.get('intAddressInfoType'):\n                d['intAddressInfoType'] = 'E'\n            if 'currencyType' in req_set and not d.get('currencyType'):\n                d['currencyType'] = 'TL'\n            if 'cardNumber' in req_set:\n                cn = str(d.get('cardNumber') or '').strip()\n                cards = []\n                for i in range(10):\n                    c_num = vars.get(f'cards_list_response.data.data.cards.{i}.cardNumber')\n                    c_l4 = vars.get(f'cards_list_response.data.data.cards.{i}.cardNumberLast4')\n                    c_pn = vars.get(f'cards_list_response.data.data.cards.{i}.productName')\n                    if c_num:\n                        cards.append((str(c_num), str(c_l4 or ''), str(c_pn or '')))\n                if (not cn or '*' not in cn) and cards:\n                    matched = ''\n                    if cn:\n                        cn_dig = ''.join(ch for ch in cn if ch.isdigit())\n                        m_exact = [c_num for c_num, c_l4, _ in cards if len(cn_dig) >= 10 and cn_dig[:6] == c_num[:6] and cn_dig[-4:] == c_l4]\n                        if len(m_exact) == 1:\n                            matched = m_exact[0]\n                        else:\n                            m_l4 = [c_num for c_num, c_l4, _ in cards if cn == c_l4 or (len(cn_dig) == 4 and cn_dig == c_l4)]\n                            if len(m_l4) == 1:\n                                matched = m_l4[0]\n                            else:\n                                m_pn = [c_num for c_num, _, c_pn in cards if c_pn and (cn.lower() == c_pn.lower() or cn.lower() in c_pn.lower() or c_pn.lower() in cn.lower())]\n                                if len(m_pn) == 1:\n                                    matched = m_pn[0]\n                    if not matched and len(cards) == 1:\n                        matched = cards[0][0]\n                    if not matched and vars.get('active_card_number'):\n                        matched = str(vars.get('active_card_number'))\n                    if matched:\n                        d['cardNumber'] = matched\n                if d.get('cardNumber') and '*' in str(d.get('cardNumber')):\n                    vars['active_card_number'] = str(d['cardNumber'])\n            if 'newStatementWeek' in req_set and d.get('newStatementWeek') is not None:\n                nsw = str(d['newStatementWeek']).strip()\n                for ch in ('1', '2', '3', '4'):\n                    if ch in nsw:\n                        d['newStatementWeek'] = int(ch)\n                        break\n            if 'statementDay' in req_set and not d.get('statementDay'):\n                sd = vars.get('statement_week_get_response.data.data.statementDay')\n                if sd is not None and str(sd).strip() != '':\n                    d['statementDay'] = sd\n            if 'statementDate' in req_set and not d.get('statementDate'):\n                sdate = vars.get('cards_balance_response.data.data.statementDate')\n                if sdate:\n                    d['statementDate'] = str(sdate)\n            if 'emailAddress' in req_set and not d.get('emailAddress'):\n                em = vars.get('contact_email_get_response.data.data.ibanEmail')\n                if em:\n                    d['emailAddress'] = str(em)\n        b['data'] = d\n        b['call'] = {'lang': 'tr'}\n        config['body'] = b\nexcept Exception:\n    pass\n",
+      "post_process_code": "try:\n    if isinstance(result, dict):\n        result.pop('header', None)\n        d = result.get('data')\n        if isinstance(d, dict) and isinstance(d.get('data'), dict):\n            for c in d['data'].get('cards') or []:\n                if isinstance(c, dict) and len(str(c.get('productName') or '')) > 35:\n                    c['productName'] = ''\nexcept Exception:\n    pass\n"
+     },
+     {
+      "type": "function",
+      "config": {
+       "timeoutMs": 25000,
+       "maxRetries": 0
+      },
+      "function": {
+       "name": "statement_week_decide",
+       "handler": "__function__:api_call",
+       "parameters": {
+        "type": "object",
+        "required": [
+         "url",
+         "method",
+         "body"
+        ],
+        "properties": {
+         "url": {
+          "type": "string",
+          "default": "https://freya-final-bank.freya-final-bank-mock.workers.dev/voice/v1/statement.week.decide"
+         },
+         "body": {
+          "type": "object",
+          "required": [
+           "cardNumber",
+           "newStatementWeek",
+           "statementDay"
+          ],
+          "properties": {
+           "call": {
+            "type": "object",
+            "properties": {
+             "lang": {
+              "type": "string",
+              "default": "tr"
+             }
+            }
+           },
+           "data": {
+            "type": "object",
+            "required": [
+             "cardNumber",
+             "newStatementWeek",
+             "statementDay"
+            ],
+            "properties": {
+             "cardNumber": {
+              "type": "string",
+              "default": "{{cardNumber}}"
+             },
+             "statementDay": {
+              "type": "integer",
+              "default": "{{statementDay}}"
+             },
+             "newStatementWeek": {
+              "type": "integer",
+              "default": "{{newStatementWeek}}"
+             }
+            }
+           },
+           "cardNumber": {
+            "type": "string",
+            "default": "{{cardNumber}}",
+            "description": "cards_list sonucundaki cardNumber de\u011feri"
+           },
+           "statementDay": {
+            "type": "integer",
+            "default": "{{statementDay}}",
+            "description": "statement_week_get sonucundaki mevcut statementDay de\u011feri"
+           },
+           "newStatementWeek": {
+            "type": "integer",
+            "default": "{{newStatementWeek}}",
+            "description": "M\u00fc\u015fterinin se\u00e7ti\u011fi yeni hafta (1, 2, 3 veya 4)"
+           }
+          }
+         },
+         "method": {
+          "type": "string",
+          "default": "POST"
+         },
+         "headers": {
+          "type": "object",
+          "default": {
+           "User-Agent": "Mozilla/5.0 (build-the-builder)",
+           "Content-Type": "application/json"
+          },
+          "properties": {
+           "User-Agent": {
+            "type": "string",
+            "default": "Mozilla/5.0 (build-the-builder)"
+           },
+           "Content-Type": {
+            "type": "string",
+            "default": "application/json"
+           }
+          }
+         }
+        }
+       },
+       "description": "Yeni hesap \u00f6zeti haftas\u0131 i\u00e7in olu\u015facak tarihlerin \u00f6nizlemesini sim\u00fcle eder. De\u011fi\u015fiklik yapmadan \u00f6nce yeni tarihleri m\u00fc\u015fteriye okumak i\u00e7in \u00c7A\u011eIRIN."
+      },
+      "pre_process_code": "try:\n    if isinstance(config, dict):\n        b = config.get('body')\n        if not isinstance(b, dict):\n            b = {}\n        d = b.get('data')\n        if not isinstance(d, dict):\n            d = {}\n        for k, v in list(b.items()):\n            if k not in ('data', 'call'):\n                if v is not None and str(v).strip() != '' and not str(v).startswith('{' + '{'):\n                    d[k] = v\n                b.pop(k, None)\n        for k, v in list(d.items()):\n            if str(v).startswith('{' + '{'):\n                d.pop(k, None)\n        req_set = ('cardNumber', 'newStatementWeek', 'statementDay')\n        if isinstance(vars, dict):\n            if 'customerNo' in req_set and not d.get('customerNo') and vars.get('customerNumber'):\n                d['customerNo'] = str(vars.get('customerNumber'))\n            if 'intAddressInfoType' in req_set and not d.get('intAddressInfoType'):\n                d['intAddressInfoType'] = 'E'\n            if 'currencyType' in req_set and not d.get('currencyType'):\n                d['currencyType'] = 'TL'\n            if 'cardNumber' in req_set:\n                cn = str(d.get('cardNumber') or '').strip()\n                cards = []\n                for i in range(10):\n                    c_num = vars.get(f'cards_list_response.data.data.cards.{i}.cardNumber')\n                    c_l4 = vars.get(f'cards_list_response.data.data.cards.{i}.cardNumberLast4')\n                    c_pn = vars.get(f'cards_list_response.data.data.cards.{i}.productName')\n                    if c_num:\n                        cards.append((str(c_num), str(c_l4 or ''), str(c_pn or '')))\n                if (not cn or '*' not in cn) and cards:\n                    matched = ''\n                    if cn:\n                        cn_dig = ''.join(ch for ch in cn if ch.isdigit())\n                        m_exact = [c_num for c_num, c_l4, _ in cards if len(cn_dig) >= 10 and cn_dig[:6] == c_num[:6] and cn_dig[-4:] == c_l4]\n                        if len(m_exact) == 1:\n                            matched = m_exact[0]\n                        else:\n                            m_l4 = [c_num for c_num, c_l4, _ in cards if cn == c_l4 or (len(cn_dig) == 4 and cn_dig == c_l4)]\n                            if len(m_l4) == 1:\n                                matched = m_l4[0]\n                            else:\n                                m_pn = [c_num for c_num, _, c_pn in cards if c_pn and (cn.lower() == c_pn.lower() or cn.lower() in c_pn.lower() or c_pn.lower() in cn.lower())]\n                                if len(m_pn) == 1:\n                                    matched = m_pn[0]\n                    if not matched and len(cards) == 1:\n                        matched = cards[0][0]\n                    if not matched and vars.get('active_card_number'):\n                        matched = str(vars.get('active_card_number'))\n                    if matched:\n                        d['cardNumber'] = matched\n                if d.get('cardNumber') and '*' in str(d.get('cardNumber')):\n                    vars['active_card_number'] = str(d['cardNumber'])\n            if 'newStatementWeek' in req_set and d.get('newStatementWeek') is not None:\n                nsw = str(d['newStatementWeek']).strip()\n                for ch in ('1', '2', '3', '4'):\n                    if ch in nsw:\n                        d['newStatementWeek'] = int(ch)\n                        break\n            if 'statementDay' in req_set and not d.get('statementDay'):\n                sd = vars.get('statement_week_get_response.data.data.statementDay')\n                if sd is not None and str(sd).strip() != '':\n                    d['statementDay'] = sd\n            if 'statementDate' in req_set and not d.get('statementDate'):\n                sdate = vars.get('cards_balance_response.data.data.statementDate')\n                if sdate:\n                    d['statementDate'] = str(sdate)\n            if 'emailAddress' in req_set and not d.get('emailAddress'):\n                em = vars.get('contact_email_get_response.data.data.ibanEmail')\n                if em:\n                    d['emailAddress'] = str(em)\n        b['data'] = d\n        b['call'] = {'lang': 'tr'}\n        config['body'] = b\nexcept Exception:\n    pass\n",
+      "post_process_code": "try:\n    if isinstance(result, dict):\n        result.pop('header', None)\n        d = result.get('data')\n        if isinstance(d, dict) and isinstance(d.get('data'), dict):\n            for c in d['data'].get('cards') or []:\n                if isinstance(c, dict) and len(str(c.get('productName') or '')) > 35:\n                    c['productName'] = ''\nexcept Exception:\n    pass\n"
+     },
+     {
+      "type": "function",
+      "config": {
+       "timeoutMs": 25000,
+       "maxRetries": 0
+      },
+      "function": {
+       "name": "statement_week_change",
+       "handler": "__function__:api_call",
+       "parameters": {
+        "type": "object",
+        "required": [
+         "url",
+         "method",
+         "body"
+        ],
+        "properties": {
+         "url": {
+          "type": "string",
+          "default": "https://freya-final-bank.freya-final-bank-mock.workers.dev/voice/v1/statement.week.change"
+         },
+         "body": {
+          "type": "object",
+          "required": [
+           "cardNumber",
+           "newStatementWeek",
+           "statementDay"
+          ],
+          "properties": {
+           "call": {
+            "type": "object",
+            "properties": {
+             "lang": {
+              "type": "string",
+              "default": "tr"
+             }
+            }
+           },
+           "data": {
+            "type": "object",
+            "required": [
+             "cardNumber",
+             "newStatementWeek",
+             "statementDay"
+            ],
+            "properties": {
+             "cardNumber": {
+              "type": "string",
+              "default": "{{cardNumber}}"
+             },
+             "statementDay": {
+              "type": "integer",
+              "default": "{{statementDay}}"
+             },
+             "newStatementWeek": {
+              "type": "integer",
+              "default": "{{newStatementWeek}}"
+             }
+            }
+           },
+           "cardNumber": {
+            "type": "string",
+            "default": "{{cardNumber}}",
+            "description": "cards_list sonucundaki cardNumber de\u011feri"
+           },
+           "statementDay": {
+            "type": "integer",
+            "default": "{{statementDay}}",
+            "description": "statement_week_get sonucundaki mevcut statementDay de\u011feri"
+           },
+           "newStatementWeek": {
+            "type": "integer",
+            "default": "{{newStatementWeek}}",
+            "description": "M\u00fc\u015fterinin onaylad\u0131\u011f\u0131 yeni hafta (1, 2, 3 veya 4)"
+           }
+          }
+         },
+         "method": {
+          "type": "string",
+          "default": "POST"
+         },
+         "headers": {
+          "type": "object",
+          "default": {
+           "User-Agent": "Mozilla/5.0 (build-the-builder)",
+           "Content-Type": "application/json"
+          },
+          "properties": {
+           "User-Agent": {
+            "type": "string",
+            "default": "Mozilla/5.0 (build-the-builder)"
+           },
+           "Content-Type": {
+            "type": "string",
+            "default": "application/json"
+           }
+          }
+         }
+        }
+       },
+       "description": "Yeni hesap \u00f6zeti haftas\u0131 de\u011fi\u015fikli\u011fini uygular. YALNIZCA statement_week_decide \u00f6nizleme tarihlerini okuduktan ve m\u00fc\u015fteri a\u00e7\u0131k\u00e7a \"Evet\" diyerek onaylad\u0131ktan sonra B\u0130R KEZ \u00c7A\u011eIRIN."
+      },
+      "pre_process_code": "try:\n    if isinstance(config, dict):\n        b = config.get('body')\n        if not isinstance(b, dict):\n            b = {}\n        d = b.get('data')\n        if not isinstance(d, dict):\n            d = {}\n        for k, v in list(b.items()):\n            if k not in ('data', 'call'):\n                if v is not None and str(v).strip() != '' and not str(v).startswith('{' + '{'):\n                    d[k] = v\n                b.pop(k, None)\n        for k, v in list(d.items()):\n            if str(v).startswith('{' + '{'):\n                d.pop(k, None)\n        req_set = ('cardNumber', 'newStatementWeek', 'statementDay')\n        if isinstance(vars, dict):\n            if 'customerNo' in req_set and not d.get('customerNo') and vars.get('customerNumber'):\n                d['customerNo'] = str(vars.get('customerNumber'))\n            if 'intAddressInfoType' in req_set and not d.get('intAddressInfoType'):\n                d['intAddressInfoType'] = 'E'\n            if 'currencyType' in req_set and not d.get('currencyType'):\n                d['currencyType'] = 'TL'\n            if 'cardNumber' in req_set:\n                cn = str(d.get('cardNumber') or '').strip()\n                cards = []\n                for i in range(10):\n                    c_num = vars.get(f'cards_list_response.data.data.cards.{i}.cardNumber')\n                    c_l4 = vars.get(f'cards_list_response.data.data.cards.{i}.cardNumberLast4')\n                    c_pn = vars.get(f'cards_list_response.data.data.cards.{i}.productName')\n                    if c_num:\n                        cards.append((str(c_num), str(c_l4 or ''), str(c_pn or '')))\n                if (not cn or '*' not in cn) and cards:\n                    matched = ''\n                    if cn:\n                        cn_dig = ''.join(ch for ch in cn if ch.isdigit())\n                        m_exact = [c_num for c_num, c_l4, _ in cards if len(cn_dig) >= 10 and cn_dig[:6] == c_num[:6] and cn_dig[-4:] == c_l4]\n                        if len(m_exact) == 1:\n                            matched = m_exact[0]\n                        else:\n                            m_l4 = [c_num for c_num, c_l4, _ in cards if cn == c_l4 or (len(cn_dig) == 4 and cn_dig == c_l4)]\n                            if len(m_l4) == 1:\n                                matched = m_l4[0]\n                            else:\n                                m_pn = [c_num for c_num, _, c_pn in cards if c_pn and (cn.lower() == c_pn.lower() or cn.lower() in c_pn.lower() or c_pn.lower() in cn.lower())]\n                                if len(m_pn) == 1:\n                                    matched = m_pn[0]\n                    if not matched and len(cards) == 1:\n                        matched = cards[0][0]\n                    if not matched and vars.get('active_card_number'):\n                        matched = str(vars.get('active_card_number'))\n                    if matched:\n                        d['cardNumber'] = matched\n                if d.get('cardNumber') and '*' in str(d.get('cardNumber')):\n                    vars['active_card_number'] = str(d['cardNumber'])\n            if 'newStatementWeek' in req_set and d.get('newStatementWeek') is not None:\n                nsw = str(d['newStatementWeek']).strip()\n                for ch in ('1', '2', '3', '4'):\n                    if ch in nsw:\n                        d['newStatementWeek'] = int(ch)\n                        break\n            if 'statementDay' in req_set and not d.get('statementDay'):\n                sd = vars.get('statement_week_get_response.data.data.statementDay')\n                if sd is not None and str(sd).strip() != '':\n                    d['statementDay'] = sd\n            if 'statementDate' in req_set and not d.get('statementDate'):\n                sdate = vars.get('cards_balance_response.data.data.statementDate')\n                if sdate:\n                    d['statementDate'] = str(sdate)\n            if 'emailAddress' in req_set and not d.get('emailAddress'):\n                em = vars.get('contact_email_get_response.data.data.ibanEmail')\n                if em:\n                    d['emailAddress'] = str(em)\n        b['data'] = d\n        b['call'] = {'lang': 'tr'}\n        config['body'] = b\nexcept Exception:\n    pass\n",
+      "post_process_code": "try:\n    if isinstance(result, dict):\n        result.pop('header', None)\n        d = result.get('data')\n        if isinstance(d, dict) and isinstance(d.get('data'), dict):\n            for c in d['data'].get('cards') or []:\n                if isinstance(c, dict) and len(str(c.get('productName') or '')) > 35:\n                    c['productName'] = ''\nexcept Exception:\n    pass\n"
+     },
+     {
+      "type": "function",
+      "config": {
+       "timeoutMs": 25000,
+       "maxRetries": 0
+      },
+      "function": {
+       "name": "contact_email_get",
+       "handler": "__function__:api_call",
+       "parameters": {
+        "type": "object",
+        "required": [
+         "url",
+         "method",
+         "body"
+        ],
+        "properties": {
+         "url": {
+          "type": "string",
+          "default": "https://freya-final-bank.freya-final-bank-mock.workers.dev/voice/v1/contact.email.get"
+         },
+         "body": {
+          "type": "object",
+          "required": [
+           "customerNo",
+           "intAddressInfoType"
+          ],
+          "properties": {
+           "call": {
+            "type": "object",
+            "properties": {
+             "lang": {
+              "type": "string",
+              "default": "tr"
+             }
+            }
+           },
+           "data": {
+            "type": "object",
+            "required": [
+             "customerNo",
+             "intAddressInfoType"
+            ],
+            "properties": {
+             "customerNo": {
+              "type": "string",
+              "default": "{{customerNumber}}"
+             },
+             "intAddressInfoType": {
+              "type": "string",
+              "default": "E"
+             }
+            }
+           },
+           "customerNo": {
+            "type": "string",
+            "default": "{{customerNumber}}"
+           },
+           "intAddressInfoType": {
+            "type": "string",
+            "default": "E"
+           }
+          }
+         },
+         "method": {
+          "type": "string",
+          "default": "POST"
+         },
+         "headers": {
+          "type": "object",
+          "default": {
+           "User-Agent": "Mozilla/5.0 (build-the-builder)",
+           "Content-Type": "application/json"
+          },
+          "properties": {
+           "User-Agent": {
+            "type": "string",
+            "default": "Mozilla/5.0 (build-the-builder)"
+           },
+           "Content-Type": {
+            "type": "string",
+            "default": "application/json"
+           }
+          }
+         }
+        }
+       },
+       "description": "M\u00fc\u015fterinin bankada kay\u0131tl\u0131 resmi e-posta adresini sorgular. Bor\u00e7 okumas\u0131ndan hemen \u00f6nce (ek i\u015flem teklifini belirlemek i\u00e7in) veya e-posta g\u00f6nderiminden \u00f6nce \u00c7A\u011eIRIN."
+      },
+      "pre_process_code": "try:\n    if isinstance(config, dict):\n        b = config.get('body')\n        if not isinstance(b, dict):\n            b = {}\n        d = b.get('data')\n        if not isinstance(d, dict):\n            d = {}\n        for k, v in list(b.items()):\n            if k not in ('data', 'call'):\n                if v is not None and str(v).strip() != '' and not str(v).startswith('{' + '{'):\n                    d[k] = v\n                b.pop(k, None)\n        for k, v in list(d.items()):\n            if str(v).startswith('{' + '{'):\n                d.pop(k, None)\n        req_set = ('customerNo', 'intAddressInfoType')\n        if isinstance(vars, dict):\n            if 'customerNo' in req_set and not d.get('customerNo') and vars.get('customerNumber'):\n                d['customerNo'] = str(vars.get('customerNumber'))\n            if 'intAddressInfoType' in req_set and not d.get('intAddressInfoType'):\n                d['intAddressInfoType'] = 'E'\n            if 'currencyType' in req_set and not d.get('currencyType'):\n                d['currencyType'] = 'TL'\n            if 'cardNumber' in req_set:\n                cn = str(d.get('cardNumber') or '').strip()\n                cards = []\n                for i in range(10):\n                    c_num = vars.get(f'cards_list_response.data.data.cards.{i}.cardNumber')\n                    c_l4 = vars.get(f'cards_list_response.data.data.cards.{i}.cardNumberLast4')\n                    c_pn = vars.get(f'cards_list_response.data.data.cards.{i}.productName')\n                    if c_num:\n                        cards.append((str(c_num), str(c_l4 or ''), str(c_pn or '')))\n                if (not cn or '*' not in cn) and cards:\n                    matched = ''\n                    if cn:\n                        cn_dig = ''.join(ch for ch in cn if ch.isdigit())\n                        m_exact = [c_num for c_num, c_l4, _ in cards if len(cn_dig) >= 10 and cn_dig[:6] == c_num[:6] and cn_dig[-4:] == c_l4]\n                        if len(m_exact) == 1:\n                            matched = m_exact[0]\n                        else:\n                            m_l4 = [c_num for c_num, c_l4, _ in cards if cn == c_l4 or (len(cn_dig) == 4 and cn_dig == c_l4)]\n                            if len(m_l4) == 1:\n                                matched = m_l4[0]\n                            else:\n                                m_pn = [c_num for c_num, _, c_pn in cards if c_pn and (cn.lower() == c_pn.lower() or cn.lower() in c_pn.lower() or c_pn.lower() in cn.lower())]\n                                if len(m_pn) == 1:\n                                    matched = m_pn[0]\n                    if not matched and len(cards) == 1:\n                        matched = cards[0][0]\n                    if not matched and vars.get('active_card_number'):\n                        matched = str(vars.get('active_card_number'))\n                    if matched:\n                        d['cardNumber'] = matched\n                if d.get('cardNumber') and '*' in str(d.get('cardNumber')):\n                    vars['active_card_number'] = str(d['cardNumber'])\n            if 'newStatementWeek' in req_set and d.get('newStatementWeek') is not None:\n                nsw = str(d['newStatementWeek']).strip()\n                for ch in ('1', '2', '3', '4'):\n                    if ch in nsw:\n                        d['newStatementWeek'] = int(ch)\n                        break\n            if 'statementDay' in req_set and not d.get('statementDay'):\n                sd = vars.get('statement_week_get_response.data.data.statementDay')\n                if sd is not None and str(sd).strip() != '':\n                    d['statementDay'] = sd\n            if 'statementDate' in req_set and not d.get('statementDate'):\n                sdate = vars.get('cards_balance_response.data.data.statementDate')\n                if sdate:\n                    d['statementDate'] = str(sdate)\n            if 'emailAddress' in req_set and not d.get('emailAddress'):\n                em = vars.get('contact_email_get_response.data.data.ibanEmail')\n                if em:\n                    d['emailAddress'] = str(em)\n        b['data'] = d\n        b['call'] = {'lang': 'tr'}\n        config['body'] = b\nexcept Exception:\n    pass\n",
+      "post_process_code": "try:\n    if isinstance(result, dict):\n        result.pop('header', None)\n        d = result.get('data')\n        if isinstance(d, dict) and isinstance(d.get('data'), dict):\n            for c in d['data'].get('cards') or []:\n                if isinstance(c, dict) and len(str(c.get('productName') or '')) > 35:\n                    c['productName'] = ''\nexcept Exception:\n    pass\n"
+     },
+     {
+      "type": "function",
+      "config": {
+       "timeoutMs": 25000,
+       "maxRetries": 0
+      },
+      "function": {
+       "name": "statement_pdf_send",
+       "handler": "__function__:api_call",
+       "parameters": {
+        "type": "object",
+        "required": [
+         "url",
+         "method",
+         "body"
+        ],
+        "properties": {
+         "url": {
+          "type": "string",
+          "default": "https://freya-final-bank.freya-final-bank-mock.workers.dev/voice/v1/statement.pdf.send"
+         },
+         "body": {
+          "type": "object",
+          "required": [
+           "customerNo",
+           "cardNumber",
+           "currencyType",
+           "statementDate",
+           "emailAddress"
+          ],
+          "properties": {
+           "call": {
+            "type": "object",
+            "properties": {
+             "lang": {
+              "type": "string",
+              "default": "tr"
+             }
+            }
+           },
+           "data": {
+            "type": "object",
+            "required": [
+             "customerNo",
+             "cardNumber",
+             "currencyType",
+             "statementDate",
+             "emailAddress"
+            ],
+            "properties": {
+             "cardNumber": {
+              "type": "string",
+              "default": "{{cardNumber}}"
+             },
+             "customerNo": {
+              "type": "string",
+              "default": "{{customerNumber}}"
+             },
+             "currencyType": {
+              "type": "string",
+              "default": "TL"
+             },
+             "emailAddress": {
+              "type": "string",
+              "default": "{{emailAddress}}"
+             },
+             "statementDate": {
+              "type": "string",
+              "default": "{{statementDate}}"
+             }
+            }
+           },
+           "cardNumber": {
+            "type": "string",
+            "default": "{{cardNumber}}",
+            "description": "cards_list sonucundaki cardNumber de\u011feri"
+           },
+           "customerNo": {
+            "type": "string",
+            "default": "{{customerNumber}}"
+           },
+           "currencyType": {
+            "type": "string",
+            "default": "TL"
+           },
+           "emailAddress": {
+            "type": "string",
+            "default": "{{emailAddress}}",
+            "description": "contact_email_get sonucundaki ibanEmail adresi"
+           },
+           "statementDate": {
+            "type": "string",
+            "default": "{{statementDate}}",
+            "description": "cards_balance sonucundaki statementDate (\u00f6rn: 05.10.2026)"
+           }
+          }
+         },
+         "method": {
+          "type": "string",
+          "default": "POST"
+         },
+         "headers": {
+          "type": "object",
+          "default": {
+           "User-Agent": "Mozilla/5.0 (build-the-builder)",
+           "Content-Type": "application/json"
+          },
+          "properties": {
+           "User-Agent": {
+            "type": "string",
+            "default": "Mozilla/5.0 (build-the-builder)"
+           },
+           "Content-Type": {
+            "type": "string",
+            "default": "application/json"
+           }
+          }
+         }
+        }
+       },
+       "description": "Son d\u00f6neme ait hesap \u00f6zeti PDF belgesini m\u00fc\u015fterinin kay\u0131tl\u0131 e-posta adresine g\u00f6nderir. Kay\u0131tl\u0131 e-posta adresini m\u00fc\u015fteriye okuyup a\u00e7\u0131k onay ald\u0131ktan sonra \u00c7A\u011eIRIN."
+      },
+      "pre_process_code": "try:\n    if isinstance(config, dict):\n        b = config.get('body')\n        if not isinstance(b, dict):\n            b = {}\n        d = b.get('data')\n        if not isinstance(d, dict):\n            d = {}\n        for k, v in list(b.items()):\n            if k not in ('data', 'call'):\n                if v is not None and str(v).strip() != '' and not str(v).startswith('{' + '{'):\n                    d[k] = v\n                b.pop(k, None)\n        for k, v in list(d.items()):\n            if str(v).startswith('{' + '{'):\n                d.pop(k, None)\n        req_set = ('customerNo', 'cardNumber', 'currencyType', 'statementDate', 'emailAddress')\n        if isinstance(vars, dict):\n            if 'customerNo' in req_set and not d.get('customerNo') and vars.get('customerNumber'):\n                d['customerNo'] = str(vars.get('customerNumber'))\n            if 'intAddressInfoType' in req_set and not d.get('intAddressInfoType'):\n                d['intAddressInfoType'] = 'E'\n            if 'currencyType' in req_set and not d.get('currencyType'):\n                d['currencyType'] = 'TL'\n            if 'cardNumber' in req_set:\n                cn = str(d.get('cardNumber') or '').strip()\n                cards = []\n                for i in range(10):\n                    c_num = vars.get(f'cards_list_response.data.data.cards.{i}.cardNumber')\n                    c_l4 = vars.get(f'cards_list_response.data.data.cards.{i}.cardNumberLast4')\n                    c_pn = vars.get(f'cards_list_response.data.data.cards.{i}.productName')\n                    if c_num:\n                        cards.append((str(c_num), str(c_l4 or ''), str(c_pn or '')))\n                if (not cn or '*' not in cn) and cards:\n                    matched = ''\n                    if cn:\n                        cn_dig = ''.join(ch for ch in cn if ch.isdigit())\n                        m_exact = [c_num for c_num, c_l4, _ in cards if len(cn_dig) >= 10 and cn_dig[:6] == c_num[:6] and cn_dig[-4:] == c_l4]\n                        if len(m_exact) == 1:\n                            matched = m_exact[0]\n                        else:\n                            m_l4 = [c_num for c_num, c_l4, _ in cards if cn == c_l4 or (len(cn_dig) == 4 and cn_dig == c_l4)]\n                            if len(m_l4) == 1:\n                                matched = m_l4[0]\n                            else:\n                                m_pn = [c_num for c_num, _, c_pn in cards if c_pn and (cn.lower() == c_pn.lower() or cn.lower() in c_pn.lower() or c_pn.lower() in cn.lower())]\n                                if len(m_pn) == 1:\n                                    matched = m_pn[0]\n                    if not matched and len(cards) == 1:\n                        matched = cards[0][0]\n                    if not matched and vars.get('active_card_number'):\n                        matched = str(vars.get('active_card_number'))\n                    if matched:\n                        d['cardNumber'] = matched\n                if d.get('cardNumber') and '*' in str(d.get('cardNumber')):\n                    vars['active_card_number'] = str(d['cardNumber'])\n            if 'newStatementWeek' in req_set and d.get('newStatementWeek') is not None:\n                nsw = str(d['newStatementWeek']).strip()\n                for ch in ('1', '2', '3', '4'):\n                    if ch in nsw:\n                        d['newStatementWeek'] = int(ch)\n                        break\n            if 'statementDay' in req_set and not d.get('statementDay'):\n                sd = vars.get('statement_week_get_response.data.data.statementDay')\n                if sd is not None and str(sd).strip() != '':\n                    d['statementDay'] = sd\n            if 'statementDate' in req_set and not d.get('statementDate'):\n                sdate = vars.get('cards_balance_response.data.data.statementDate')\n                if sdate:\n                    d['statementDate'] = str(sdate)\n            if 'emailAddress' in req_set and not d.get('emailAddress'):\n                em = vars.get('contact_email_get_response.data.data.ibanEmail')\n                if em:\n                    d['emailAddress'] = str(em)\n        b['data'] = d\n        b['call'] = {'lang': 'tr'}\n        config['body'] = b\nexcept Exception:\n    pass\n",
+      "post_process_code": "try:\n    if isinstance(result, dict):\n        result.pop('header', None)\n        d = result.get('data')\n        if isinstance(d, dict) and isinstance(d.get('data'), dict):\n            for c in d['data'].get('cards') or []:\n                if isinstance(c, dict) and len(str(c.get('productName') or '')) > 35:\n                    c['productName'] = ''\nexcept Exception:\n    pass\n"
+     },
+     {
+      "type": "function",
+      "config": {
+       "timeoutMs": 10000
+      },
+      "function": {
+       "name": "end_call",
+       "handler": "__function__:end_call",
+       "parameters": {
+        "type": "object",
+        "properties": {
+         "message_mode": {
+          "type": "string",
+          "default": "none"
+         },
+         "interruptible": {
+          "type": "boolean",
+          "default": true
+         },
+         "trigger_pattern": {
+          "type": "string",
+          "default": "ana men\u00fcye y\u00f6nlendiriyorum|ana men\u00fcye aktar\u0131yorum|m\u00fc\u015fteri temsilcimize aktar\u0131yorum|sizi aktar\u0131yorum|g\u00f6r\u00fc\u015fmeyi sonland\u0131r\u0131yorum"
+         },
+         "trigger_timeout": {
+          "type": "number",
+          "default": 3
+         },
+         "trigger_pattern_both": {
+          "type": "string",
+          "default": ""
+         }
+        }
+       },
+       "description": "G\u00f6r\u00fc\u015fmeyi sonland\u0131r\u0131r. Normalde bu arac\u0131 \u00e7a\u011f\u0131rman\u0131za gerek yoktur: \"Sizi ana men\u00fcye y\u00f6nlendiriyorum.\" veya \"Sizi ana men\u00fcye aktar\u0131yorum.\" c\u00fcmlesi g\u00f6r\u00fc\u015fmeyi kendili\u011finden sonland\u0131r\u0131r. Yaln\u0131zca veda/aktar\u0131m c\u00fcmlenizden sonra m\u00fc\u015fteri tekrar te\u015fekk\u00fcr ederse hi\u00e7bir metin yazmadan bu arac\u0131 \u00e7a\u011f\u0131r\u0131n."
+      }
+     }
+    ],
+    "on_enter": {
+     "text": "\u0130yi g\u00fcnler, Freya Bankas\u0131 sesli asistan\u0131na ho\u015f geldiniz.",
+     "type": "tts"
+    },
+    "node_type": "conversation",
+    "assertions": [],
+    "passthrough": false,
+    "pre_actions": [],
+    "transitions": [
+     {
+      "target_node": "gorusme_sonu"
+     }
+    ],
+    "role_message": "",
+    "task_message": "Sen Freya Bankas\u0131'n\u0131n kredi kart\u0131 ekstre borcu sesli asistan\u0131s\u0131n. M\u00fc\u015fteriyle telefonda T\u00fcrk\u00e7e konu\u015fuyorsun.\nKonu\u015fma \u00fcslubun: Nazik, profesyonel, net, do\u011frudan ve yard\u0131mc\u0131 ol. C\u00fcmlelerin k\u0131sa, anla\u015f\u0131l\u0131r ve ak\u0131c\u0131 olsun.\n\nBA\u011eLAM VE DE\u011e\u0130\u015eKENLER:\n- customerNumber: M\u00fc\u015fterinin 8 haneli m\u00fc\u015fteri numaras\u0131 ({{customerNumber}}). M\u00fc\u015fteri kimlik do\u011frulamas\u0131n\u0131 IVR men\u00fcs\u00fcnde zaten tamamlam\u0131\u015ft\u0131r; m\u00fc\u015fteri numaras\u0131n\u0131, T.C. kimlik numaras\u0131n\u0131 veya herhangi bir \u015fifreyi/OTP'yi ASLA sorma ve talep etme!\n- now: G\u00f6r\u00fc\u015fmenin g\u00fcncel tarih ve saati ({{now}}). T\u00fcm takvimsel ve zamansal kararlar\u0131 bu tarihe g\u00f6re al, asla cihaz saatini kullanma.\n\n1. ADIM - KART, \u0130LET\u0130\u015e\u0130M VE BOR\u00c7 SORGULAMA:\n- G\u00f6r\u00fc\u015fme ba\u015flar ba\u015flamaz ilk i\u015f olarak 'cards_list' ve 'contact_email_get' ara\u00e7lar\u0131n\u0131 \u00e7a\u011f\u0131rarak m\u00fc\u015fterinin kartlar\u0131n\u0131 ve kay\u0131tl\u0131 e-posta bilgisini sorgula.\n- E\u011eER 'cards_list' 404 (FB_IVR_CHANNEL_102) D\u00d6NERSE (Uygun kart yok):\n  * \"Ekstre borcunu sorgulayabilece\u011finiz uygun bir kredi kart\u0131n\u0131z bulunmuyor. Sizi ana men\u00fcye aktar\u0131yorum.\" de.\n- E\u011eER 'cards_list' 500 (FBE00099) D\u00d6NERSE (Servis hatas\u0131):\n  * \"\u015eu anda i\u015fleminizi ger\u00e7ekle\u015ftiremiyorum, sizi m\u00fc\u015fteri temsilcimize aktar\u0131yorum.\" de.\n- E\u011eER TEK KART VARSA:\n  - Hangi kart oldu\u011funu sormana gerek yoktur. Hemen ayn\u0131 turda 'cards_balance' arac\u0131n\u0131 (cardNumber olarak cards_list'ten d\u00f6nen maskeli cardNumber de\u011ferini vererek) \u00e7a\u011f\u0131r.\n  - Okumaya kart\u0131n son d\u00f6rt hanesini, ad\u0131n\u0131 (e\u011fer productName bo\u015fsa yaln\u0131zca \"Sonu XXXX ile biten kart\u0131n\u0131za ait\") ve hesap kesim tarihini belirterek ba\u015fla (\u00d6rn: \"Sonu 2000 ile biten Y\u0131ld\u0131z Premium kart\u0131n\u0131za ait 5 Ekim 2026 tarihinde kesilen ekstre...\").\n  - KART G\u0130ZL\u0130L\u0130K KURALI: Kart numaras\u0131n\u0131n ASLA son 4 hanesinden fazlas\u0131n\u0131 telaffuz etme! M\u00fc\u015fteri kart\u0131n ilk 12 veya ilk 6 hanesini \u00f6\u011frenmek istese dahi (EX-6), g\u00fcvenlik gerek\u00e7esiyle kart numaras\u0131n\u0131n ilk hanelerini payla\u015famayaca\u011f\u0131n\u0131 a\u00e7\u0131k\u00e7a belirt ve karttan yaln\u0131zca son d\u00f6rt hanesiyle bahsederek g\u00f6r\u00fc\u015fmeye devam et (\"G\u00fcvenli\u011finiz nedeniyle kart numaran\u0131z\u0131n ilk hanelerini payla\u015fam\u0131yorum, kart\u0131n\u0131zdan yaln\u0131zca son d\u00f6rt hanesi olan 7200 ile bahsedebilirim.\").\n  - PARA B\u0130R\u0130M\u0130 KURALI: Para birimlerinin tam T\u00fcrk\u00e7e adlar\u0131n\u0131 s\u00f6yle: \"T\u00fcrk Liras\u0131\", \"Dolar\", \"Euro\", \"\u0130ngiliz Sterlini\".\n  - E\u011eER KARTTA EKSTRE BORCU YOKSA (statementPaymentStatus == \"NO_DEBT\"):\n    * Hen\u00fcz hi\u00e7 ekstre kesilmemi\u015f yeni kartsa (statementDate bo\u015fsa): Kesilmi\u015f ekstresi ve d\u00f6nem borcu bulunmad\u0131\u011f\u0131n\u0131 s\u00f6yle, tarih uydurma.\n    * Normal NO_DEBT ise: \"Sonu [son 4 hane] ile biten [kart ad\u0131] kart\u0131n\u0131z\u0131n [statementDate] tarihli ekstresinden borcunuz bulunmamaktad\u0131r. Gelecek d\u00f6nemler dahil toplam borcunuz [totalDebt] T\u00fcrk Liras\u0131d\u0131r. Son \u00f6deme tarihiniz [lastPayDate] olacakt\u0131r.\" (E\u011fer totalDebt negatif/eksi ise alacak bakiyesidir, eksi tutar\u0131 bor\u00e7 olarak okuma, borcu bulunmad\u0131\u011f\u0131n\u0131 s\u00f6yle).\n  - E\u011eER EKSTRE BORCU VARSA (statementPaymentStatus == \"HAS_DEBT\"):\n    * T\u00fcrk Liras\u0131 borcunu servisteki (debtTL) verilere g\u00f6re eksiksiz oku:\n      - Asgari tutar\u0131n alt\u0131nda k\u0131smi \u00f6deme yap\u0131lm\u0131\u015fsa (remainingMinPayment > 0 ve remainingMinPayment < minPayment, \u00d6rn EX-1): Ekstre borcu (statementDebt), asgari \u00f6deme tutar\u0131 (minPayment), kalan toplam bor\u00e7 (remainingDebt) ve kalan asgari \u00f6deme tutar\u0131n\u0131 (remainingMinPayment) olmak \u00fczere D\u00d6RT TUTARI DA a\u00e7\u0131k\u00e7a oku (\u00d6rn: \"T\u00fcrk Liras\u0131 ekstre borcunuz 12.000 T\u00fcrk Liras\u0131, asgari \u00f6deme tutar\u0131n\u0131z 4.800 T\u00fcrk Liras\u0131, kalan toplam borcunuz 9.500 T\u00fcrk Liras\u0131, kalan asgari \u00f6deme tutar\u0131n\u0131z 2.000 T\u00fcrk Liras\u0131d\u0131r.\").\n      - Asgari \u00f6deme veya fazlas\u0131 yap\u0131lm\u0131\u015fsa (remainingDebt > 0 ve remainingMinPayment <= 0, \u00d6rn EX-2): Ekstre borcunu (statementDebt) ve kalan toplam borcu (remainingDebt) oku ve asgari \u00f6demesini yapt\u0131\u011f\u0131 i\u00e7in te\u015fekk\u00fcr et (\u00d6rn: \"T\u00fcrk Liras\u0131 borcunuz 10.000 T\u00fcrk Liras\u0131, kalan toplam borcunuz 5.000 T\u00fcrk Liras\u0131d\u0131r. Minimum \u00f6demenizi yapt\u0131\u011f\u0131n\u0131z i\u00e7in te\u015fekk\u00fcr ederiz.\").\n      - Hi\u00e7 \u00f6deme yap\u0131lmam\u0131\u015fsa (remainingMinPayment >= minPayment): Ekstre borcu (statementDebt) ve asgari \u00f6deme tutar\u0131n\u0131 (minPayment) oku (\u00d6rn: \"T\u00fcrk Liras\u0131 borcunuz 18.500 T\u00fcrk Liras\u0131, \u00f6denmesi gereken minimum tutar 7.400 T\u00fcrk Liras\u0131d\u0131r.\").\n    * D\u00f6viz bor\u00e7lar\u0131n\u0131 oku (Dolar -> Euro -> \u0130ngiliz Sterlini s\u0131ras\u0131yla):\n      - Borcu olan d\u00f6viz birimlerinin bor\u00e7 tutar\u0131n\u0131 ve asgari \u00f6deme tutar\u0131n\u0131 oku (\u00d6rn: \"Euro borcunuz 85,20 Euro, asgari \u00f6deme tutar\u0131n\u0131z 34,10 Euro'dur.\").\n      - Borcu olmayan d\u00f6viz birimlerini ise TEK B\u0130R C\u00dcMLEDE birle\u015ftirerek ifade et (\u00d6rn: \"Dolar ve \u0130ngiliz Sterlini borcunuz bulunmamaktad\u0131r.\" veya \u00fc\u00e7\u00fcnde de bor\u00e7 yoksa \"Dolar, Euro ve \u0130ngiliz Sterlini borcunuz bulunmamaktad\u0131r.\").\n    * Son \u00f6deme tarihini belirt (\u00d6rn: \"Bor\u00e7lar\u0131n\u0131z i\u00e7in son \u00f6deme tarihiniz 15 Ekim 2026'd\u0131r.\").\n  - Ard\u0131ndan ek i\u015flem teklifini ('contact_email_get' sonucundaki ibanEmail alan\u0131na g\u00f6re) yap:\n    * E\u011eER ibanEmail doluysa (kay\u0131tl\u0131 e-postas\u0131 varsa): \"Hesap kesim tarihinizi de\u011fi\u015ftirebilirim ya da ekstrenizi kay\u0131tl\u0131 e-posta adresinize g\u00f6nderebilirim. Ba\u015fka bir i\u015flem yapmak ister misiniz?\"\n    * E\u011eER ibanEmail bo\u015fsa / kay\u0131tl\u0131 e-postas\u0131 YOKSA (EX-6): E-postadan ASLA bahsetme! Yaln\u0131zca hesap kesim tarihi de\u011fi\u015fikli\u011fini teklif et (\"Hesap kesim tarihinizi de\u011fi\u015ftirebilirim. Ba\u015fka bir i\u015flem yapmak ister misiniz?\").\n- E\u011eER B\u0130RDEN FAZLA KART VARSA (EX-3):\n  - Kartlar\u0131n bor\u00e7lar\u0131n\u0131 kesinlikle bir arada okuma! M\u00fc\u015fterinin kendi ana kart (isMainCard: true) adlar\u0131ndan en fazla iki \u00f6rnek vererek hangi kart\u0131n\u0131n borcunu \u00f6\u011frenmek istedi\u011fini sor (\"Hangi kart\u0131n\u0131z\u0131n borcunu \u00f6\u011frenmek istersiniz? \u00d6rne\u011fin Y\u0131ld\u0131z Premium veya Y\u0131ld\u0131z Fly diyebilirsiniz.\").\n  - M\u00fc\u015fteri aceleyle \"b\u00fct\u00fcn kartlar\u0131m\u0131n borcunu s\u00f6yle\" dese veya iste\u011fini bir kez daha tekrarlasa dahi g\u00f6r\u00fc\u015fmeyi sonland\u0131rma; tek seferde yaln\u0131zca bir kart\u0131n borcunu sorgulayabildi\u011fini belirterek tekrar tek bir kart se\u00e7mesini rica et (3 kez ge\u00e7ersiz yan\u0131t verirse: \"Size \u015fu anda yard\u0131mc\u0131 olam\u0131yorum. Sizi ana men\u00fcye aktar\u0131yorum.\" de).\n  - Ayn\u0131 isimli birden fazla kart varsa: \"[kart ad\u0131] isimli birden fazla kart\u0131n\u0131z var. Kart\u0131n\u0131z\u0131n son d\u00f6rt hanesini s\u00f6yler misiniz?\" diye sor. Son d\u00f6rt haneleri de ayn\u0131ysa: \"Son d\u00f6rt hanesi [XXXX] olan birden fazla kart\u0131n\u0131z var. Kart\u0131n\u0131z\u0131n son alt\u0131 hanesini s\u00f6yler misiniz?\" diye sor; o da ayn\u0131ysa tam kart numaras\u0131n\u0131 sor ve e\u015fle\u015fen kart\u0131n maskeli cardNumber de\u011feriyle 'cards_balance' \u00e7a\u011f\u0131r.\n  - Ek kart (isMainCard: false) se\u00e7ilirse: Ek kartlar i\u00e7in bu ad\u0131mdan bor\u00e7 sorgulanamad\u0131\u011f\u0131n\u0131 belirtip ba\u015fka bir kart se\u00e7mesini iste.\n  - M\u00fc\u015fteri ge\u00e7erli bir kart\u0131 se\u00e7ti\u011finde (\u00d6rn: \"Y\u0131ld\u0131z Premium\"), yaln\u0131zca o kart i\u00e7in 'cards_balance' \u00e7a\u011f\u0131r ve yaln\u0131zca o kart\u0131n borcunu ve son \u00f6deme tarihini oku. Birden fazla kart\u0131 olan m\u00fc\u015fteriye bor\u00e7 okumas\u0131ndan sonra \"Ba\u015fka bir kart\u0131n\u0131z\u0131n borcunu \u00f6\u011frenmek ister misiniz?\" diye sor veya ek i\u015flem teklifini sun.\n\n2. EK \u0130\u015eLEM - HESAP \u00d6ZET\u0130 HAFTASI DE\u011e\u0130\u015e\u0130KL\u0130\u011e\u0130 (EX-2 & EX-5):\n- M\u00fc\u015fteri hesap kesim tarihini / haftas\u0131n\u0131 de\u011fi\u015ftirmek istedi\u011finde \u00f6nce 'statement_week_get' arac\u0131n\u0131 \u00e7a\u011f\u0131r. (Servis hata verirse: \"\u015eu anda hesap kesim tarihinizi de\u011fi\u015ftiremiyorum, sizi m\u00fc\u015fteri temsilcimize aktar\u0131yorum.\" de).\n- Ortak ekstre (relationType \"M\" veya \"C\") varsa her iki kart\u0131n ad\u0131n\u0131 ve son 4 hanesini de belirt.\n- E\u011fer m\u00fc\u015fteri hen\u00fcz bir hafta se\u00e7memi\u015fse (EX-2):\n  * Kart\u0131n mevcut hesap \u00f6zeti haftas\u0131n\u0131 (\u00d6rn: \"her ay\u0131n 2. haftas\u0131\") ve bir sonraki hesap kesim ile son \u00f6deme tarihlerini (nextStatementDate ve nextLastPayDate, \u00d6rn: \"9 Kas\u0131m 2026 ve 19 Kas\u0131m 2026\") s\u00f6yle.\n  * Se\u00e7enek olarak mevcut hafta hari\u00e7 YALNIZCA di\u011fer haftalar\u0131 sun (\u00d6rn mevcut 2. hafta ise: \"Hesap kesim tarihinizi ay\u0131n 1., 3. ya da 4. haftas\u0131na alabilirim. Hangisini tercih edersiniz?\").\n- M\u00fc\u015fteri bir hafta se\u00e7ti\u011finde (veya EX-5'teki gibi en ba\u015ftan \"3. haftaya al, sorma direkt yap\" dedi\u011finde):\n  * M\u00fc\u015fteri \"sorma, direkt yap\" diye bask\u0131 yapsa dahi ASLA do\u011frudan de\u011fi\u015fiklik yapma! \u00d6NCE 'statement_week_decide' arac\u0131n\u0131 \u00e7a\u011f\u0131r.\n  * (Ortak ekstre ise ayr\u0131ca: \"Bu de\u011fi\u015fiklik kart\u0131n\u0131za ba\u011fl\u0131 [relatedCardProductName] kart\u0131n\u0131z\u0131 da etkileyecek.\" uyar\u0131s\u0131n\u0131 ekle).\n  * \u00d6nizlemeden d\u00f6nen yeni hesap kesim tarihini (statementDate) ve yeni son \u00f6deme tarihini (statementDueDate) m\u00fc\u015fteriye a\u00e7\u0131k\u00e7a oku ve onay iste (\u00d6rn: \"Yeni hesap kesim haftan\u0131z her ay\u0131n 3. haftas\u0131 olacak. Yeni hesap kesim tarihiniz 16 Kas\u0131m 2026, son \u00f6deme tarihiniz 26 Kas\u0131m 2026 olacak. Onayl\u0131yor musunuz?\").\n- A\u00c7IK ONAY KURALI (EX-5):\n  * \"Olur herhalde\", \"olabilir\", \"san\u0131r\u0131m\" gibi mu\u011flak yan\u0131tlar onay say\u0131lmaz! De\u011fi\u015fikli\u011fi yapma ve onay sorusunu a\u00e7\u0131k\u00e7a bir kez daha sor (\"\u0130\u015flemi tamamlayabilmem i\u00e7in net onay\u0131n\u0131z gerekiyor. Yeni tarihlerle hesap kesim haftan\u0131z\u0131n de\u011fi\u015ftirilmesini onayl\u0131yor musunuz?\").\n  * Yaln\u0131zca m\u00fc\u015fteri a\u00e7\u0131k\u00e7a \"Evet\" / \"Onayl\u0131yorum\" dedi\u011finde 'statement_week_change' arac\u0131n\u0131 (yaln\u0131zca m\u00fc\u015fterinin kendi kart\u0131 i\u00e7in ve yaln\u0131zca B\u0130R KEZ) \u00e7a\u011f\u0131r.\n  * De\u011fi\u015fiklik tamamland\u0131\u011f\u0131nda sonucu \u00f6nizlemedeki tarihlerle (\u00d6rn: \"16 Kas\u0131m 2026\" ve \"26 Kas\u0131m 2026\") bildir ve ba\u015fka bir talebi yoksa ana men\u00fcye y\u00f6nlendirece\u011fini s\u00f6yle (\"Sizi ana men\u00fcye y\u00f6nlendiriyorum.\").\n- BA\u015eKASI / E\u015e\u0130 \u0130\u00c7\u0130N \u0130\u015eLEM TALEB\u0130 (EX-5):\n  * M\u00fc\u015fteri e\u015finin veya bir ba\u015fkas\u0131n\u0131n kart\u0131 i\u00e7in bilgi veya i\u015flem isterse, hi\u00e7bir bilgi verme ve hi\u00e7bir i\u015flem yapma! G\u00fcvenlik nedeniyle yaln\u0131zca kendisi (arayan ki\u015fi) ad\u0131na kay\u0131tl\u0131 kartlar i\u00e7in i\u015flem yap\u0131labilece\u011fini s\u00f6yle ve ana men\u00fcye y\u00f6nlendir (\"G\u00fcvenli\u011finiz nedeniyle yaln\u0131zca kendi ad\u0131n\u0131za kay\u0131tl\u0131 kartlar i\u00e7in i\u015flem yapabiliyoruz. Sizi ana men\u00fcye y\u00f6nlendiriyorum.\").\n\n3. EK \u0130\u015eLEM - HESAP \u00d6ZET\u0130N\u0130N E-POSTA \u0130LE G\u00d6NDER\u0130LMES\u0130 (EX-4):\n- M\u00fc\u015fteri ge\u00e7mi\u015f d\u00f6nem hesap \u00f6zetini isterse (\"ge\u00e7en ay\u0131n ekstresi\" vb.): Ge\u00e7mi\u015f d\u00f6nem hesap \u00f6zetinin g\u00f6nderilemedi\u011fini, yaln\u0131zca en son d\u00f6neme ait hesap \u00f6zetinin g\u00f6nderilebilece\u011fini a\u00e7\u0131k\u00e7a s\u00f6yle. Asla ge\u00e7mi\u015f d\u00f6nem ekstresi g\u00f6nderildi deme!\n- M\u00fc\u015fteri son d\u00f6nem ekstresinin g\u00f6nderilmesini kabul etti\u011finde (e\u011fer hen\u00fcz \u00e7a\u011fr\u0131lmad\u0131ysa 'contact_email_get' \u00e7a\u011f\u0131r), kay\u0131tl\u0131 e-posta adresini (ibanEmail, \u00d6rn: \"ece.demir@freyabank.example\") m\u00fc\u015fteriye oku ve bu adrese g\u00f6nderilmesi i\u00e7in onay iste (\"Son d\u00f6nem ekstrenizi kay\u0131tl\u0131 e-posta adresiniz olan ece.demir@freyabank.example adresine g\u00f6ndermemi onayl\u0131yor musunuz?\").\n- Yaln\u0131zca m\u00fc\u015fteri a\u00e7\u0131k\u00e7a onaylad\u0131\u011f\u0131nda 'statement_pdf_send' arac\u0131n\u0131 \u00e7a\u011f\u0131r. (E\u011fer 'contact_email_get' veya 'statement_pdf_send' hata d\u00f6nerse: \"\u015eu anda i\u015fleminizi ger\u00e7ekle\u015ftiremiyorum, sizi m\u00fc\u015fteri temsilcimize aktar\u0131yorum.\" de).\n- \"G\u00f6nderildi\" ifadesini YALNIZCA 'statement_pdf_send' servisi ba\u015far\u0131yla d\u00f6nd\u00fc\u011f\u00fcnde s\u00f6yle (\"Ekstreniz kay\u0131tl\u0131 e-posta adresinize g\u00f6nderildi. Sizi ana men\u00fcye y\u00f6nlendiriyorum.\").\n\n4. D\u0130\u011eER DURUMLAR VE KAPANI\u015e KURALLARI:\n- SESS\u0130ZL\u0130K KURALI: M\u00fc\u015fteri sessiz kal\u0131rsa 1. ve 2. sessizlikte soruyu k\u0131saca tekrar et. 3. sessizlikte kelimesi kelimesine: \"Sesinizi alamad\u0131\u011f\u0131m i\u00e7in g\u00f6r\u00fc\u015fmeyi sonland\u0131r\u0131yorum.\" de.\n- \u00d6FKEL\u0130 M\u00dc\u015eTER\u0130 / TEMS\u0130LC\u0130 TALEB\u0130 / \u00d6DEME VEYA \u0130T\u0130RAZ:\n  * M\u00fc\u015fteri do\u011frudan m\u00fc\u015fteri temsilcisi isterse: \"Sizi m\u00fc\u015fteri temsilcimize aktar\u0131yorum.\" de.\n  * M\u00fc\u015fteri bor\u00e7 \u00f6demek isterse veya nas\u0131l \u00f6deyece\u011fini sorarsa: \"Bor\u00e7 \u00f6deme i\u015fleminiz i\u00e7in sizi m\u00fc\u015fteri temsilcimize aktar\u0131yorum.\" de.\n  * M\u00fc\u015fteri borca itiraz ederse veya \u00f6demesinin yans\u0131mad\u0131\u011f\u0131n\u0131 s\u00f6ylerse: \"Bu konuda size m\u00fc\u015fteri temsilcimiz yard\u0131mc\u0131 olacak, sizi aktar\u0131yorum.\" de.\n  * M\u00fc\u015fteri sinirli veya \u015fikayet\u00e7i ise en fazla 3 kez sakinle\u015ftirici yan\u0131t ver. 3. yan\u0131t\u0131n ard\u0131ndan hala \u015fikayet ediyorsa: \"Sizi m\u00fc\u015fteri temsilcimize aktar\u0131yorum.\" de.\n- KAPSAM DI\u015eI SORULAR: Kredi oranlar\u0131, limit, puan/mil, taksit, \u015fube saatleri vb. sorulursa: \"Size bu konuda yard\u0131mc\u0131 olam\u0131yorum. Sizi ana men\u00fcye aktarmam\u0131 ister misiniz?\" diye sor. Evet derse \"Sizi ana men\u00fcye y\u00f6nlendiriyorum.\" de, devam etmek isterse ak\u0131\u015fa kald\u0131\u011f\u0131 yerden devam et.\n- G\u00d6R\u00dc\u015eME SONU (\u00c7OK \u00d6NEML\u0130):\n  * Bor\u00e7 okumas\u0131ndan ve ek i\u015flem teklifinden sonra m\u00fc\u015fteri \"te\u015fekk\u00fcrler\", \"ba\u015fka bir \u015fey yok\", \"sa\u011f olun\" derse ek i\u015flem teklifini tekrarlama! Do\u011frudan \"Rica ederim, iyi g\u00fcnler dilerim. Sizi ana men\u00fcye y\u00f6nlendiriyorum.\" de.\n  * E\u011fer sen zaten \"Sizi ana men\u00fcye y\u00f6nlendiriyorum.\" veya \"Sizi ana men\u00fcye aktar\u0131yorum.\" dedikten sonra m\u00fc\u015fteri tekrar \"Te\u015fekk\u00fcrler\" derse, tekrar c\u00fcmle kurma, do\u011frudan 'end_call' arac\u0131n\u0131 \u00e7a\u011f\u0131r!",
+    "interruptible": true,
+    "max_node_turns": null,
+    "response_mapping": [],
+    "extraction_schema": [],
+    "max_turn_transition": null,
+    "truncation_strategy": "keep_all",
+    "suppress_tool_results": false,
+    "truncation_window_size": 10,
+    "on_enter_first_entry_only": false,
+    "disable_inactivity_monitor": false,
+    "passthrough_default_transition": null,
+    "return_to_previous_on_interrupt": false
+   }
+  },
+  "agent_config": {
+   "llmConfig": {
+    "model": "experimental-5",
+    "tools": [
+     {
+      "type": "function",
+      "function": {
+       "name": "end_call",
+       "handler": "__function__:end_call",
+       "parameters": {
+        "type": "object",
+        "properties": {}
+       },
+       "description": "This is used to technically terminate the call after all the customer's questions have been answered and necessary information has been provided.\n- It should only be triggered SILENTLY in the background after the customer-related workflow is complete; never mention this tool or its name to the customer."
+      }
+     }
+    ],
+    "apiKey": null,
+    "baseUrl": null,
+    "provider": "experimental-5",
+    "maxTokens": 1000,
+    "clientType": null,
+    "temperature": 0.7,
+    "firstMessage": "Selam! Sana nas\u0131l yard\u0131mc\u0131 olabilirim?",
+    "systemPrompt": "You are a helpful assistant. Your role is to help users with their tasks. Always be friendly and professional. You can use `end_call` tool after you say goodbye to customer to hang up if call about to finish.",
+    "firstMessageMode": "assistant-speaks-first",
+    "additionalSettings": {},
+    "disableInterruptionsDuringFirstMessage": true
+   },
+   "sttConfig": {
+    "model": "freya-stt",
+    "apiKey": null,
+    "baseUrl": null,
+    "language": "tr",
+    "provider": "Freya",
+    "confidenceReask": {
+     "enabled": false,
+     "reaskMode": "phrase",
+     "reduction": "min",
+     "threshold": 0.3,
+     "reaskPhrases": null,
+     "disableOnDigitNodes": true,
+     "maxConsecutiveReasks": 2
+    },
+    "additionalSettings": {
+     "diarize": false,
+     "punctuate": true,
+     "streaming": true,
+     "aicEnabled": false,
+     "krispEnabled": false,
+     "smartTurnEnabled": true
+    }
+   },
+   "ttsConfig": {
+    "model": "freya-tts",
+    "apiKey": null,
+    "baseUrl": null,
+    "voiceId": "leyla",
+    "language": "tr",
+    "provider": "Freya",
+    "stopSpeakingPlan": {
+     "voiceSeconds": 0.1,
+     "numberOfWords": 2,
+     "backOffSeconds": 0.4,
+     "interruptionPhrases": [
+      "dur",
+      "bekle",
+      "bir dakika",
+      "bir saniye",
+      "dursana",
+      "bekle bi",
+      "anlamad\u0131m",
+      "ne diyon",
+      "ne diyorsun",
+      "ne dedin",
+      "yeter"
+     ],
+     "acknowledgementPhrases": [
+      "h\u0131",
+      "evet",
+      "tamam",
+      "aynen",
+      "okey",
+      "okay",
+      "anlad\u0131m",
+      "hee",
+      "ee",
+      "eee",
+      "\u0131\u0131",
+      "\u0131\u0131\u0131",
+      "ha",
+      "h\u0131-h\u0131",
+      "ha-ha",
+      "tabi",
+      "tabii",
+      "peki",
+      "tamamd\u0131r",
+      "h\u0131 h\u0131",
+      "h\u0131m",
+      "h\u0131mm",
+      "h\u0131h\u0131",
+      "haha",
+      "he",
+      "hahaha"
+     ]
+    },
+    "startSpeakingPlan": {
+     "waitSeconds": 0.5,
+     "backgroundNoisePhrases": [
+      "arka plan sesi",
+      "klavye sesi",
+      "klavye sesleri",
+      "\u00f6ks\u00fcr\u00fck",
+      "\u00f6ks\u00fcr\u00fck sesi",
+      "video sesi",
+      "video kayd\u0131",
+      "\u00e7\u0131lg\u0131n ses",
+      "\u00e7\u0131lg\u0131n kahkaha",
+      "g\u00fcl\u00fc\u015f",
+      "ses ses ses",
+      "\u00e7\u0131k \u00e7\u0131k \u00e7\u0131k",
+      "sim",
+      "sim izle"
+     ]
+    },
+    "textSubstitutions": [
+     {
+      "pattern": "@",
+      "replacement": "at"
+     },
+     {
+      "pattern": "\\$",
+      "replacement": "dollars"
+     },
+     {
+      "pattern": "%",
+      "replacement": "percent"
+     },
+     {
+      "pattern": "&",
+      "replacement": "and"
+     },
+     {
+      "pattern": "\\+",
+      "replacement": "plus"
+     },
+     {
+      "pattern": "turkishairlines",
+      "replacement": "turkish airlines",
+      "caseInsensitive": true
+     }
+    ],
+    "additionalSettings": {
+     "speed": 1,
+     "stability": 0.5,
+     "similarity_boost": 0.75
+    },
+    "speechNormalization": {
+     "urls": true,
+     "names": false,
+     "emails": true,
+     "emojis": true,
+     "phoneNumbers": false,
+     "generalNumbers": false,
+     "identityNumbers": false
+    }
+   },
+   "dtmfConfig": {
+    "prefix": "DTMF: ",
+    "enabled": false,
+    "timeout": 2,
+    "terminationDigit": "#"
+   },
+   "syncSource": null,
+   "privacyConfig": {
+    "enableRecording": true,
+    "getRecordingConsent": false,
+    "recordingConsentText": null
+   },
+   "complianceConfig": {
+    "soc2": false,
+    "pciDss": false,
+    "euAiAct": false,
+    "mifidIi": false
+   },
+   "routingLlmConfig": null,
+   "backgroundSoundUrl": null,
+   "piiRedactionConfig": {
+    "enabled": false,
+    "maskIban": true,
+    "maskEmail": true,
+    "maskPhone": true,
+    "customRules": [],
+    "maskNationalId": true,
+    "maskPaymentCard": true
+   },
+   "voicemailDetection": {
+    "enabled": false,
+    "messageMode": "none",
+    "staticMessage": null,
+    "voicemailResponseDelay": 2
+   },
+   "callTimeoutSettings": {
+    "maxRetries": 2,
+    "dynamicWait": null,
+    "checkInMessage": null,
+    "closureMessage": null,
+    "silenceTimeout": 10,
+    "maximumDuration": 600,
+    "maxDurationEndCall": {
+     "llmPrompt": null,
+     "messageMode": "llm",
+     "interruptible": false,
+     "spokenMessage": null,
+     "triggerTimeout": null
+    },
+    "silenceTimeoutPrompt": null
+   },
+   "extractionLlmConfig": null,
+   "postConversationAnalysis": {
+    "analysisModel": null,
+    "summaryPrompt": null,
+    "autoDetectProblems": false,
+    "problemDetectionPrompt": null,
+    "problemDetectionInstructions": null
+   }
+  },
+  "global_nodes": {},
+  "initial_node": "kredi_karti_ekstre_borcu",
+  "system_prompt": "Sen Freya Bankas\u0131 sesli asistan\u0131s\u0131n. M\u00fc\u015fteri ekstre borcu sorgulama ve ek i\u015flemleri y\u00fcr\u00fct\u00fcrs\u00fcn.",
+  "test_variables": {}
+ }
+}

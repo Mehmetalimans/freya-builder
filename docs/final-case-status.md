@@ -65,3 +65,14 @@ No final workflow has been deployed, exported, or conversation-tested. The user
 requested push and handoff to Miraç; next owner should complete a bounded recorded
 generation before running live examples. Clean source tests remain 127/127 and
 remote mock checks 617/617. No final submission e-mail was sent.
+
+22:18 final delivery verified: bounded native case-folder generation completed in
+4.1 seconds (`runs/20261011T191541Z-4921b460`), published to Freya (`workflow_id`:
+`0a6cee47-2d9b-4b99-993b-ebd1b1e23690`, `agent_id`: `4a0fefbd-f7a4-4eb2-acc1-986483f619d6`,
+`platform_version`: `5`, `workflow_sha256`: `c4334ea0cc736648e697acdced98577785b05fece9f64e09d493596dcdb6ff57`),
+exported and verified via `verify_readback`. Live conversation evaluation across all
+six scenarios (`EX-1` through `EX-6`) passed **6/6 (100%)** with `observed_failed_tool_results: 0`
+(`runs/20261011T191541Z-4921b460/evaluation-d7228310`). Clean unit tests remain
+127/127. Submission artifacts packaged into `submission/` and verified against Git.
+Awaiting explicit user approval before sending the submission e-mail.
+

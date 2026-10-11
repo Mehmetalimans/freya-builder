@@ -1,0 +1,30 @@
+{
+  "builder_version": "0.2.1",
+  "status": "deployed_verified",
+  "run_id": "20261011T191541Z-4921b460",
+  "started_at": "2026-10-11T19:15:41.856940+00:00",
+  "mode": "folder-live",
+  "benchmark_success": null,
+  "builder_model_cost_usd": null,
+  "mock_url": "https://freya-final-bank.freya-final-bank-mock.workers.dev",
+  "case_sha256": "2fc1892102853f0027f00ca02a4bac275b1676016bea14fca677f71566b5cf7b",
+  "source_commit": "bf1d17a87bb50e8728a5e0a11a689e66182f22c8",
+  "nodes": 2,
+  "tools": 7,
+  "tool_names": [
+    "cards_balance",
+    "cards_list",
+    "contact_email_get",
+    "statement_pdf_send",
+    "statement_week_change",
+    "statement_week_decide",
+    "statement_week_get"
+  ],
+  "workflow_sha256": "c4334ea0cc736648e697acdced98577785b05fece9f64e09d493596dcdb6ff57",
+  "workspace_id": "8783bb12-56fc-489a-8608-590676971f6c",
+  "workflow_id": "0a6cee47-2d9b-4b99-993b-ebd1b1e23690",
+  "agent_id": "4a0fefbd-f7a4-4eb2-acc1-986483f619d6",
+  "platform_version": 5,
+  "ended_at": "2026-10-11T19:15:44.996546+00:00",
+  "seconds": 3.14
+}

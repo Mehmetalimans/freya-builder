@@ -1,0 +1,23 @@
+{
+  "builder\\build.py": "85fe281aee7bec86e5a5758b194e5f4aa7ee17f8f03a9c0de7327c4286a2638e",
+  "builder\\calendar.py": "f1481009c1b8bdf4699ce781334515fde71923698da9fa9bc84bb579b49f89a7",
+  "builder\\campaign.py": "3902d04a3ce7155ac871c726c461d86ffc7fffae8b6d67dcd41655b5e79c3a96",
+  "builder\\case_folder.py": "fb24564d18c39e47f576878d05cb4c12044480fcec61524651dacbe8734d95fb",
+  "builder\\core.py": "21a452658e43aad08e325966fae8ea2cdc1b6aa8fe14b5bc1b35a295e0c527a5",
+  "builder\\evaluate.py": "ecd50189c9b459e6239ac0b676665aecf39638b5a2a61354bc6cd298ea1e8a42",
+  "builder\\recover.py": "787a2273edc3124f15edaa9de1c91e08112eefc9554d990833f862495724c8ee",
+  "builder\\runtime.py": "3856ea58cbdda5c613a3fffa56ef96b1e34272341f701b2d8932a7fea26e7b9e",
+  "builder\\__init__.py": "125e84d652c9206ba496704973c0c7665a67127aedb85d4f37f9a23e2a882d8f",
+  "scripts\\browser_smoke.py": "f6b7b463c082912044a7b5d3db6178ab21c0ae25bb878b0738b4e489d01adad2",
+  "scripts\\build_docs_zip.py": "3ddaa759f708a592d4fb692d558c1c3af8a9c8fc120bda133ea7b6bc73caf766",
+  "scripts\\check_git_safety.py": "22bb2d2c85f11174d1741c795b06fe51f886b854f93737c4f08828d8620aa4d5",
+  "scripts\\check_mock.py": "63427cef25ec91c329fdc59d9be13e4e6905eaa950b39740db6c7e2de6ecf554",
+  "scripts\\final_evaluate.py": "387b293d6be4a2c92f2f47f2037d6c25c673226d8a172aefe0a019b262a14239",
+  "scripts\\final_submission.py": "19ba166f73db7dd9329fcfc1d8c60b99e4ae4962eb957e807a6e40c9462cf47a",
+  "scripts\\generate_mock_worker.py": "463ec90276cead9dc6e1e5ea172d2ec1149457e1e1c18eff47550f191b7f5f1a",
+  "scripts\\pack_submission.py": "880ec09d371f38597446418c981096d4c0f73292d2dde6bfe84b76a8af9c8733",
+  "scripts\\prepare_gpt_bundle.py": "e01b796cb083bfb525c36a2a18dc43e5d95c842474df15358fa20ab4e7f5effb",
+  "scripts\\release.py": "f6b559bcc84be560c0aa05e59939052c0410f748b1cc08c58402837af1e9ed5d",
+  "scripts\\summarize_evaluations.py": "e8c00faf142d6448991aee567be1f04b731bc1e543806751a8afc73ca2fa4f34",
+  "scripts\\verify_release.py": "57fba6ab1a2161dc651c76d438a8ad0b4e2e489119abff098e57ef81c56df7d1"
+}

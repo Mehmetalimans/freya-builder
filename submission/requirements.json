@@ -1,0 +1,46 @@
+{
+  "status": "complete",
+  "language": "tr",
+  "call_variables": [
+    "customerNumber",
+    "now"
+  ],
+  "source_backed_requirements": [
+    "Identity pre-verified by IVR; customerNumber passed as call variable",
+    "All temporal operations use call time now",
+    "Full currency names mandatory: Türk Lirası, Dolar, Euro, İngiliz Sterlini",
+    "Card privacy: never speak more than last 4 digits",
+    "Third silence exact termination: Sesinizi alamadığım için görüşmeyi sonlandırıyorum.",
+    "Angry caller: 3 calming replies then transfer to agent",
+    "Out-of-scope routing offer: Size bu konuda yardımcı olamıyorum. Sizi ana menüye aktarmamı ister misiniz?",
+    "Statement week change requires preview then explicit confirmation",
+    "Statement PDF send limited to latest statement and registered email"
+  ],
+  "operations": [
+    "cards_list",
+    "cards_balance",
+    "statement_week_get",
+    "statement_week_decide",
+    "statement_week_change",
+    "contact_email_get",
+    "statement_pdf_send"
+  ],
+  "unresolved_conflicts": [
+    {
+      "id": "C01",
+      "blocking": false,
+      "issue": "No backend entitlement pre-check for statement week change; service mutation is authoritative.",
+      "safe_fallback": "Proceed with statement.week.decide preview and require explicit customer consent before mutation."
+    },
+    {
+      "id": "C02",
+      "blocking": false,
+      "issue": "Physical PBX transfer routing unexposed in voice API contract; terminal intent recorded via dialogue.",
+      "safe_fallback": "Announce transfer and use end_call node."
+    }
+  ],
+  "limitations": [
+    "Only latest statement PDF supported; past statements rejected per business rule.",
+    "Masked test card digits limit last-six disambiguation; handled via card names."
+  ]
+}
