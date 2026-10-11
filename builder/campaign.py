@@ -14,6 +14,13 @@ def balance_usd(snapshot):
 def check_campaign(policy, snapshot, case_count):
     if policy.get("monitored_campaign_authorized") is not True:
         raise ContractError("Monitored campaign requires explicit user authorization")
+    if policy.get('funding_mode') == 'existing_workspace_credit':
+        if policy.get('existing_credit_authorized') is not True:
+            raise ContractError('Existing-credit use requires explicit authorization')
+        balance = balance_usd(snapshot)
+        if not 1 <= case_count <= 7 or balance <= 0:
+            raise ContractError('No existing credit or invalid case count')
+        return balance
     cap = policy.get("total_authorized_usd")
     if not isinstance(cap, (int, float)) or isinstance(cap, bool) or not math.isfinite(cap) or not 0 < cap <= 100:
         raise ContractError("Campaign authorization must be within 100 USD")
@@ -49,7 +56,8 @@ def observed_spend(state, snapshot):
 def reserve_campaign(policy, state, snapshot, case_count, repetitions, run_id):
     balance = check_campaign(policy, snapshot, case_count)
     spend = observed_spend(state, snapshot)
-    if spend >= policy["total_authorized_usd"] - policy["campaign_stop_balance_usd"]:
+    if (policy.get('funding_mode') != 'existing_workspace_credit'
+            and spend >= policy["total_authorized_usd"] - policy["campaign_stop_balance_usd"]):
         raise ContractError("Recorded consumption reached the authorized buffer")
     if state.get("monitored_pending_run") or state.get("reserved_usd", 0):
         raise ContractError("An earlier reservation is unresolved")

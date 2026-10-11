@@ -140,7 +140,7 @@ def make_post_process_code(name):
             tool_name = TOOL_NAME
             if tool_name == 'verify_identity':
                 if ('ok' not in d or d.get('ok') is True):
-                    if d.get('all_verified') is True:
+                    if d.get('all_verified') is True or d.get('identity_complete') is True:
                         d['what_to_do_next'] = 'All security questions PASSED. Continue according to the supplied policy.'
                     elif d.get('verified') is True:
                         d['what_to_do_next'] = 'This identity answer is verified. Follow the next required check in the supplied policy; not all checks have passed.'
@@ -303,7 +303,10 @@ def compile_workflow(briefs, document):
             f'Product days_late {low} to {high}: at most {count} persuasion attempts.' for low,high,count in attempts)
         system += '\nUse the supplied definition of an attempt and exception precedence. Stop when its allowance is exhausted; never infer the count from the deadline.\n'
 
-    gated = boolean_response(ops["verify_identity"], "all_verified")
+    gate_field = next((f for f in ('all_verified','identity_complete') if boolean_response(ops['verify_identity'],f)),None)
+    if gate_field is None:
+        raise ContractError('Identity response has no recognized bank completion signal; account access cannot be compiled safely')
+    gated = True
     closing = success_transition("close_call", "ok", "finished")
 
     def conversation(name, tool_names, task, transitions):
@@ -330,7 +333,7 @@ def compile_workflow(briefs, document):
             "Handle questions, third parties, refusal, callback and human requests as the policy requires. "
             "Account and promise tools become available only after the bank confirms all identity checks. "
             "Never disclose account information before that. On failure or other early exit, complete required permitted records and close_call.",
-            [closing, success_transition("verify_identity", "all_verified", "collection")])
+            [closing, success_transition("verify_identity", gate_field, "collection")])
         nodes["collection"] = conversation("collection", TOOLS - {"verify_identity"},
             "Identity is verified by the bank. Continue without greeting or repeating security questions. "
             "Call get_account before stating any account facts. Follow all supplied rules for each product, "
@@ -371,7 +374,7 @@ def compile_workflow(briefs, document):
         nodes["calendar_setup"] = calendar_node(calendar, initial)
         workflow["initial_node"] = "calendar_setup"
     analysis = {"strategy": "lossless_policy_template_v1", "semantic_policy_extraction": False,
-        "builder_model_calls": 0, "identity_gate": "bank_all_verified" if gated else "dialogue_only",
+        "builder_model_calls": 0, "identity_gate": 'bank_'+gate_field,
         "calendar": calendar or {"status": "unsupported_definition_policy_only"},
         "deadline_bands": bands,
         "persuasion_limits": attempts,

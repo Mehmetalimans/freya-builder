@@ -88,8 +88,8 @@ class IntegrationRegressions(unittest.TestCase):
                          {'content': {'application/json': {'schema': {'properties': {'all_verified': None}}}}}):
             document = deepcopy(API)
             document['paths']['/verify_identity']['post']['responses']['200'] = response
-            wf, analysis = compile_workflow([('policy', 'Use supplied policy.')], document)
-            self.assertEqual(analysis['identity_gate'], 'dialogue_only')
+            with self.assertRaises(ContractError):
+                compile_workflow([('policy', 'Use supplied policy.')], document)
 
     def test_null_required_is_rejected_with_contract_error(self):
         document = deepcopy(API)

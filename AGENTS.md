@@ -1,5 +1,11 @@
 # Ekip çalışma talimatı
 
+11 Ekim güncel kullanıcı kararı: 100 USD harcama sınırı kaldırıldı; mevcut
+Freya deneme kredileri verimli testlerde kullanılabilir. Eski 100 USD/20 USD
+tampon metinleri tarihsel yetkiye aittir. Kredi satın alma veya dış model
+harcaması talep edilmedi. Tek workspace simülasyonu, kayıt, gizli veri koruması
+ve belirsiz işin uzlaştırılması kuralları geçerlidir.
+
 Önce `README.md`, `docs/hackathon-rules.md`, `docs/contracts.md` ve
 `docs/tasks.md` dosyalarını oku; değişiklikten önce `git status` kontrol et.
 Bu dosyadaki kurallar insanın güncel talimatlarının yerini almaz.

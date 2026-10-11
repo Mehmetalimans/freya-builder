@@ -1,3 +1,3 @@
 """Reproducible Freya hackathon builder, based on official kit v3."""
 
-__version__ = "0.1.14"
+__version__ = "0.1.15"

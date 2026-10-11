@@ -150,11 +150,9 @@ class CompilerTests(unittest.TestCase):
         tool = next(t for t in wf["nodes"]["collection"]["tools"] if t["function"]["name"] == "create_promise")
         self.assertIn("reference_code", tool["function"]["parameters"]["properties"]["body"]["required"])
 
-    def test_missing_verification_signal_is_explicit_fallback(self):
+    def test_missing_verification_signal_fails_closed(self):
         self.doc["paths"]["/verify_identity"]["post"]["responses"]["200"]["content"]["application/json"]["schema"]["properties"].pop("all_verified")
-        wf, analysis = self.compile()
-        self.assertEqual(analysis["identity_gate"], "dialogue_only")
-        self.assertEqual(wf["nodes"]["calendar_setup"]["passthrough_default_transition"], "conversation")
+        with self.assertRaises(ContractError): self.compile()
 
     def test_unknown_close_success_signal_fails(self):
         self.doc["paths"]["/close_call"]["post"]["responses"]["200"]["content"]["application/json"]["schema"]["properties"].pop("ok")

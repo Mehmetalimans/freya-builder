@@ -13,6 +13,15 @@ from test_builder import temporary_directory
 
 
 class AuditBoundaries(unittest.TestCase):
+    def test_alternative_bank_completion_field_is_used_without_a_local_counter(self):
+        api=json.loads((KIT/'tools/openapi.json').read_text())
+        props=api['paths']['/verify_identity']['post']['responses']['200']['content']['application/json']['schema']['properties']
+        props['identity_complete']=props.pop('all_verified')
+        wf,analysis=compile_workflow([('policy','Follow bank confirmation before account access.')],api)
+        self.assertEqual(analysis['identity_gate'],'bank_identity_complete')
+        self.assertIn('identity_complete',json.dumps(wf['nodes']['identity']['transitions']))
+        self.assertNotIn('identity_verified_count',json.dumps(wf))
+
     def setUp(self):
         self.api = json.loads((KIT/'tools/openapi.json').read_text())
         self.wf, _ = compile_workflow([('policy', (KIT/'briefs/brief-a.md').read_text())], self.api)
