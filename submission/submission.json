@@ -1,0 +1,19 @@
+{
+  "team": "Noble Einstein",
+  "members": [
+    {
+      "name": "Mehmet Ali Mansuroğlu",
+      "email": "mmansuroglu24@ku.edu.tr"
+    },
+    {
+      "name": "Miraç Birlik",
+      "email": "mbirlik24@ku.edu.tr"
+    }
+  ],
+  "repo": "https://github.com/Mehmetalimans/freya-builder",
+  "commit": "56fd76088d4da12318829cea8e2ce8a71d6d53d2",
+  "run_command": "python builder/build.py {case_folder} {mock_url}",
+  "workflow": "submission/workflow.json",
+  "trace": "submission/builder.trace.jsonl",
+  "mock_url": "https://freya-final-bank.freya-final-bank-mock.workers.dev"
+}
