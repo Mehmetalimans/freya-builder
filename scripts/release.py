@@ -12,7 +12,7 @@ from builder import __version__
 
 def files():
     result = []
-    for folder in ("builder", "tests", "scripts", "docs", "starter-v3"):
+    for folder in ("builder", "tests", "scripts", "docs", "briefs", "starter-v3"):
         result.extend(p for p in (ROOT / folder).rglob("*") if p.is_file()
                       and not set(p.relative_to(ROOT).parts) & {"__pycache__", "results", "traces", "freya_docs"}
                       and p.suffix in {".py", ".md", ".json"})
@@ -21,7 +21,7 @@ def files():
     result.extend(p for p in (ROOT / ".github").rglob("*") if p.is_file() and p.suffix in {".md", ".yml", ".yaml"})
     result.extend(ROOT / "evidence" / name for name in ("hackathon.txt", "build-the-builder-v3.zip"))
     result.extend(ROOT / "reports" / name for name in ("first-live-evaluation.json", "extended-evaluation.json",
-                  "mirac-review-regressions.json", "live-validation.json", "live-pause.json", "history/mirac-7dc5e56-verification.json")
+                  "mirac-review-regressions.json", "live-validation.json", "live-pause.json", "approved-quick-evaluation.json", "history/mirac-7dc5e56-verification.json")
                   if (ROOT / "reports" / name).exists())
     return sorted(set(result))
 

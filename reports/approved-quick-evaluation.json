@@ -1,0 +1,170 @@
+{
+  "scope": "Public practice only; not hidden final benchmark",
+  "cost_note": "Balance snapshots can include other workspace activity; actual invoices are unknown.",
+  "evaluations": [
+    {
+      "run_id": "20261011T165535Z-286a45ad",
+      "builder_version": "0.1.15",
+      "workflow_sha256": "b901ea4cf296055065873a35e81512202cf3703392f8250e954d30cfcbeb0703",
+      "platform_version": 14,
+      "status": "measured",
+      "brief": "A",
+      "split": "dev",
+      "reps": 1,
+      "style": null,
+      "case_ids": [
+        "PUB-03",
+        "PUB-07"
+      ],
+      "seconds": 91.625,
+      "benchmark_success": 1.0,
+      "credits_before": {
+        "creditsLeft": 481.856,
+        "creditUsdRate": 0.5,
+        "totalCreditsUsed": 27.7409
+      },
+      "credits_after": {
+        "creditsLeft": 481.6731,
+        "creditUsdRate": 0.5,
+        "totalCreditsUsed": 28.0192
+      },
+      "observed_balance_delta_usd": 0.09145,
+      "actual_cost_usd": null,
+      "simulations": [
+        {
+          "simulation_id": "e414115e-4619-4120-b60e-097006642f12",
+          "iteration_id": "35944c88-a2b5-4d2b-a341-b94d2f17c4d5",
+          "status": "completed"
+        }
+      ],
+      "recovered_read_only": false,
+      "tool_telemetry": {
+        "calls_observed": 2,
+        "completions_including_workflow_end": 16,
+        "failed_result_events": 0
+      },
+      "customer_sentiment": {
+        "status": "unavailable_no_sentiment_labels",
+        "total_call_runs": 2,
+        "labeled_calls": 0,
+        "unlabeled_calls": 2,
+        "buckets": {
+          "very-unhappy": 0,
+          "unhappy": 0,
+          "neutral": 0,
+          "happy": 0,
+          "very-happy": 0
+        },
+        "happy_fraction_of_labeled": null,
+        "note": "Missing labels are not neutral or unhappy. Platform labels are not a customer survey or benchmark score."
+      },
+      "passed": 2,
+      "total": 2,
+      "successful_call_runs": 2,
+      "total_call_runs": 2,
+      "cases": [
+        {
+          "id": "PUB-03",
+          "family": "Identity",
+          "passes": 1,
+          "runs": 1,
+          "pass": true
+        },
+        {
+          "id": "PUB-07",
+          "family": "Dates",
+          "passes": 1,
+          "runs": 1,
+          "pass": true
+        }
+      ],
+      "failures": [],
+      "latency": {
+        "calls_observed": 2,
+        "worst_turn_seconds": 15.6
+      }
+    },
+    {
+      "run_id": "20261011T165752Z-f7b53d56",
+      "builder_version": "0.1.15",
+      "workflow_sha256": "b901ea4cf296055065873a35e81512202cf3703392f8250e954d30cfcbeb0703",
+      "platform_version": 14,
+      "status": "measured",
+      "brief": "A",
+      "split": "holdout",
+      "reps": 1,
+      "style": null,
+      "case_ids": [
+        "PUB-09",
+        "PUB-10"
+      ],
+      "seconds": 67.891,
+      "benchmark_success": 1.0,
+      "credits_before": {
+        "creditsLeft": 481.6731,
+        "creditUsdRate": 0.5,
+        "totalCreditsUsed": 28.0192
+      },
+      "credits_after": {
+        "creditsLeft": 481.5331,
+        "creditUsdRate": 0.5,
+        "totalCreditsUsed": 28.2064
+      },
+      "observed_balance_delta_usd": 0.07,
+      "actual_cost_usd": null,
+      "simulations": [
+        {
+          "simulation_id": "d5b7fe7b-229f-43b7-9108-e60e5164e1e3",
+          "iteration_id": "2c3fbb0f-b70f-485f-91ae-4c0e8677223e",
+          "status": "completed"
+        }
+      ],
+      "recovered_read_only": false,
+      "tool_telemetry": {
+        "calls_observed": 2,
+        "completions_including_workflow_end": 16,
+        "failed_result_events": 1
+      },
+      "customer_sentiment": {
+        "status": "unavailable_no_sentiment_labels",
+        "total_call_runs": 2,
+        "labeled_calls": 0,
+        "unlabeled_calls": 2,
+        "buckets": {
+          "very-unhappy": 0,
+          "unhappy": 0,
+          "neutral": 0,
+          "happy": 0,
+          "very-happy": 0
+        },
+        "happy_fraction_of_labeled": null,
+        "note": "Missing labels are not neutral or unhappy. Platform labels are not a customer survey or benchmark score."
+      },
+      "passed": 2,
+      "total": 2,
+      "successful_call_runs": 2,
+      "total_call_runs": 2,
+      "cases": [
+        {
+          "id": "PUB-09",
+          "family": "Restructuring",
+          "passes": 1,
+          "runs": 1,
+          "pass": true
+        },
+        {
+          "id": "PUB-10",
+          "family": "Tool failure",
+          "passes": 1,
+          "runs": 1,
+          "pass": true
+        }
+      ],
+      "failures": [],
+      "latency": {
+        "calls_observed": 2,
+        "worst_turn_seconds": 5.2
+      }
+    }
+  ]
+}

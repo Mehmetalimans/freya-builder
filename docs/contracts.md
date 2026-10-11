@@ -139,3 +139,8 @@ Ekip raporuna göre B public vakaları kullanılmıştır. `--split holdout` dos
 seçimi tarihsel ayrımı korur; ekip genelinde veri bağımsızlığını garanti etmez.
 B tekrarları regresyon olarak raporlanmalı; genelleme için kullanılmamış veri
 geçmişi ayrıca doğrulanmalıdır.
+
+0.1.15 kimlik sözleşmesi: doğrulama endpoint'i all_verified veya identity_complete
+alanını boolean olarak bildirmelidir. Yerel sayaç banka doğrulaması yerine
+geçmez; tamamlanma alanı olmayan şema fail closed reddedilir. C/D/E sentetik
+şemaları yalnız derleme uyumluluğu içindir; resmî API özellikleri sayılmaz.

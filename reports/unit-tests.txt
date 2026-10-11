@@ -1,8 +1,11 @@
-{"status": "offline_validated", "run_directory": "C:\\Users\\asus\\.codex\\.chatgpt-projects\\g-p-6aca2978a33481919b0eeebee0f0aae4\\freya-builder\\dist\\clean-62e00f26\\runs\\test-temp\\tmpl0dnvqww\\20261010T214840Z-c99ec2f8", "error": null, "error_type": null}
+{"status": "offline_validated", "run_directory": "C:\\Users\\asus\\.codex\\.chatgpt-projects\\g-p-6aca2978a33481919b0eeebee0f0aae4\\freya-builder\\dist\\clean-e7e119a8\\runs\\test-temp\\tmp_u3xo_il\\20261011T170009Z-827e1e73", "error": null, "error_type": null}
+test_alternative_bank_completion_field_is_used_without_a_local_counter (test_audit_fixes.AuditBoundaries.test_alternative_bank_completion_field_is_used_without_a_local_counter) ... ok
 test_array_products_use_actual_lateness_and_missing_values_do_not_become_zero (test_audit_fixes.AuditBoundaries.test_array_products_use_actual_lateness_and_missing_values_do_not_become_zero) ... ok
 test_calendar_requires_explicit_workdays (test_audit_fixes.AuditBoundaries.test_calendar_requires_explicit_workdays) ... ok
 test_readback_checks_behavior_not_only_prompt (test_audit_fixes.AuditBoundaries.test_readback_checks_behavior_not_only_prompt) ... ok
 test_version_binding_accepts_normalized_export_but_rejects_stale_or_unpublished (test_audit_fixes.AuditBoundaries.test_version_binding_accepts_normalized_export_but_rejects_stale_or_unpublished) ... ok
+test_new_note_and_transfer_values_are_present_in_the_supplied_fixture_contract (test_brief_cde_matrix.SyntheticPolicies.test_new_note_and_transfer_values_are_present_in_the_supplied_fixture_contract) ... ok
+test_preserves_quoted_policy_and_explicit_attempts_without_public_defaults (test_brief_cde_matrix.SyntheticPolicies.test_preserves_quoted_policy_and_explicit_attempts_without_public_defaults) ... ok
 test_all_seven_tools_and_schema_enums (test_builder.CompilerTests.test_all_seven_tools_and_schema_enums) ... ok
 test_arbitrary_holidays_extracted_from_brief (test_builder.CompilerTests.test_arbitrary_holidays_extracted_from_brief) ... ok
 test_calendar_counts_after_today_and_crosses_holiday_year_boundary (test_builder.CompilerTests.test_calendar_counts_after_today_and_crosses_holiday_year_boundary) ... ok
@@ -20,7 +23,7 @@ test_external_and_cyclic_refs_rejected (test_builder.CompilerTests.test_external
 test_full_policy_and_no_test_customer_in_artifact (test_builder.CompilerTests.test_full_policy_and_no_test_customer_in_artifact) ... ok
 test_identity_tools_unavailable_before_bank_verification (test_builder.CompilerTests.test_identity_tools_unavailable_before_bank_verification) ... ok
 test_local_ref_resolution (test_builder.CompilerTests.test_local_ref_resolution) ... ok
-test_missing_verification_signal_is_explicit_fallback (test_builder.CompilerTests.test_missing_verification_signal_is_explicit_fallback) ... ok
+test_missing_verification_signal_fails_closed (test_builder.CompilerTests.test_missing_verification_signal_fails_closed) ... ok
 test_offer_calculation_uses_input_bands_and_each_account_product (test_builder.CompilerTests.test_offer_calculation_uses_input_bands_and_each_account_product) ... ok
 test_openapi_with_null_and_omitted_documentation_fields (test_builder.CompilerTests.test_openapi_with_null_and_omitted_documentation_fields) ... ok
 test_raw_memo_and_overrides_are_preserved_in_order (test_builder.CompilerTests.test_raw_memo_and_overrides_are_preserved_in_order) ... ok
@@ -103,11 +106,15 @@ test_unrecognized_calendar_does_not_invent_weekdays_or_holidays (test_integratio
 test_unseen_policy_has_no_stale_bank_dates_or_numeric_rules (test_integration_regressions.IntegrationRegressions.test_unseen_policy_has_no_stale_bank_dates_or_numeric_rules) ... ok
 test_attempt_count_is_independent_of_deadline_length (test_policy_limits.PolicyLimitsTests.test_attempt_count_is_independent_of_deadline_length) ... ok
 test_missing_or_ambiguous_limit_is_not_guessed (test_policy_limits.PolicyLimitsTests.test_missing_or_ambiguous_limit_is_not_guessed) ... ok
+test_existing_credit_mode_requires_authorization_and_positive_balance (test_result_evidence.EvidenceTests.test_existing_credit_mode_requires_authorization_and_positive_balance) ... ok
 test_measured_result_cannot_be_recovered_again_even_if_pause_metadata_exists (test_result_evidence.EvidenceTests.test_measured_result_cannot_be_recovered_again_even_if_pause_metadata_exists) ... ok
+test_reconciliation_never_accepts_active_unknown_or_wrong_version_calls (test_result_evidence.EvidenceTests.test_reconciliation_never_accepts_active_unknown_or_wrong_version_calls) ... ok
 test_recovery_rejects_missing_or_duplicate_repetitions_before_network (test_result_evidence.EvidenceTests.test_recovery_rejects_missing_or_duplicate_repetitions_before_network) ... ok
+test_repeating_a_verified_answer_cannot_forge_bank_completion (test_result_evidence.EvidenceTests.test_repeating_a_verified_answer_cannot_forge_bank_completion) ... ok
+test_terminal_reconciliation_preserves_inconclusive_and_requires_quiet_interval (test_result_evidence.EvidenceTests.test_terminal_reconciliation_preserves_inconclusive_and_requires_quiet_interval) ... ok
 test_unlabeled_call_is_not_counted_as_neutral_and_empty_rate_is_null (test_result_evidence.EvidenceTests.test_unlabeled_call_is_not_counted_as_neutral_and_empty_rate_is_null) ... ok
 
 ----------------------------------------------------------------------
-Ran 107 tests in 0.568s
+Ran 114 tests in 0.443s
 
 OK

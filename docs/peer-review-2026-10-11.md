@@ -70,4 +70,7 @@ raporlanır; devam eden çağrıların bittiği varsayılmaz. Etkinliğin kayıt
 takviminde gizli brief'ler bugün 20:00 İstanbul'da açılıyor; kod düzeltmeleri
 ilk bölümde sabitlenmeli, gizli brief'ten kural/değer koda eklenmemeli.
 
-Uygulama kullanıcının açık onayını bekliyor.
+Tarihsel plan kullanıcı tarafından onaylandı. Eski 100 USD sınırı ayrıca
+kaldırıldı; mevcut workspace deneme kredisine izin verildi. Uygulama 0.1.15'te
+tamamlandı; son canlı ölçüm aşaması kullanıcı tarafından beş dakikaya kısaltıldı.
+Gerçek sonuç ve kalan sınırlamalar [approved-quick-checks.md](approved-quick-checks.md).

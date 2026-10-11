@@ -60,6 +60,13 @@ tamamlandı: **PUB-01 1/1 geçti**, simülasyon 41 saniye, gözlenen bakiye fark
 
 ## Sıradaki çalışma sırası
 
+11 Ekim güncellemesi: kritik kimlik/transfer/kayıt/bütçe düzeltmeleri 0.1.15'te
+uygulandı, Miraç'ın 3d731be kaydı birleştirildi. 114 temiz ortam testi geçti.
+Kullanıcı son canlı turu beş dakikaya indirdi; iki hedefli A vakasıyla
+başlandı. Güncel durum [approved-quick-checks.md](approved-quick-checks.md).
+Önceki bakiye ve sürüm bilgileri tarihsel kayıttır. Sıradaki öncelik yeni resmî
+girdileri sözleşmeye göre işlemek; gizli değerlere göre kaynak kodu ayarlamamak.
+
 1. İş bölümü PR'si açıldı; `mbirlik24` yazma erişimi doğrulandı. Her bilgisayarda ayrı klon/dal ve PR incelemesi.
 2. API dağıtımı tamam. Kullanıcı bu oturumda test operatörü olarak asistanı seçti;
    arkadaş aynı anda simülasyon başlatmamalı. Banka anahtarı sabit ve yerel tutulmalı.

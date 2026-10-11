@@ -1,4 +1,17 @@
-# Freya builder 0.1.13 — son public doğrulama
+# Freya builder 0.1.15
+
+11 Ekim onaylı düzeltme: Miraç'ın `3d731be` değişiklikleri mevcut çalışmalar
+korunarak birleştirildi. Bankanın gerçek kimlik doğrulama bayrağı korunur;
+transfer kuyruğu kapanış nedeni sayılmaz; kayıt bildirimi korunur. 114 test
+temiz Python 3.12.14 ortamında geçti; A/B üretimleri tekrarlandığında hash'ler
+eşit çıktı. C/D/E sentetik örnekleri yalnız derleme testidir, benchmark değildir.
+[Güncel uygulama ve canlı ölçüm](docs/approved-quick-checks.md).
+
+Kullanıcı eski 100 USD sınırını kaldırdı: mevcut workspace deneme kredisi
+verimli kullanılabilir. Kredi satın alma veya dış model API harcaması bu izne
+dahil değildir. Tek workspace simülasyonu ve PR inceleme düzeni sürer.
+
+## Önceki sürümlerin ölçümleri
 
 11 Ekim'de kullanıcı son testleri sürdürdü. Miraç'ın son üç commit'i
 birleştirildi, politika varsayımları düzeltildi ve nazik/kısa müşteri iletişimi
