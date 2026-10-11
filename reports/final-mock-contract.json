@@ -1,0 +1,4949 @@
+{
+  "status": "passed",
+  "mock_url": "https://freya-final-bank.freya-final-bank-mock.workers.dev",
+  "case_sha256": "2fc1892102853f0027f00ca02a4bac275b1676016bea14fca677f71566b5cf7b",
+  "fixtures_sha256": "4526d840b14d670ba6353039a0793d37d49e7fa8d8d9a40a70de7670ee2d0fc7",
+  "checked_at": "2026-10-11T17:54:10.243Z",
+  "total": 617,
+  "failed": 0,
+  "results": [
+    {
+      "id": "90000001/cards.list/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.33656179999999997
+    },
+    {
+      "id": "90000001/statement.week.get/540000******1234",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.3134278
+    },
+    {
+      "id": "90000001/statement.week.decide/540000******1234/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.4263776
+    },
+    {
+      "id": "90000001/statement.week.decide/540000******1234/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.11541639999999995
+    },
+    {
+      "id": "90000001/statement.week.change/540000******1234/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08055430000000001
+    },
+    {
+      "id": "90000001/statement.week.change/540000******1234/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09323410000000001
+    },
+    {
+      "id": "90000001/statement.week.change/540000******1234/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.11987170000000004
+    },
+    {
+      "id": "90000001/contact.email.get/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.10998799999999995
+    },
+    {
+      "id": "90000001/statement.week.decide/540000******1234/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.37394749999999993
+    },
+    {
+      "id": "90000001/statement.pdf.send/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07879470000000004
+    },
+    {
+      "id": "92030487/cards.list/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08907580000000007
+    },
+    {
+      "id": "92030487/cards.balance/540000******4253",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08166319999999996
+    },
+    {
+      "id": "92030487/cards.balance/545000******4253",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07778739999999994
+    },
+    {
+      "id": "92030487/cards.balance/540000******6184",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.10106709999999998
+    },
+    {
+      "id": "92030487/statement.week.get/540000******4253",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07592279999999994
+    },
+    {
+      "id": "92030487/statement.week.get/545000******4253",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08677930000000003
+    },
+    {
+      "id": "92030487/cards.balance/540000******8870",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.1647206
+    },
+    {
+      "id": "92030487/statement.week.get/540000******6184",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.10398110000000008
+    },
+    {
+      "id": "92030487/statement.week.get/540000******8870",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.10926919999999996
+    },
+    {
+      "id": "92030487/statement.week.decide/540000******4253/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07597360000000003
+    },
+    {
+      "id": "92030487/statement.week.decide/540000******4253/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.13061199999999998
+    },
+    {
+      "id": "92030487/statement.week.decide/540000******4253/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.11911589999999979
+    },
+    {
+      "id": "92030487/statement.week.decide/545000******4253/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09550839999999994
+    },
+    {
+      "id": "92030487/statement.week.decide/545000******4253/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.10277170000000001
+    },
+    {
+      "id": "92030487/statement.week.decide/540000******6184/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08454660000000012
+    },
+    {
+      "id": "92030487/statement.week.decide/545000******4253/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08871229999999991
+    },
+    {
+      "id": "92030487/statement.week.decide/540000******6184/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07615200000000004
+    },
+    {
+      "id": "90000001/cards.balance/540000******1234",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 1.2603594
+    },
+    {
+      "id": "92030487/statement.week.decide/540000******6184/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0764547
+    },
+    {
+      "id": "92030487/statement.week.decide/540000******8870/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08613540000000011
+    },
+    {
+      "id": "92030487/statement.week.decide/540000******8870/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07553610000000004
+    },
+    {
+      "id": "92030487/statement.week.decide/540000******8870/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08156410000000006
+    },
+    {
+      "id": "92030487/statement.week.change/540000******4253/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0749686999999999
+    },
+    {
+      "id": "92030487/statement.week.change/540000******4253/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0759579000000001
+    },
+    {
+      "id": "92030487/statement.week.change/540000******4253/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08960609999999997
+    },
+    {
+      "id": "92030487/statement.week.change/545000******4253/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0826857
+    },
+    {
+      "id": "92030487/statement.week.change/545000******4253/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07658729999999991
+    },
+    {
+      "id": "92030487/statement.week.change/545000******4253/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07752839999999991
+    },
+    {
+      "id": "92030487/statement.week.change/540000******6184/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08693280000000005
+    },
+    {
+      "id": "92030487/statement.week.change/540000******6184/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08237439999999992
+    },
+    {
+      "id": "92030487/statement.week.change/540000******6184/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07375150000000008
+    },
+    {
+      "id": "92030487/statement.week.change/540000******8870/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07927299999999991
+    },
+    {
+      "id": "92030487/statement.week.change/540000******8870/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09346550000000002
+    },
+    {
+      "id": "92030487/statement.week.change/540000******8870/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08016529999999988
+    },
+    {
+      "id": "92030487/contact.email.get/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07397550000000001
+    },
+    {
+      "id": "92030487/statement.pdf.send/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0775041000000001
+    },
+    {
+      "id": "92122831/cards.balance/540000******0411",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07899700000000007
+    },
+    {
+      "id": "92122831/statement.week.get/540000******0411",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07687509999999997
+    },
+    {
+      "id": "92122831/cards.list/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09352829999999994
+    },
+    {
+      "id": "92122831/statement.week.decide/540000******0411/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08352409999999987
+    },
+    {
+      "id": "92122831/statement.week.decide/540000******0411/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07630740000000015
+    },
+    {
+      "id": "92122831/statement.week.decide/540000******0411/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08410419999999999
+    },
+    {
+      "id": "92122831/statement.week.change/540000******0411/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08955670000000009
+    },
+    {
+      "id": "92122831/statement.week.change/540000******0411/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07643590000000017
+    },
+    {
+      "id": "92122831/statement.week.change/540000******0411/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.081106
+    },
+    {
+      "id": "92122831/contact.email.get/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07861550000000012
+    },
+    {
+      "id": "92122831/statement.pdf.send/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0865130999999999
+    },
+    {
+      "id": "92220795/cards.list/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07660500000000002
+    },
+    {
+      "id": "92220795/cards.balance/540000******3201",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0790664999999999
+    },
+    {
+      "id": "92220795/cards.balance/540000******3202",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07794910000000005
+    },
+    {
+      "id": "92220795/statement.week.get/540000******3202",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07726199999999994
+    },
+    {
+      "id": "92220795/statement.week.get/540000******3201",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.10316500000000019
+    },
+    {
+      "id": "92220795/statement.week.decide/540000******3201/1",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07888679999999999
+    },
+    {
+      "id": "92220795/statement.week.decide/540000******3201/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07363640000000009
+    },
+    {
+      "id": "92220795/statement.week.decide/540000******3201/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07338669999999979
+    },
+    {
+      "id": "92220795/statement.week.decide/540000******3202/1",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09305370000000016
+    },
+    {
+      "id": "92220795/statement.week.decide/540000******3202/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08099269999999979
+    },
+    {
+      "id": "92220795/statement.week.decide/540000******3202/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07467470000000002
+    },
+    {
+      "id": "92220795/statement.week.change/540000******3201/1",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0780295000000001
+    },
+    {
+      "id": "92220795/statement.week.change/540000******3201/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08753900000000021
+    },
+    {
+      "id": "92220795/statement.week.change/540000******3202/1",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07508510000000024
+    },
+    {
+      "id": "92220795/statement.week.change/540000******3201/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08006939999999986
+    },
+    {
+      "id": "92220795/statement.week.change/540000******3202/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07531039999999985
+    },
+    {
+      "id": "92220795/contact.email.get/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07670749999999998
+    },
+    {
+      "id": "92220795/statement.pdf.send/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07807740000000013
+    },
+    {
+      "id": "92220795/statement.week.change/540000******3202/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08730430000000024
+    },
+    {
+      "id": "92311921/cards.list/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07578839999999991
+    },
+    {
+      "id": "92311921/statement.week.get/540000******1896",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.18581410000000007
+    },
+    {
+      "id": "92311921/statement.week.decide/540000******1896/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.18430479999999988
+    },
+    {
+      "id": "92311921/statement.week.decide/540000******1896/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.16053899999999977
+    },
+    {
+      "id": "92311921/statement.week.change/540000******1896/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0763139000000001
+    },
+    {
+      "id": "92311921/statement.week.decide/540000******1896/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07982359999999972
+    },
+    {
+      "id": "92311921/statement.week.change/540000******1896/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08884140000000025
+    },
+    {
+      "id": "92311921/statement.week.change/540000******1896/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07654550000000017
+    },
+    {
+      "id": "92311921/contact.email.get/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08387649999999985
+    },
+    {
+      "id": "92311921/statement.pdf.send/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08617640000000029
+    },
+    {
+      "id": "92335586/cards.list/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07482400000000007
+    },
+    {
+      "id": "92335586/cards.balance/540000******8501",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08218539999999984
+    },
+    {
+      "id": "92335586/statement.week.get/540000******8501",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08647960000000011
+    },
+    {
+      "id": "92335586/statement.week.decide/540000******8501/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08698030000000018
+    },
+    {
+      "id": "92335586/statement.week.decide/540000******8501/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0765650999999998
+    },
+    {
+      "id": "92335586/statement.week.decide/540000******8501/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08742549999999982
+    },
+    {
+      "id": "92335586/statement.week.change/540000******8501/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08669189999999981
+    },
+    {
+      "id": "92335586/statement.week.change/540000******8501/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08513449999999965
+    },
+    {
+      "id": "92335586/statement.week.change/540000******8501/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0876552999999999
+    },
+    {
+      "id": "92335586/contact.email.get/customer",
+      "pass": true,
+      "status": 500,
+      "expected_status": 500,
+      "body_equal": true,
+      "seconds": 0.07641319999999996
+    },
+    {
+      "id": "92335586/statement.pdf.send/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07849320000000035
+    },
+    {
+      "id": "92460108/cards.list/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08902149999999984
+    },
+    {
+      "id": "92460108/cards.balance/540000******8500",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08161619999999993
+    },
+    {
+      "id": "92460108/statement.week.get/540000******8500",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07939319999999998
+    },
+    {
+      "id": "92460108/statement.week.decide/540000******8500/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08885170000000016
+    },
+    {
+      "id": "92460108/statement.week.decide/540000******8500/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07780030000000034
+    },
+    {
+      "id": "92460108/statement.week.decide/540000******8500/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07847479999999996
+    },
+    {
+      "id": "92460108/statement.week.change/540000******8500/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08964959999999973
+    },
+    {
+      "id": "92460108/statement.week.change/540000******8500/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08373180000000002
+    },
+    {
+      "id": "92460108/statement.week.change/540000******8500/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08571360000000004
+    },
+    {
+      "id": "92460108/statement.pdf.send/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07430179999999972
+    },
+    {
+      "id": "92460108/contact.email.get/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.10584469999999965
+    },
+    {
+      "id": "93075404/cards.list/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08746489999999994
+    },
+    {
+      "id": "92311921/cards.balance/540000******1896",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 1.054984
+    },
+    {
+      "id": "93075404/cards.balance/540000******1401",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08424229999999988
+    },
+    {
+      "id": "93075404/cards.balance/540000******1403",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07857690000000002
+    },
+    {
+      "id": "93075404/cards.balance/540000******1402",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08759730000000036
+    },
+    {
+      "id": "93075404/statement.week.get/540000******1402",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07686720000000014
+    },
+    {
+      "id": "93075404/statement.week.get/540000******1403",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0818152
+    },
+    {
+      "id": "93075404/statement.week.decide/540000******1401/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08854329999999981
+    },
+    {
+      "id": "93075404/statement.week.decide/540000******1401/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07976690000000007
+    },
+    {
+      "id": "93075404/statement.week.decide/540000******1401/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08162339999999994
+    },
+    {
+      "id": "93075404/statement.week.decide/540000******1402/1",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09364579999999978
+    },
+    {
+      "id": "93075404/statement.week.decide/540000******1402/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07679040000000031
+    },
+    {
+      "id": "93075404/statement.week.decide/540000******1402/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08854410000000007
+    },
+    {
+      "id": "93075404/statement.week.decide/540000******1403/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0879036000000001
+    },
+    {
+      "id": "93075404/statement.week.decide/540000******1403/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08547040000000015
+    },
+    {
+      "id": "93075404/statement.week.decide/540000******1403/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07994420000000037
+    },
+    {
+      "id": "93075404/statement.week.change/540000******1401/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.10208889999999973
+    },
+    {
+      "id": "93075404/statement.week.change/540000******1401/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0784354000000003
+    },
+    {
+      "id": "93075404/statement.week.get/540000******1401",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.41483759999999986
+    },
+    {
+      "id": "93075404/statement.week.change/540000******1401/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07971140000000014
+    },
+    {
+      "id": "93075404/statement.week.change/540000******1402/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07593040000000019
+    },
+    {
+      "id": "93075404/statement.week.change/540000******1402/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07786850000000003
+    },
+    {
+      "id": "93075404/statement.week.change/540000******1402/1",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09476999999999998
+    },
+    {
+      "id": "93075404/statement.week.change/540000******1403/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07578139999999985
+    },
+    {
+      "id": "93075404/statement.week.change/540000******1403/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0801612
+    },
+    {
+      "id": "93075404/statement.week.change/540000******1403/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08251330000000007
+    },
+    {
+      "id": "93075404/contact.email.get/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08961720000000013
+    },
+    {
+      "id": "93075404/statement.pdf.send/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08281759999999985
+    },
+    {
+      "id": "93261864/cards.list/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07764409999999998
+    },
+    {
+      "id": "93261864/cards.balance/540000******7101",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08048810000000003
+    },
+    {
+      "id": "93261864/cards.balance/540000******7103",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07647400000000017
+    },
+    {
+      "id": "93261864/cards.balance/540000******7102",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09286259999999993
+    },
+    {
+      "id": "93261864/statement.week.get/540000******7101",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07767710000000033
+    },
+    {
+      "id": "93261864/statement.week.get/540000******7102",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09210979999999973
+    },
+    {
+      "id": "93261864/statement.week.get/540000******7103",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0809771999999998
+    },
+    {
+      "id": "93261864/statement.week.decide/540000******7101/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08695000000000028
+    },
+    {
+      "id": "93261864/statement.week.decide/540000******7101/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07979660000000012
+    },
+    {
+      "id": "93261864/statement.week.decide/540000******7101/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08334680000000026
+    },
+    {
+      "id": "93261864/statement.week.decide/540000******7102/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08521680000000015
+    },
+    {
+      "id": "93261864/statement.week.decide/540000******7102/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08636599999999998
+    },
+    {
+      "id": "93261864/statement.week.decide/540000******7102/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08024060000000009
+    },
+    {
+      "id": "93261864/statement.week.decide/540000******7103/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07761559999999917
+    },
+    {
+      "id": "93261864/statement.week.decide/540000******7103/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08396010000000023
+    },
+    {
+      "id": "93261864/statement.week.decide/540000******7103/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09067410000000017
+    },
+    {
+      "id": "93261864/statement.week.change/540000******7101/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07617799999999988
+    },
+    {
+      "id": "93261864/statement.week.change/540000******7101/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0746264000000001
+    },
+    {
+      "id": "93261864/statement.week.change/540000******7101/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08147450000000026
+    },
+    {
+      "id": "93261864/statement.week.change/540000******7102/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08772170000000006
+    },
+    {
+      "id": "93261864/statement.week.change/540000******7102/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0781885000000002
+    },
+    {
+      "id": "93261864/statement.week.change/540000******7103/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.10839719999999943
+    },
+    {
+      "id": "93261864/statement.week.change/540000******7103/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08997360000000026
+    },
+    {
+      "id": "93261864/statement.week.change/540000******7103/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0778176000000003
+    },
+    {
+      "id": "93635512/cards.list/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07684000000000014
+    },
+    {
+      "id": "93261864/contact.email.get/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09969679999999971
+    },
+    {
+      "id": "93261864/statement.pdf.send/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09478319999999985
+    },
+    {
+      "id": "93635512/cards.balance/540000******7201",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08091969999999947
+    },
+    {
+      "id": "93261864/statement.week.change/540000******7102/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.3482046999999993
+    },
+    {
+      "id": "93635512/cards.balance/540000******7203",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09175969999999961
+    },
+    {
+      "id": "93635512/statement.week.get/540000******7201",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0788041000000003
+    },
+    {
+      "id": "93635512/statement.week.get/540000******7202",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07453809999999976
+    },
+    {
+      "id": "93635512/statement.week.get/540000******7203",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09378760000000057
+    },
+    {
+      "id": "93635512/statement.week.decide/540000******7201/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0800605000000005
+    },
+    {
+      "id": "93635512/statement.week.decide/540000******7201/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07553880000000027
+    },
+    {
+      "id": "93635512/statement.week.decide/540000******7201/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09996839999999975
+    },
+    {
+      "id": "93635512/statement.week.decide/540000******7202/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08091049999999995
+    },
+    {
+      "id": "93635512/statement.week.decide/540000******7202/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08164410000000044
+    },
+    {
+      "id": "93635512/statement.week.decide/540000******7202/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.10202849999999944
+    },
+    {
+      "id": "93635512/statement.week.decide/540000******7203/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08062740000000031
+    },
+    {
+      "id": "93635512/statement.week.decide/540000******7203/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07550590000000011
+    },
+    {
+      "id": "93635512/statement.week.change/540000******7201/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07477850000000034
+    },
+    {
+      "id": "93635512/statement.week.change/540000******7201/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07969350000000032
+    },
+    {
+      "id": "93635512/statement.week.decide/540000******7203/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09529910000000018
+    },
+    {
+      "id": "93635512/cards.balance/540000******7202",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.5126657999999997
+    },
+    {
+      "id": "93635512/statement.week.change/540000******7201/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07589090000000033
+    },
+    {
+      "id": "93635512/statement.week.change/540000******7202/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07721199999999953
+    },
+    {
+      "id": "93635512/statement.week.change/540000******7202/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08937890000000061
+    },
+    {
+      "id": "93635512/statement.week.change/540000******7202/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08233699999999954
+    },
+    {
+      "id": "93635512/statement.week.change/540000******7203/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07513040000000001
+    },
+    {
+      "id": "93635512/statement.week.change/540000******7203/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07681600000000072
+    },
+    {
+      "id": "93635512/contact.email.get/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08134680000000026
+    },
+    {
+      "id": "93635512/statement.week.change/540000******7203/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.10301819999999952
+    },
+    {
+      "id": "93635512/statement.pdf.send/customer",
+      "pass": true,
+      "status": 404,
+      "expected_status": 404,
+      "body_equal": true,
+      "seconds": 0.07508629999999994
+    },
+    {
+      "id": "93821776/cards.list/customer",
+      "pass": true,
+      "status": 404,
+      "expected_status": 404,
+      "body_equal": true,
+      "seconds": 0.08277860000000055
+    },
+    {
+      "id": "93821776/contact.email.get/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07795660000000043
+    },
+    {
+      "id": "93931069/cards.list/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08829930000000058
+    },
+    {
+      "id": "93931069/cards.balance/540000******3215",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0730625
+    },
+    {
+      "id": "93931069/cards.balance/546000******3215",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.1898096999999998
+    },
+    {
+      "id": "93931069/statement.week.get/540000******3215",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.1517586999999994
+    },
+    {
+      "id": "93931069/statement.week.decide/540000******3215/1",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.13215869999999996
+    },
+    {
+      "id": "93931069/statement.week.get/546000******3215",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.14096950000000016
+    },
+    {
+      "id": "93931069/statement.week.decide/546000******3215/1",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.1618736000000008
+    },
+    {
+      "id": "93931069/statement.week.decide/540000******3215/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.16290999999999986
+    },
+    {
+      "id": "93931069/statement.week.decide/540000******3215/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.16298379999999998
+    },
+    {
+      "id": "93931069/statement.week.decide/546000******3215/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.16283360000000086
+    },
+    {
+      "id": "93931069/statement.week.decide/546000******3215/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.13225709999999982
+    },
+    {
+      "id": "93931069/statement.week.change/540000******3215/1",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.13226580000000013
+    },
+    {
+      "id": "93931069/statement.week.change/540000******3215/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.13210189999999966
+    },
+    {
+      "id": "93931069/statement.week.change/540000******3215/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.13206739999999992
+    },
+    {
+      "id": "93931069/statement.week.change/546000******3215/1",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.14176790000000072
+    },
+    {
+      "id": "93931069/statement.week.change/546000******3215/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.14354289999999947
+    },
+    {
+      "id": "93931069/statement.week.change/546000******3215/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.1450553
+    },
+    {
+      "id": "93931069/contact.email.get/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.1604442999999992
+    },
+    {
+      "id": "94030575/cards.list/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0851136000000006
+    },
+    {
+      "id": "93931069/statement.pdf.send/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08793399999999929
+    },
+    {
+      "id": "94030575/cards.balance/548000******4253",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08430680000000029
+    },
+    {
+      "id": "94030575/cards.balance/540000******5501",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.1372426000000005
+    },
+    {
+      "id": "94030575/cards.balance/547000******4253",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.20546250000000055
+    },
+    {
+      "id": "94030575/statement.week.get/548000******4253",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.13734769999999935
+    },
+    {
+      "id": "94030575/statement.week.get/547000******4253",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.13716019999999934
+    },
+    {
+      "id": "94030575/statement.week.decide/548000******4253/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.17335840000000008
+    },
+    {
+      "id": "94030575/statement.week.get/540000******5501",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.17502399999999943
+    },
+    {
+      "id": "94030575/statement.week.decide/548000******4253/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.1747506000000003
+    },
+    {
+      "id": "94030575/statement.week.decide/548000******4253/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.17557020000000012
+    },
+    {
+      "id": "94030575/statement.week.decide/547000******4253/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.15066780000000016
+    },
+    {
+      "id": "94030575/statement.week.decide/547000******4253/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.15230059999999956
+    },
+    {
+      "id": "94030575/statement.week.decide/547000******4253/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.15102530000000025
+    },
+    {
+      "id": "94030575/statement.week.decide/540000******5501/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.15079309999999987
+    },
+    {
+      "id": "94030575/statement.week.decide/540000******5501/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07721460000000024
+    },
+    {
+      "id": "94030575/statement.week.decide/540000******5501/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07857330000000001
+    },
+    {
+      "id": "94030575/statement.week.change/548000******4253/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08347909999999956
+    },
+    {
+      "id": "94030575/statement.week.change/548000******4253/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.11142099999999937
+    },
+    {
+      "id": "94030575/statement.week.change/547000******4253/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08943650000000071
+    },
+    {
+      "id": "94030575/statement.week.change/548000******4253/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09267299999999977
+    },
+    {
+      "id": "94030575/statement.week.change/547000******4253/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08795380000000023
+    },
+    {
+      "id": "94030575/statement.week.change/547000******4253/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09129280000000017
+    },
+    {
+      "id": "94030575/statement.week.change/540000******5501/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0791278000000002
+    },
+    {
+      "id": "94030575/statement.week.change/540000******5501/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0810603000000001
+    },
+    {
+      "id": "94030575/statement.week.change/540000******5501/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08227880000000004
+    },
+    {
+      "id": "94030575/contact.email.get/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.11617389999999977
+    },
+    {
+      "id": "94339861/cards.list/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0803155999999999
+    },
+    {
+      "id": "94030575/statement.pdf.send/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08321290000000045
+    },
+    {
+      "id": "94339861/cards.balance/540000******1112",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07922770000000037
+    },
+    {
+      "id": "94339861/statement.week.decide/540000******1112/1",
+      "pass": true,
+      "status": 500,
+      "expected_status": 500,
+      "body_equal": true,
+      "seconds": 0.1022539999999999
+    },
+    {
+      "id": "94339861/statement.week.get/540000******1112",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.13551139999999942
+    },
+    {
+      "id": "94339861/statement.week.decide/540000******1112/3",
+      "pass": true,
+      "status": 500,
+      "expected_status": 500,
+      "body_equal": true,
+      "seconds": 0.13364350000000014
+    },
+    {
+      "id": "94339861/statement.week.decide/540000******1112/4",
+      "pass": true,
+      "status": 500,
+      "expected_status": 500,
+      "body_equal": true,
+      "seconds": 0.13396579999999994
+    },
+    {
+      "id": "94339861/statement.week.change/540000******1112/1",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0900628999999999
+    },
+    {
+      "id": "94339861/statement.week.change/540000******1112/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07947710000000006
+    },
+    {
+      "id": "94339861/contact.email.get/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07872269999999935
+    },
+    {
+      "id": "94339861/statement.week.change/540000******1112/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.12083709999999974
+    },
+    {
+      "id": "94339861/statement.pdf.send/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07840430000000015
+    },
+    {
+      "id": "94835408/cards.list/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.14950740000000043
+    },
+    {
+      "id": "94835408/cards.balance/540000******1111",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.14923260000000027
+    },
+    {
+      "id": "94835408/statement.week.get/540000******1111",
+      "pass": true,
+      "status": 500,
+      "expected_status": 500,
+      "body_equal": true,
+      "seconds": 0.11975730000000022
+    },
+    {
+      "id": "94835408/statement.week.decide/540000******1111/1",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09567010000000027
+    },
+    {
+      "id": "94835408/statement.week.change/540000******1111/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.10798419999999988
+    },
+    {
+      "id": "94835408/statement.week.decide/540000******1111/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.10900820000000022
+    },
+    {
+      "id": "94835408/statement.week.decide/540000******1111/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.10981840000000011
+    },
+    {
+      "id": "94835408/statement.week.change/540000******1111/1",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.12696259999999984
+    },
+    {
+      "id": "94835408/statement.pdf.send/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07491490000000067
+    },
+    {
+      "id": "94835408/contact.email.get/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07581910000000061
+    },
+    {
+      "id": "94835408/statement.week.change/540000******1111/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07685689999999977
+    },
+    {
+      "id": "94896459/cards.list/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09266240000000016
+    },
+    {
+      "id": "94896459/cards.balance/540000******7007",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07738349999999991
+    },
+    {
+      "id": "94896459/statement.week.decide/540000******7007/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07697139999999945
+    },
+    {
+      "id": "94896459/statement.week.get/540000******7007",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08007340000000022
+    },
+    {
+      "id": "94896459/statement.week.decide/540000******7007/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09401339999999982
+    },
+    {
+      "id": "94896459/statement.week.change/540000******7007/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07560770000000047
+    },
+    {
+      "id": "94896459/statement.week.decide/540000******7007/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08085039999999935
+    },
+    {
+      "id": "94896459/statement.week.change/540000******7007/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08132930000000033
+    },
+    {
+      "id": "94896459/statement.week.change/540000******7007/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09880349999999999
+    },
+    {
+      "id": "94896459/contact.email.get/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0786206000000002
+    },
+    {
+      "id": "94896459/statement.pdf.send/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07967770000000018
+    },
+    {
+      "id": "94907600/cards.list/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08379460000000018
+    },
+    {
+      "id": "94907600/statement.week.get/540000******7211",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08453300000000036
+    },
+    {
+      "id": "94907600/statement.week.decide/540000******7211/1",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07955140000000029
+    },
+    {
+      "id": "94907600/statement.week.decide/540000******7211/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07834900000000015
+    },
+    {
+      "id": "94907600/statement.week.decide/540000******7211/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08057980000000044
+    },
+    {
+      "id": "94907600/statement.week.change/540000******7211/1",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08253680000000077
+    },
+    {
+      "id": "94907600/statement.week.change/540000******7211/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07789560000000074
+    },
+    {
+      "id": "94907600/statement.week.change/540000******7211/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07741830000000027
+    },
+    {
+      "id": "94907600/contact.email.get/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07659099999999944
+    },
+    {
+      "id": "95004361/cards.list/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07645840000000044
+    },
+    {
+      "id": "95004361/statement.week.get/540000******2000",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0762450000000008
+    },
+    {
+      "id": "95004361/cards.balance/540000******2000",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07898679999999968
+    },
+    {
+      "id": "95004361/statement.week.decide/540000******2000/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07775799999999981
+    },
+    {
+      "id": "95004361/statement.week.decide/540000******2000/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07623109999999997
+    },
+    {
+      "id": "95004361/statement.week.decide/540000******2000/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07961620000000039
+    },
+    {
+      "id": "95004361/statement.week.change/540000******2000/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08184020000000056
+    },
+    {
+      "id": "95004361/statement.week.change/540000******2000/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07669610000000011
+    },
+    {
+      "id": "95004361/statement.week.change/540000******2000/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07912199999999939
+    },
+    {
+      "id": "95004361/contact.email.get/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.1051908000000003
+    },
+    {
+      "id": "95110230/cards.list/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0783710000000001
+    },
+    {
+      "id": "95110230/cards.balance/540000******7711",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08961179999999967
+    },
+    {
+      "id": "95110230/cards.balance/540000******7722",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.1446962999999996
+    },
+    {
+      "id": "95110230/statement.week.get/540000******7711",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.10381480000000011
+    },
+    {
+      "id": "95110230/statement.week.get/540000******7722",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0786137000000017
+    },
+    {
+      "id": "95110230/statement.week.decide/540000******7711/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08072750000000087
+    },
+    {
+      "id": "95004361/statement.pdf.send/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.38357949999999985
+    },
+    {
+      "id": "95110230/statement.week.decide/540000******7711/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07577319999999964
+    },
+    {
+      "id": "95110230/statement.week.decide/540000******7711/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07504150000000118
+    },
+    {
+      "id": "95110230/statement.week.decide/540000******7722/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09667170000000078
+    },
+    {
+      "id": "95110230/statement.week.decide/540000******7722/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09869770000000062
+    },
+    {
+      "id": "95110230/statement.week.decide/540000******7722/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0959964
+    },
+    {
+      "id": "95110230/statement.week.change/540000******7711/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.17139270000000034
+    },
+    {
+      "id": "95110230/statement.week.change/540000******7711/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.17346539999999913
+    },
+    {
+      "id": "95110230/statement.week.change/540000******7711/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.17328959999999824
+    },
+    {
+      "id": "95110230/statement.week.change/540000******7722/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07820169999999962
+    },
+    {
+      "id": "95110230/statement.week.change/540000******7722/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08188450000000011
+    },
+    {
+      "id": "95110230/statement.week.change/540000******7722/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08491259999999966
+    },
+    {
+      "id": "95813998/cards.list/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.1142502999999997
+    },
+    {
+      "id": "95110230/contact.email.get/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.12223879999999918
+    },
+    {
+      "id": "95110230/statement.pdf.send/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.11755299999999988
+    },
+    {
+      "id": "95813998/cards.balance/540000******1801",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07853479999999945
+    },
+    {
+      "id": "95813998/cards.balance/540000******1802",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07878169999999955
+    },
+    {
+      "id": "95813998/cards.balance/540000******1803",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0794421999999995
+    },
+    {
+      "id": "95813998/cards.balance/540000******1804",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.12599009999999908
+    },
+    {
+      "id": "95813998/cards.balance/541000******1805",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.1258793000000005
+    },
+    {
+      "id": "95813998/statement.week.get/540000******1801",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.1255741999999991
+    },
+    {
+      "id": "95813998/statement.week.get/540000******1802",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07328489999999874
+    },
+    {
+      "id": "95813998/statement.week.get/540000******1803",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08961380000000099
+    },
+    {
+      "id": "95813998/statement.week.get/540000******1804",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08980140000000028
+    },
+    {
+      "id": "95813998/statement.week.decide/540000******1801/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09227149999999892
+    },
+    {
+      "id": "95813998/statement.week.decide/540000******1801/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09240550000000075
+    },
+    {
+      "id": "95813998/statement.week.decide/540000******1802/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07949109999999927
+    },
+    {
+      "id": "95813998/statement.week.decide/540000******1801/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08170709999999963
+    },
+    {
+      "id": "95813998/statement.week.decide/540000******1802/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07821459999999934
+    },
+    {
+      "id": "95813998/statement.week.decide/540000******1802/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08284290000000147
+    },
+    {
+      "id": "95813998/statement.week.decide/540000******1803/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07985409999999865
+    },
+    {
+      "id": "95813998/statement.week.decide/540000******1803/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0773806999999997
+    },
+    {
+      "id": "95813998/statement.week.get/541000******1805",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.37959319999999935
+    },
+    {
+      "id": "95813998/statement.week.decide/540000******1803/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0782484000000004
+    },
+    {
+      "id": "95813998/statement.week.decide/540000******1804/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08066979999999967
+    },
+    {
+      "id": "95813998/statement.week.decide/540000******1804/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08728340000000026
+    },
+    {
+      "id": "95813998/statement.week.decide/540000******1804/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09338980000000083
+    },
+    {
+      "id": "95813998/statement.week.decide/541000******1805/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09149009999999907
+    },
+    {
+      "id": "95813998/statement.week.decide/541000******1805/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07373550000000069
+    },
+    {
+      "id": "95813998/statement.week.decide/541000******1805/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07766820000000008
+    },
+    {
+      "id": "95813998/statement.week.change/540000******1801/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0773020000000015
+    },
+    {
+      "id": "95813998/statement.week.change/540000******1801/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07772869999999966
+    },
+    {
+      "id": "95813998/statement.week.change/540000******1801/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07656230000000142
+    },
+    {
+      "id": "95813998/statement.week.change/540000******1802/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0783737000000001
+    },
+    {
+      "id": "95813998/statement.week.change/540000******1802/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07969930000000022
+    },
+    {
+      "id": "95813998/statement.week.change/540000******1802/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08064100000000143
+    },
+    {
+      "id": "95813998/statement.week.change/540000******1803/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0799411999999993
+    },
+    {
+      "id": "95813998/statement.week.change/540000******1803/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07733320000000095
+    },
+    {
+      "id": "95813998/statement.week.change/540000******1804/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07668029999999999
+    },
+    {
+      "id": "95813998/statement.week.change/540000******1803/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08439609999999993
+    },
+    {
+      "id": "95813998/statement.week.change/540000******1804/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08331430000000001
+    },
+    {
+      "id": "95813998/statement.week.change/541000******1805/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0796919999999991
+    },
+    {
+      "id": "95813998/statement.week.change/541000******1805/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07606400000000031
+    },
+    {
+      "id": "95813998/statement.week.change/541000******1805/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08068169999999918
+    },
+    {
+      "id": "95813998/statement.pdf.send/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07610469999999987
+    },
+    {
+      "id": "95813998/contact.email.get/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08111290000000008
+    },
+    {
+      "id": "95813998/statement.week.change/540000******1804/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.36311310000000047
+    },
+    {
+      "id": "95960044/cards.list/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07495370000000003
+    },
+    {
+      "id": "95960044/cards.balance/540000******3101",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07775250000000052
+    },
+    {
+      "id": "95960044/cards.balance/540000******3102",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07444490000000041
+    },
+    {
+      "id": "95960044/statement.week.get/540000******3102",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07715710000000035
+    },
+    {
+      "id": "95960044/statement.week.get/540000******3101",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08559259999999995
+    },
+    {
+      "id": "95960044/statement.week.decide/540000******3101/1",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07583539999999994
+    },
+    {
+      "id": "95960044/statement.week.decide/540000******3101/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0784411999999993
+    },
+    {
+      "id": "95960044/statement.week.decide/540000******3101/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07735349999999926
+    },
+    {
+      "id": "95960044/statement.week.decide/540000******3102/1",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07983759999999893
+    },
+    {
+      "id": "95960044/statement.week.decide/540000******3102/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0776856000000007
+    },
+    {
+      "id": "95960044/statement.week.decide/540000******3102/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08038810000000013
+    },
+    {
+      "id": "95960044/statement.week.change/540000******3101/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07622190000000045
+    },
+    {
+      "id": "95960044/statement.week.change/540000******3101/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07715860000000066
+    },
+    {
+      "id": "95960044/statement.week.change/540000******3102/1",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07726120000000082
+    },
+    {
+      "id": "95960044/statement.week.change/540000******3102/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07717740000000049
+    },
+    {
+      "id": "95960044/statement.week.change/540000******3102/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0789325000000008
+    },
+    {
+      "id": "95960044/contact.email.get/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07918579999999929
+    },
+    {
+      "id": "95960044/statement.pdf.send/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07590500000000065
+    },
+    {
+      "id": "96026000/cards.list/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07772699999999895
+    },
+    {
+      "id": "95960044/statement.week.change/540000******3101/1",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.3616641
+    },
+    {
+      "id": "96026000/statement.week.get/540000******1250",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.16126139999999942
+    },
+    {
+      "id": "96026000/cards.balance/540000******1250",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.1646771000000008
+    },
+    {
+      "id": "96026000/statement.week.decide/540000******1250/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.13424389999999947
+    },
+    {
+      "id": "96026000/statement.week.decide/540000******1250/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.14073149999999987
+    },
+    {
+      "id": "96026000/statement.week.decide/540000******1250/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.1425054
+    },
+    {
+      "id": "96026000/statement.week.change/540000******1250/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.14116660000000048
+    },
+    {
+      "id": "96026000/contact.email.get/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.13562860000000002
+    },
+    {
+      "id": "96026000/statement.week.change/540000******1250/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.13672429999999985
+    },
+    {
+      "id": "96026000/statement.week.change/540000******1250/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.13839099999999963
+    },
+    {
+      "id": "96026000/statement.pdf.send/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07614010000000053
+    },
+    {
+      "id": "96125950/cards.list/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07959680000000116
+    },
+    {
+      "id": "96125950/cards.balance/540000******7200",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08076690000000053
+    },
+    {
+      "id": "96125950/statement.week.get/540000******7200",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08451380000000062
+    },
+    {
+      "id": "96125950/statement.week.decide/540000******7200/1",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08138649999999871
+    },
+    {
+      "id": "96125950/statement.week.decide/540000******7200/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.15592330000000038
+    },
+    {
+      "id": "96125950/statement.week.decide/540000******7200/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07821559999999954
+    },
+    {
+      "id": "96125950/statement.week.change/540000******7200/1",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08330159999999887
+    },
+    {
+      "id": "96125950/statement.week.change/540000******7200/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07702090000000135
+    },
+    {
+      "id": "96125950/statement.week.change/540000******7200/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08104320000000007
+    },
+    {
+      "id": "96125950/contact.email.get/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08001490000000012
+    },
+    {
+      "id": "96158684/cards.balance/540000******1110",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.13434630000000106
+    },
+    {
+      "id": "96158684/cards.list/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.13842469999999957
+    },
+    {
+      "id": "96158684/statement.week.get/540000******1110",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.12984939999999914
+    },
+    {
+      "id": "96158684/statement.week.decide/540000******1110/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09154629999999997
+    },
+    {
+      "id": "96158684/statement.week.decide/540000******1110/1",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09279300000000149
+    },
+    {
+      "id": "96158684/statement.week.decide/540000******1110/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09174009999999908
+    },
+    {
+      "id": "96158684/statement.week.change/540000******1110/1",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.12619069999999918
+    },
+    {
+      "id": "96158684/statement.week.change/540000******1110/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.12680449999999838
+    },
+    {
+      "id": "96158684/statement.week.change/540000******1110/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.1276357000000007
+    },
+    {
+      "id": "96158684/contact.email.get/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07709079999999995
+    },
+    {
+      "id": "96158684/statement.pdf.send/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.19986200000000098
+    },
+    {
+      "id": "96451507/cards.list/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.19995370000000004
+    },
+    {
+      "id": "96451507/cards.balance/540000******1301",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.1255625999999993
+    },
+    {
+      "id": "96451507/statement.week.get/540000******1301",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0755515000000014
+    },
+    {
+      "id": "96451507/cards.balance/540000******1303",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07870780000000013
+    },
+    {
+      "id": "96451507/cards.balance/540000******1302",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08279719999999907
+    },
+    {
+      "id": "96451507/statement.week.get/540000******1302",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.11173430000000008
+    },
+    {
+      "id": "96451507/statement.week.get/540000******1303",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.11056150000000162
+    },
+    {
+      "id": "96451507/statement.week.decide/540000******1301/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.1079381999999987
+    },
+    {
+      "id": "96451507/statement.week.decide/540000******1301/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08996500000000014
+    },
+    {
+      "id": "96451507/statement.week.decide/540000******1302/1",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08936729999999989
+    },
+    {
+      "id": "96451507/statement.week.decide/540000******1301/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09064730000000054
+    },
+    {
+      "id": "96451507/statement.week.decide/540000******1302/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09304689999999936
+    },
+    {
+      "id": "96451507/statement.week.decide/540000******1303/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0924352999999992
+    },
+    {
+      "id": "96451507/statement.week.decide/540000******1302/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09345889999999964
+    },
+    {
+      "id": "96451507/statement.week.decide/540000******1303/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07803510000000097
+    },
+    {
+      "id": "96451507/statement.week.change/540000******1301/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07948840000000018
+    },
+    {
+      "id": "96451507/statement.week.decide/540000******1303/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08064849999999933
+    },
+    {
+      "id": "96451507/statement.week.change/540000******1301/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07499529999999868
+    },
+    {
+      "id": "96451507/statement.week.change/540000******1302/1",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07638790000000154
+    },
+    {
+      "id": "96451507/statement.week.change/540000******1301/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0780612000000001
+    },
+    {
+      "id": "96451507/statement.week.change/540000******1302/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07526200000000062
+    },
+    {
+      "id": "96451507/statement.week.change/540000******1303/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07558580000000074
+    },
+    {
+      "id": "96451507/statement.week.change/540000******1302/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08316259999999966
+    },
+    {
+      "id": "96451507/statement.week.change/540000******1303/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0767409000000007
+    },
+    {
+      "id": "96451507/contact.email.get/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.1154915000000001
+    },
+    {
+      "id": "96451507/statement.pdf.send/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09894310000000041
+    },
+    {
+      "id": "97073972/cards.list/customer",
+      "pass": true,
+      "status": 500,
+      "expected_status": 500,
+      "body_equal": true,
+      "seconds": 0.08806520000000091
+    },
+    {
+      "id": "96451507/statement.week.change/540000******1303/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.23353650000000015
+    },
+    {
+      "id": "97073972/cards.balance/540000******1201",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07988780000000043
+    },
+    {
+      "id": "97073972/cards.balance/540000******1203",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.10088409999999931
+    },
+    {
+      "id": "97073972/statement.week.get/540000******1201",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08113559999999961
+    },
+    {
+      "id": "97073972/cards.balance/540000******1202",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.16616669999999975
+    },
+    {
+      "id": "97073972/statement.week.get/540000******1202",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.081679900000001
+    },
+    {
+      "id": "97073972/statement.week.get/540000******1203",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07827030000000014
+    },
+    {
+      "id": "97073972/statement.week.decide/540000******1201/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08283890000000065
+    },
+    {
+      "id": "97073972/statement.week.decide/540000******1201/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07885620000000017
+    },
+    {
+      "id": "97073972/statement.week.decide/540000******1201/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07995359999999892
+    },
+    {
+      "id": "97073972/statement.week.decide/540000******1202/1",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08133940000000076
+    },
+    {
+      "id": "97073972/statement.week.decide/540000******1202/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07753260000000045
+    },
+    {
+      "id": "97073972/statement.week.decide/540000******1202/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08823229999999967
+    },
+    {
+      "id": "97073972/statement.week.decide/540000******1203/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08041389999999955
+    },
+    {
+      "id": "97073972/statement.week.decide/540000******1203/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07984079999999995
+    },
+    {
+      "id": "97073972/statement.week.decide/540000******1203/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08040700000000106
+    },
+    {
+      "id": "97073972/statement.week.change/540000******1201/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07878150000000096
+    },
+    {
+      "id": "97073972/statement.week.change/540000******1201/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07586319999999978
+    },
+    {
+      "id": "97073972/statement.week.change/540000******1201/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08252160000000003
+    },
+    {
+      "id": "97073972/statement.week.change/540000******1202/1",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08140530000000035
+    },
+    {
+      "id": "97073972/statement.week.change/540000******1202/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07528989999999976
+    },
+    {
+      "id": "97073972/statement.week.change/540000******1202/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07846060000000034
+    },
+    {
+      "id": "97073972/statement.week.change/540000******1203/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0871869999999999
+    },
+    {
+      "id": "97073972/statement.week.change/540000******1203/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0760712999999996
+    },
+    {
+      "id": "97073972/statement.week.change/540000******1203/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08820280000000093
+    },
+    {
+      "id": "97073972/contact.email.get/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.12316029999999956
+    },
+    {
+      "id": "97073972/statement.pdf.send/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.11945399999999973
+    },
+    {
+      "id": "97116902/cards.balance/540000******1602",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.11595510000000103
+    },
+    {
+      "id": "97116902/cards.balance/540000******1601",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.11915499999999883
+    },
+    {
+      "id": "97116902/statement.week.get/540000******1601",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.10673640000000159
+    },
+    {
+      "id": "97116902/statement.week.get/540000******1602",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.10575140000000101
+    },
+    {
+      "id": "97116902/statement.week.decide/540000******1601/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07983590000000004
+    },
+    {
+      "id": "97116902/statement.week.decide/540000******1601/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08532780000000094
+    },
+    {
+      "id": "97116902/cards.list/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.5714040000000005
+    },
+    {
+      "id": "97116902/statement.week.decide/540000******1601/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.19002250000000095
+    },
+    {
+      "id": "97116902/statement.week.decide/540000******1602/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.18439230000000134
+    },
+    {
+      "id": "97116902/statement.week.decide/540000******1602/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.1639987999999994
+    },
+    {
+      "id": "97116902/statement.week.change/540000******1601/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.16373010000000068
+    },
+    {
+      "id": "97116902/statement.week.decide/540000******1602/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.16570750000000042
+    },
+    {
+      "id": "97116902/statement.week.change/540000******1601/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0757548999999999
+    },
+    {
+      "id": "97116902/statement.week.change/540000******1601/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08194580000000133
+    },
+    {
+      "id": "97116902/statement.week.change/540000******1602/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08229349999999977
+    },
+    {
+      "id": "97116902/statement.week.change/540000******1602/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.12552190000000155
+    },
+    {
+      "id": "97116902/statement.pdf.send/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07606549999999879
+    },
+    {
+      "id": "97116902/contact.email.get/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.19502999999999884
+    },
+    {
+      "id": "97116902/statement.week.change/540000******1602/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.1963751000000011
+    },
+    {
+      "id": "97526380/cards.list/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.11289339999999902
+    },
+    {
+      "id": "97526380/cards.balance/540000******1101",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.11286629999999968
+    },
+    {
+      "id": "97526380/cards.balance/540000******1102",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.11247609999999986
+    },
+    {
+      "id": "97526380/statement.week.get/540000******1102",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09452260000000023
+    },
+    {
+      "id": "97526380/statement.week.get/540000******1101",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09562809999999991
+    },
+    {
+      "id": "97526380/statement.week.get/540000******1103",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.1095656999999992
+    },
+    {
+      "id": "97526380/statement.week.decide/540000******1101/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.11982430000000022
+    },
+    {
+      "id": "97526380/statement.week.decide/540000******1101/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08388460000000122
+    },
+    {
+      "id": "97526380/statement.week.decide/540000******1101/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.11963799999999901
+    },
+    {
+      "id": "97526380/statement.week.decide/540000******1102/1",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.10931700000000091
+    },
+    {
+      "id": "97526380/statement.week.decide/540000******1102/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.10268399999999929
+    },
+    {
+      "id": "97526380/statement.week.decide/540000******1102/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.14190129999999954
+    },
+    {
+      "id": "97526380/statement.week.decide/540000******1103/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.10418730000000141
+    },
+    {
+      "id": "97526380/statement.week.decide/540000******1103/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.10920110000000022
+    },
+    {
+      "id": "97526380/statement.week.decide/540000******1103/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.15583059999999932
+    },
+    {
+      "id": "97526380/statement.week.change/540000******1101/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09376559999999881
+    },
+    {
+      "id": "97526380/statement.week.change/540000******1101/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0790020999999997
+    },
+    {
+      "id": "97526380/statement.week.change/540000******1101/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.1322479999999996
+    },
+    {
+      "id": "97526380/cards.balance/540000******1103",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.8627965999999997
+    },
+    {
+      "id": "97526380/statement.week.change/540000******1102/1",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0974403999999995
+    },
+    {
+      "id": "97526380/statement.week.change/540000******1102/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07683859999999913
+    },
+    {
+      "id": "97526380/statement.week.change/540000******1103/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08552710000000116
+    },
+    {
+      "id": "97526380/statement.week.change/540000******1103/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08579669999999896
+    },
+    {
+      "id": "97526380/statement.week.change/540000******1103/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08692109999999957
+    },
+    {
+      "id": "97526380/contact.email.get/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08520299999999952
+    },
+    {
+      "id": "97526380/statement.pdf.send/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0829984000000004
+    },
+    {
+      "id": "97631186/cards.list/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07815829999999914
+    },
+    {
+      "id": "97526380/statement.week.change/540000******1102/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.39016030000000135
+    },
+    {
+      "id": "97631186/statement.week.get/540000******2020",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.090759399999999
+    },
+    {
+      "id": "97631186/statement.week.decide/540000******2020/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07864310000000115
+    },
+    {
+      "id": "97631186/statement.week.decide/540000******2020/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08367380000000048
+    },
+    {
+      "id": "97631186/statement.week.decide/540000******2020/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.11067909999999938
+    },
+    {
+      "id": "97631186/statement.week.change/540000******2020/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0811815999999999
+    },
+    {
+      "id": "97631186/cards.balance/540000******2020",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.3140600000000013
+    },
+    {
+      "id": "97631186/statement.week.change/540000******2020/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.10848389999999927
+    },
+    {
+      "id": "97631186/statement.week.change/540000******2020/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0792397000000019
+    },
+    {
+      "id": "97631186/contact.email.get/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.1812001999999993
+    },
+    {
+      "id": "97783309/cards.list/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.17523220000000037
+    },
+    {
+      "id": "97783309/cards.balance/540000******0310",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.13323289999999907
+    },
+    {
+      "id": "97783309/statement.week.get/540000******0310",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.18308150000000023
+    },
+    {
+      "id": "97783309/statement.week.decide/540000******0310/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.18205529999999998
+    },
+    {
+      "id": "97783309/statement.week.decide/540000******0310/1",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.182617000000002
+    },
+    {
+      "id": "97783309/statement.week.change/540000******0310/1",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09091649999999936
+    },
+    {
+      "id": "97783309/statement.week.decide/540000******0310/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09199359999999797
+    },
+    {
+      "id": "97783309/statement.week.change/540000******0310/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09628189999999813
+    },
+    {
+      "id": "97783309/statement.week.change/540000******0310/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09598040000000037
+    },
+    {
+      "id": "97917292/cards.list/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09094830000000002
+    },
+    {
+      "id": "97783309/contact.email.get/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0968093000000008
+    },
+    {
+      "id": "97917292/cards.balance/540000******9009",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09506830000000263
+    },
+    {
+      "id": "97917292/statement.week.get/540000******9009",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0950565999999999
+    },
+    {
+      "id": "97917292/statement.week.decide/540000******9009/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0983140999999996
+    },
+    {
+      "id": "97917292/statement.week.decide/540000******9009/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.10903369999999996
+    },
+    {
+      "id": "97917292/statement.week.decide/540000******9009/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.11015769999999975
+    },
+    {
+      "id": "97917292/statement.week.change/540000******9009/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.10587880000000223
+    },
+    {
+      "id": "97917292/statement.week.change/540000******9009/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07933710000000065
+    },
+    {
+      "id": "97917292/statement.week.change/540000******9009/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08197200000000157
+    },
+    {
+      "id": "97917292/contact.email.get/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09961170000000129
+    },
+    {
+      "id": "97917292/statement.pdf.send/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.1348895999999986
+    },
+    {
+      "id": "97974112/cards.balance/540000******2801",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.11458949999999822
+    },
+    {
+      "id": "97974112/cards.list/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.13298199999999996
+    },
+    {
+      "id": "97974112/cards.balance/540000******2802",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09048539999999776
+    },
+    {
+      "id": "97974112/cards.balance/540000******2804",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08997609999999986
+    },
+    {
+      "id": "97974112/cards.balance/541000******2803",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09083810000000085
+    },
+    {
+      "id": "97974112/cards.balance/540000******2805",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.11091379999999845
+    },
+    {
+      "id": "97974112/statement.week.get/540000******2801",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.1104992999999995
+    },
+    {
+      "id": "97974112/statement.week.get/540000******2802",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.11025270000000091
+    },
+    {
+      "id": "97974112/statement.week.get/541000******2803",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08024520000000121
+    },
+    {
+      "id": "97974112/statement.week.get/540000******2805",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08406830000000264
+    },
+    {
+      "id": "97974112/statement.week.get/540000******2804",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09048890000000029
+    },
+    {
+      "id": "97974112/statement.week.decide/540000******2801/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.12317739999999686
+    },
+    {
+      "id": "97974112/statement.week.decide/540000******2801/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.11934059999999955
+    },
+    {
+      "id": "97974112/statement.week.decide/540000******2801/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.11318540000000211
+    },
+    {
+      "id": "97974112/statement.week.decide/540000******2802/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0901807000000008
+    },
+    {
+      "id": "97974112/statement.week.decide/540000******2802/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09105409999999756
+    },
+    {
+      "id": "97974112/statement.week.decide/541000******2803/1",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09264619999999922
+    },
+    {
+      "id": "97974112/statement.week.decide/541000******2803/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09271879999999874
+    },
+    {
+      "id": "97974112/statement.week.decide/541000******2803/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07980470000000059
+    },
+    {
+      "id": "97974112/statement.week.decide/540000******2804/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07956259999999747
+    },
+    {
+      "id": "97974112/statement.week.decide/540000******2804/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08228059999999823
+    },
+    {
+      "id": "97974112/statement.week.decide/540000******2804/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08247060000000056
+    },
+    {
+      "id": "97974112/statement.week.decide/540000******2802/1",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.38911149999999906
+    },
+    {
+      "id": "97974112/statement.week.decide/540000******2805/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08724489999999786
+    },
+    {
+      "id": "97974112/statement.week.decide/540000******2805/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09472070000000167
+    },
+    {
+      "id": "97974112/statement.week.decide/540000******2805/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07531239999999889
+    },
+    {
+      "id": "97974112/statement.week.change/540000******2801/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.10818000000000029
+    },
+    {
+      "id": "97974112/statement.week.change/540000******2801/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.10123880000000281
+    },
+    {
+      "id": "97974112/statement.week.change/540000******2801/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08105160000000251
+    },
+    {
+      "id": "97974112/statement.week.change/540000******2802/1",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.2043090000000011
+    },
+    {
+      "id": "97974112/statement.week.change/540000******2802/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.20051190000000133
+    },
+    {
+      "id": "97974112/statement.week.change/540000******2802/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.20428819999999906
+    },
+    {
+      "id": "97974112/statement.week.change/541000******2803/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07502880000000005
+    },
+    {
+      "id": "97974112/statement.week.change/541000******2803/1",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0788247999999985
+    },
+    {
+      "id": "97974112/statement.week.change/541000******2803/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0917400000000016
+    },
+    {
+      "id": "97974112/statement.week.change/540000******2804/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08157940000000236
+    },
+    {
+      "id": "97974112/statement.week.change/540000******2804/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07947119999999995
+    },
+    {
+      "id": "97974112/statement.week.change/540000******2804/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08280760000000009
+    },
+    {
+      "id": "97974112/statement.week.change/540000******2805/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07929049999999915
+    },
+    {
+      "id": "97974112/statement.week.change/540000******2805/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0791262999999999
+    },
+    {
+      "id": "97974112/statement.week.change/540000******2805/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08688479999999982
+    },
+    {
+      "id": "97974112/contact.email.get/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07578099999999904
+    },
+    {
+      "id": "97974112/statement.pdf.send/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08781659999999829
+    },
+    {
+      "id": "98390128/cards.list/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08409660000000076
+    },
+    {
+      "id": "98390128/cards.balance/540000******8008",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07596159999999873
+    },
+    {
+      "id": "98390128/statement.week.get/540000******8008",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08158789999999863
+    },
+    {
+      "id": "98390128/statement.week.decide/540000******8008/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08134890000000086
+    },
+    {
+      "id": "98390128/statement.week.decide/540000******8008/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07736509999999908
+    },
+    {
+      "id": "98390128/statement.week.decide/540000******8008/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09244250000000102
+    },
+    {
+      "id": "98390128/statement.week.change/540000******8008/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08450209999999789
+    },
+    {
+      "id": "98390128/statement.week.change/540000******8008/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07607630000000062
+    },
+    {
+      "id": "98390128/statement.week.change/540000******8008/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08714589999999953
+    },
+    {
+      "id": "98390128/contact.email.get/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08324339999999938
+    },
+    {
+      "id": "98390128/statement.pdf.send/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07503629999999975
+    },
+    {
+      "id": "98814070/cards.balance/540000******2401",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07984400000000096
+    },
+    {
+      "id": "98814070/cards.list/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.10054799999999886
+    },
+    {
+      "id": "98814070/cards.balance/540000******2402",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07934200000000055
+    },
+    {
+      "id": "98814070/cards.balance/540000******2403",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.10238509999999951
+    },
+    {
+      "id": "98814070/statement.week.get/540000******2401",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0915112999999983
+    },
+    {
+      "id": "98814070/statement.week.get/540000******2402",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.1609357999999993
+    },
+    {
+      "id": "98814070/statement.week.decide/540000******2401/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08218790000000081
+    },
+    {
+      "id": "98814070/statement.week.get/540000******2403",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0835548000000017
+    },
+    {
+      "id": "98814070/statement.week.decide/540000******2401/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09438010000000213
+    },
+    {
+      "id": "98814070/statement.week.decide/540000******2402/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.0915692999999992
+    },
+    {
+      "id": "98814070/statement.week.decide/540000******2401/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.09326729999999953
+    },
+    {
+      "id": "98814070/statement.week.decide/540000******2402/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.11092150000000038
+    },
+    {
+      "id": "98814070/statement.week.decide/540000******2403/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.10902240000000166
+    },
+    {
+      "id": "98814070/statement.week.decide/540000******2402/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.1105767999999989
+    },
+    {
+      "id": "98814070/statement.week.decide/540000******2403/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.13211119999999937
+    },
+    {
+      "id": "98814070/statement.week.change/540000******2401/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.1323863999999994
+    },
+    {
+      "id": "94907600/cards.balance/540000******7211",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 12.1072093
+    },
+    {
+      "id": "98814070/statement.week.change/540000******2401/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.17764500000000044
+    },
+    {
+      "id": "98814070/statement.week.change/540000******2401/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.17763920000000144
+    },
+    {
+      "id": "98814070/statement.week.change/540000******2402/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.1500407000000014
+    },
+    {
+      "id": "98814070/statement.week.decide/540000******2403/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.463290100000002
+    },
+    {
+      "id": "98814070/statement.week.change/540000******2402/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.1533826000000008
+    },
+    {
+      "id": "98814070/statement.week.change/540000******2402/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.1528678
+    },
+    {
+      "id": "98814070/statement.week.change/540000******2403/2",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.15311260000000038
+    },
+    {
+      "id": "98814070/statement.week.change/540000******2403/3",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.07551680000000124
+    },
+    {
+      "id": "98814070/statement.week.change/540000******2403/4",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.08216779999999926
+    },
+    {
+      "id": "98814070/statement.pdf.send/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.11076119999999719
+    },
+    {
+      "id": "98814070/contact.email.get/customer",
+      "pass": true,
+      "status": 200,
+      "expected_status": 200,
+      "body_equal": true,
+      "seconds": 0.38003570000000036
+    }
+  ],
+  "transport": "Node HTTPS, four connections, normal TLS certificate and hostname verification",
+  "dns_diagnostic_address": "104.21.80.118"
+}

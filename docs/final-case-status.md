@@ -38,3 +38,23 @@ during initial reachability; preserved under runs/final-live/mock-first-remote.j
 A full second sweep is running; generation remains gated on its result.
 Freya preflight: zero active simulations, 481.5331 credits at 0.5 USD/credit.
 This is available trial balance, not a per-call tariff or measured final cost.
+
+20:54 remote verification: 617/617 exact HTTP/body comparisons passed through
+the real public HTTPS Worker. Local system DNS returned 188.114.96.3/97.3, whose
+TCP connection timed out; Cloudflare's 1.1.1.1 resolver returned 104.21.80.118 and
+172.67.180.132. The diagnostic verifier used 104.21.80.118 while retaining the
+original hostname, SNI and normal certificate validation. No machine DNS setting
+or TLS protection was changed. Freya-side reachability still needs a live call.
+Two sweeps that stalled on local network routing were stopped, not counted as
+passes. Exact successful checks: reports/final-mock-contract.json.
+
+20:55 first generation failed because the nested Codex session could not execute
+even read-only file commands. No workflow or API mutation was produced. Its full
+trace is preserved in runs/20261011T175422Z-4d4ce55d. The generic adapter now embeds
+all business source text and PDF images in the model input and saves the model's
+JSON reply itself. Large non-schema JSON datasets are represented by shape only;
+actual fixture values remain in the mock and tests. This keeps task-specific facts
+out of builder code and avoids requiring model filesystem access.
+
+20:56 clean source checkpoint: 948da58. A second recorded production generation
+has started; neither its output nor its success is yet assumed.
