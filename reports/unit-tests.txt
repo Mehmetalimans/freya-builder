@@ -1,4 +1,4 @@
-{"status": "offline_validated", "run_directory": "C:\\Users\\mirac\\Documents\\antigravity\\noble-einstein\\dist\\clean-0d21f5a7\\runs\\test-temp\\tmp0v9epy60\\20261011T165208Z-b454d227", "error": null, "error_type": null}
+{"status": "offline_validated", "run_directory": "C:\\Users\\mirac\\Documents\\antigravity\\noble-einstein\\dist\\clean-e99a6c3e\\runs\\test-temp\\tmpp0_7c6us\\20261011T171004Z-0e2dff4e", "error": null, "error_type": null}
 test_item11_vague_period_rule_21_schema_and_prompts (test_audit_fixes.AuditFixesRegressionTest.test_item11_vague_period_rule_21_schema_and_prompts)
 Rule 21 vague periods: prompts instruct asking for exact day and action extractor sets none. ... ok
 test_item12_conversation_quality_edge_cases (test_audit_fixes.AuditFixesRegressionTest.test_item12_conversation_quality_edge_cases)
@@ -201,6 +201,6 @@ test_099_fault_protocol_verify_identity_is_not_service_error (test_scenarios_100
 test_100_final_farewell_and_terminal_guarantee (test_scenarios_100.HundredScenariosTest.test_100_final_farewell_and_terminal_guarantee) ... ok
 
 ----------------------------------------------------------------------
-Ran 182 tests in 0.295s
+Ran 182 tests in 0.362s
 
 OK
