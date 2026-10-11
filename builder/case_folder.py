@@ -155,7 +155,16 @@ def prepare_documents(case, out):
         target = folder / (path.relative_to(case).as_posix().replace('/', '__') + '.txt')
         if path.suffix.lower() == '.pdf':
             from pypdf import PdfReader
+            import pypdfium2 as pdfium
             content = '\n\n'.join(f'PAGE {i+1}\n{p.extract_text()}' for i, p in enumerate(PdfReader(path).pages))
+            pdf = pdfium.PdfDocument(path)
+            for i in range(len(pdf)):
+                page = pdf[i]
+                scale = min(2, 4000 / max(page.get_size()))
+                bitmap = page.render(scale=scale)
+                bitmap.to_pil().save(target.with_suffix(f'.page-{i+1}.png'))
+                bitmap.close(); page.close()
+            pdf.close()
         else:
             from docx import Document
             doc = Document(path)
@@ -174,6 +183,7 @@ The transport mock has already passed its documented fixtures. Its base URL is {
 Read the platform format references under {context}; do not invent platform features.
 Read every business source in full, including attachments and meeting transcripts.
 Extracted binary document text is in {output.parent / 'document-text'}; originals remain authoritative.
+PDF page PNG previews are alongside that text. Inspect diagrams visually when layout carries meaning.
 Resolve business requirements from the input evidence, preserving source path and section.
 Distinguish explicit amendments from older evidence; file modification time alone is not authority.
 Produce requirements.json with language, call_variables, source-backed requirements,
