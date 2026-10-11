@@ -197,6 +197,7 @@ Use service definitions/examples to learn shapes; test fixtures are not runtime 
 Create workflow.json in the documented platform format. Derive language, identity handling,
 date rules, allowed actions and closing from the supplied evidence, not previous practice tasks.
 All HTTP tools must use {mock_url}; use exactly documented paths, methods, fields and statuses.
+Set a fixed User-Agent header of Mozilla/5.0 (build-the-builder) for Cloudflare transport compatibility.
 Bind trusted call variables directly and never allow caller speech to replace their identity.
 Read financial/account facts from tool results. A failed or missing result is not success or zero.
 Derive all temporal decisions from the supplied call-time variable, never the machine clock.
@@ -228,6 +229,7 @@ def run_generator(case, mock_url, out, model, seconds, trace):
            and k not in {'FREYA_BANK_TEAM_KEY'}}
     env['PYTHONUTF8'] = '1'
     command = [executable, 'exec', '--ignore-user-config', '--json', '--model', model,
+               '-c', 'model_reasoning_effort="high"',
                '--sandbox', 'workspace-write', '--skip-git-repo-check', '-C', str(out), '-']
     trace.emit('model_run_start', model=model, prompt_summary='Derive source-grounded contract and workflow from case-folder documents')
     before = source_hashes()
