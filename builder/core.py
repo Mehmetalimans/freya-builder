@@ -160,11 +160,18 @@ def parse_policy(briefs, ops):
     note_schema = ops.get("add_note", {}).get("schema", {}).get("properties", {})
     note_reasons = list(note_schema.get("reason", {}).get("enum", []))
 
+    num_questions = 2
+    m_sec_count = re.search(r"(\d+|one|two|three|four)\s+security\s+questions", combined, re.I)
+    if m_sec_count:
+        val = m_sec_count.group(1).lower()
+        num_questions = int(val) if val.isdigit() else word_to_num.get(val, 2)
+
     return Policy(
         bank_name=bank_name,
         max_wrong_answers=max_wrong,
         callback_hours=callback_hours,
         bands=bands,
+        num_security_questions=num_questions,
         close_outcomes=close_outcomes,
         close_reasons=close_reasons,
         transfer_queues=transfer_queues,
@@ -234,6 +241,7 @@ def make_post_process_code(name, policy=None):
             else:
                 callback_reason = reasons[0]
 
+    num_questions = policy.get("num_security_questions", 2) if policy is not None else 2
     max_wrong_word = num_words.get(max_wrong, str(max_wrong))
     max_wrong_msg = f'{max_wrong_word} wrong answers reached! Tell customer to use the mobile app or visit a branch, say goodbye, and call close_call(outcome="{failed_outcome}", reason="{failed_reason}").'
 
@@ -252,10 +260,18 @@ def make_post_process_code(name, policy=None):
             if isinstance(d, dict):
                 d.pop('what_to_do_next', None)
         elif isinstance(d, dict):
-            if d.get('all_verified') or d.get('identity_complete'):
+            _v = vars if ('vars' in dir() and isinstance(vars, dict)) else globals().get('vars', {{}})
+            if d.get('verified') is True:
+                _cnt = _v.get('identity_verified_count', 0) + 1
+                if isinstance(_v, dict):
+                    _v['identity_verified_count'] = _cnt
+                if _cnt >= {num_questions} or d.get('all_verified') or d.get('identity_complete'):
+                    d['all_verified'] = True
+                    d['what_to_do_next'] = 'All security questions PASSED. Proceed to collection node or call get_account.'
+                else:
+                    d['what_to_do_next'] = 'Security question / Date of birth verified! Ask the next required security question from the supplied brief.'
+            elif d.get('all_verified') or d.get('identity_complete'):
                 d['what_to_do_next'] = 'All security questions PASSED. Proceed to collection node or call get_account.'
-            elif d.get('verified') is True:
-                d['what_to_do_next'] = 'Security question / Date of birth verified! Ask the next required security question from the supplied brief.'
             elif d.get('hint') == 'day_month_swapped':
                 d['what_to_do_next'] = 'Day and month were swapped! Ask customer to say the month as a word (e.g. July). This retry does NOT count as a wrong answer.'
             elif d.get('verified') is False:
@@ -518,9 +534,10 @@ THIRD PARTY & DISPUTES:
 If someone else answers, NEVER reveal debt or account facts; schedule_callback if agreed, else close_call.
 If debt is disputed, close as no_promise / dispute without taking a promise.
 If customer already paid, state payments take one business day to appear, take no promise, close as paid.
-If customer mentions hardship (illness, bereavement, job loss), offer customer support once without persuasion.
+TRANSFER PROTOCOL: On any transfer (restructuring, support, general), call transfer_to_agent FIRST in its own turn. Only AFTER transfer_to_agent succeeds (ok: true), call close_call(outcome='transferred', reason=queue). NEVER call close_call before or in the same turn as transfer_to_agent!
 If restructuring requested, call transfer_to_agent(queue='restructuring') and close as transferred / restructuring.
 If human requested, ask once if you can help; if they insist, call transfer_to_agent(queue='general') and close as transferred / human.
+If customer mentions hardship (illness, bereavement, job loss), offer customer support once without persuasion. If accepted, call transfer_to_agent(queue='support') and close as transferred / support.
 For multiple products (Brief B), call add_note with the specific reason for every unpromised product. On any transfer, add no notes at all.
 """
 
@@ -583,7 +600,7 @@ def compile_workflow(briefs, document):
             failed_reas = policy.close_reasons[0]
 
     task_identity = (
-        f"Begin with the exact required opening: say you are a digital assistant calling from {policy.bank_name} and the call is recorded. "
+        f"Begin with the required opening: say you are a digital assistant calling from {policy.bank_name} and this call is monitored. "
         "Ask 'Am I speaking with {title} {last_name}?'. Do not mention debt, collections, or products. "
         f"If someone else answers, do not disclose anything; ask when the customer can be reached. If a callback is agreed (today or next business day {policy.callback_hours}), schedule_callback and close_call(outcome='not_reached', reason='callback'). "
         "If person says wrong number, close_call(outcome='not_reached', reason='wrong_number'). "
@@ -602,8 +619,8 @@ def compile_workflow(briefs, document):
     if not policy.bands or policy.bands == [[1, 7, 12], [8, 45, 7]]:
         persuasion_task = (
             "PERSUASION ATTEMPTS BY BAND: For each product, check its days_late: "
-            "Early band (1-7 days late): exactly 1 persuasion attempt (propose this Friday). If refused, stop for that product. "
-            "Late band (8-45 days late): you MUST make 2 persuasion attempts before accepting refusal! "
+            "Early band (1-7 days late): exactly 1 persuasion attempt maximum (propose this Friday). If refused, stop immediately for that product! NEVER make a second attempt and NEVER repeat the offer! "
+            "Late band (8-45 days late): you MUST make exactly 2 persuasion attempts before accepting refusal! "
             "Attempt 1: propose this Friday. If customer flatly refuses Attempt 1, you MUST make Attempt 2: propose the FLOOR amount on the DEADLINE date (the 7th business day after today). Only after Attempt 2 is also refused, stop and record refusal. "
         )
     else:
@@ -626,7 +643,8 @@ def compile_workflow(briefs, document):
         "If customer proposes an exact date after a product's deadline, state the latest allowed date is the deadline and offer it on the deadline; if other products have later deadlines, keep their dates. "
         "Read back product(s), amount(s) and date(s) before create_promise. After promise, ALWAYS say: 'You will receive a text message confirming this promise.' "
         "If create_promise fails, retry once immediately. Never say recorded if the tool call failed. "
-        "BRIEF B / MULTI-PRODUCT: If multiple products exist, state each product and amount first. Ask if they can pay all today. If not, negotiate one-by-one in get_account order with the persuasion rules above. Read back all promises together for one confirmation, then call create_promise for each. "
+        "TRANSFER PROTOCOL (Rule 41, 42, 32): When transferring to an agent (for restructuring, support, or general human), call transfer_to_agent FIRST in its own turn. NEVER call close_call before or in the same turn as transfer_to_agent! Only in the turn AFTER transfer_to_agent returns ok: true, say goodbye and call close_call(outcome='transferred', reason=queue). "
+        "BRIEF B / MULTI-PRODUCT: If multiple products exist, state each product and amount first. Ask if they can pay all today. If not, negotiate one-by-one in get_account order with the persuasion rules above. For Early band products (1-7 days late), make at most 1 attempt; if refused, do NOT ask again and do NOT repeat the offer! For Late band products (8-45 days late), make 2 attempts before stopping. Read back all promises together for one confirmation, then call create_promise for each. "
         f"For every unpromised product, call add_note(customer_id, product_id, reason) with reason in {note_reasons_str}. On any transfer (restructuring, support, general), do NOT call add_note. "
         "CLOSING: ALWAYS thank the customer and say goodbye BEFORE or in the same turn as calling close_call. close_call must be the final bank tool."
     )
